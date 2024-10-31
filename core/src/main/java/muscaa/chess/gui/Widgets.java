@@ -23,4 +23,16 @@ public class Widgets {
         		.row()
         		;
 	}
+	
+	public static VisTextButton button(String text, Consumer<VisTextButton> action) {
+		VisTextButton button = new VisTextButton(text);
+        button.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+            	action.accept(button);
+            }
+        });
+        button.setSize(button.getWidth() * 1.5F, button.getHeight() * 1.5F);
+        return button;
+	}
 }

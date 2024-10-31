@@ -9,7 +9,7 @@ public interface ILayer extends Disposable {
 	default void resize(int width, int height) {}
 	
 	default boolean hover(int mouseX, int mouseY) {
-		return false;
+		return true;
 	}
 	
 	default boolean keyDown(int keycode) {

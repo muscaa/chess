@@ -4,15 +4,15 @@ import com.badlogic.gdx.Input.Keys;
 
 import muscaa.chess.gui.GuiScreen;
 import muscaa.chess.gui.screens.PauseMenuScreen;
+import muscaa.chess.layer.ILayer;
+import muscaa.chess.layer.LayerInputProcessor;
 import muscaa.chess.render.WindowUtils;
 
-import com.badlogic.gdx.InputProcessor;
-
-public class ChessInputProcessor implements InputProcessor {
+public class ChessInputProcessor extends LayerInputProcessor {
 	
 	@Override
-	public boolean keyDown(int keycode) {
-		return ChessGame.INSTANCE.getLayerManager().keyDown(keycode);
+	protected ILayer getLayer() {
+		return ChessGame.INSTANCE.getLayerManager();
 	}
 	
 	@Override
@@ -35,41 +35,6 @@ public class ChessInputProcessor implements InputProcessor {
 				return true;
 		}
 		
-		return ChessGame.INSTANCE.getLayerManager().keyUp(keycode);
-	}
-	
-	@Override
-	public boolean keyTyped(char character) {
-		return ChessGame.INSTANCE.getLayerManager().keyTyped(character);
-	}
-	
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		return ChessGame.INSTANCE.getLayerManager().mouseDown(screenX, screenY, pointer, button);
-	}
-	
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		return ChessGame.INSTANCE.getLayerManager().mouseUp(screenX, screenY, pointer, button);
-	}
-	
-	@Override
-	public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
-		return ChessGame.INSTANCE.getLayerManager().mouseCancelled(screenX, screenY, pointer, button);
-	}
-	
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		return ChessGame.INSTANCE.getLayerManager().mouseDragged(screenX, screenY, pointer);
-	}
-	
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		return ChessGame.INSTANCE.getLayerManager().mouseMoved(screenX, screenY);
-	}
-	
-	@Override
-	public boolean scrolled(float amountX, float amountY) {
-		return ChessGame.INSTANCE.getLayerManager().scrolled(amountX, amountY);
+		return getLayer().keyUp(keycode);
 	}
 }

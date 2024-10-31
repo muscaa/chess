@@ -9,6 +9,7 @@ import muscaa.chess.assets.Fonts;
 import muscaa.chess.assets.Textures;
 import muscaa.chess.board.BoardLayer;
 import muscaa.chess.gui.GuiLayer;
+import muscaa.chess.gui.screens.MainMenuScreen;
 import muscaa.chess.layer.LayerManager;
 import muscaa.chess.render.Screen;
 
@@ -39,7 +40,7 @@ public class ChessGame implements ApplicationListener {
     	
     	guiLayer = new GuiLayer();
     	layerManager.register(guiLayer);
-    	//guiLayer.setScreen(new MainMenuScreen());
+    	guiLayer.setScreen(new MainMenuScreen());
 	}
 	
 	@Override
