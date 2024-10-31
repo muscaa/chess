@@ -3,6 +3,10 @@ package muscaa.chess.layer;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import com.badlogic.gdx.math.Vector2;
+
+import muscaa.chess.render.Screen;
+
 public class LayerManager implements ILayer {
 	
 	private final LinkedList<ILayer> reg = new LinkedList<>();
@@ -59,11 +63,13 @@ public class LayerManager implements ILayer {
 	
 	@Override
 	public boolean hover(int mouseX, int mouseY) {
+		Vector2 mouse = Screen.VIEWPORT.unproject(new Vector2(mouseX, mouseY));
+		
 		synchronized (reg) {
 			Iterator<ILayer> it = reg.descendingIterator();
 			while (it.hasNext()) {
 				ILayer l = it.next();
-				if (l.hover(mouseX, mouseY)) {
+				if (l.hover((int) mouse.x, (int) mouse.y)) {
 					hovered = l;
 					return true;
 				}
@@ -111,11 +117,13 @@ public class LayerManager implements ILayer {
 	
 	@Override
 	public boolean mouseDown(int mouseX, int mouseY, int pointer, int button) {
+		Vector2 mouse = Screen.VIEWPORT.unproject(new Vector2(mouseX, mouseY));
+		
 		synchronized (reg) {
 			Iterator<ILayer> it = reg.descendingIterator();
 			while (it.hasNext()) {
 				ILayer l = it.next();
-				if (l.mouseDown(mouseX, mouseY, pointer, button)) return true;
+				if (l.mouseDown((int) mouse.x, (int) mouse.y, pointer, button)) return true;
 			}
 			return false;
 		}
@@ -123,11 +131,13 @@ public class LayerManager implements ILayer {
 	
 	@Override
 	public boolean mouseUp(int mouseX, int mouseY, int pointer, int button) {
+		Vector2 mouse = Screen.VIEWPORT.unproject(new Vector2(mouseX, mouseY));
+		
 		synchronized (reg) {
 			Iterator<ILayer> it = reg.descendingIterator();
 			while (it.hasNext()) {
 				ILayer l = it.next();
-				if (l.mouseUp(mouseX, mouseY, pointer, button)) return true;
+				if (l.mouseUp((int) mouse.x, (int) mouse.y, pointer, button)) return true;
 			}
 			return false;
 		}
@@ -135,11 +145,13 @@ public class LayerManager implements ILayer {
 	
 	@Override
 	public boolean mouseCancelled(int mouseX, int mouseY, int pointer, int button) {
+		Vector2 mouse = Screen.VIEWPORT.unproject(new Vector2(mouseX, mouseY));
+		
 		synchronized (reg) {
 			Iterator<ILayer> it = reg.descendingIterator();
 			while (it.hasNext()) {
 				ILayer l = it.next();
-				if (l.mouseCancelled(mouseX, mouseY, pointer, button)) return true;
+				if (l.mouseCancelled((int) mouse.x, (int) mouse.y, pointer, button)) return true;
 			}
 			return false;
 		}
@@ -147,11 +159,13 @@ public class LayerManager implements ILayer {
 	
 	@Override
 	public boolean mouseDragged(int mouseX, int mouseY, int pointer) {
+		Vector2 mouse = Screen.VIEWPORT.unproject(new Vector2(mouseX, mouseY));
+		
 		synchronized (reg) {
 			Iterator<ILayer> it = reg.descendingIterator();
 			while (it.hasNext()) {
 				ILayer l = it.next();
-				if (l.mouseDragged(mouseX, mouseY, pointer)) return true;
+				if (l.mouseDragged((int) mouse.x, (int) mouse.y, pointer)) return true;
 			}
 			return false;
 		}
@@ -159,11 +173,13 @@ public class LayerManager implements ILayer {
 	
 	@Override
 	public boolean mouseMoved(int mouseX, int mouseY) {
+		Vector2 mouse = Screen.VIEWPORT.unproject(new Vector2(mouseX, mouseY));
+		
 		synchronized (reg) {
 			Iterator<ILayer> it = reg.descendingIterator();
 			while (it.hasNext()) {
 				ILayer l = it.next();
-				if (l.mouseMoved(mouseX, mouseY)) return true;
+				if (l.mouseMoved((int) mouse.x, (int) mouse.y)) return true;
 			}
 			return false;
 		}

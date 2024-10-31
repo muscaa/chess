@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 import muscaa.chess.assets.Textures;
 
-public enum BoardPieceType {
+public enum ChessPieceType {
 	WHITE_KING(Textures.WHITE_KING),
 	WHITE_QUEEN(Textures.WHITE_QUEEN),
 	WHITE_BISHOP(Textures.WHITE_BISHOP),
@@ -22,7 +22,7 @@ public enum BoardPieceType {
 	
 	private final Texture texture;
 	
-	private BoardPieceType(Texture texture) {
+	private ChessPieceType(Texture texture) {
 		this.texture = texture;
 	}
 	

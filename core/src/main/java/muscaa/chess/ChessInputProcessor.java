@@ -4,6 +4,7 @@ import com.badlogic.gdx.Input.Keys;
 
 import muscaa.chess.gui.GuiScreen;
 import muscaa.chess.gui.screens.PauseMenuScreen;
+import muscaa.chess.render.WindowUtils;
 
 import com.badlogic.gdx.InputProcessor;
 
@@ -16,17 +17,22 @@ public class ChessInputProcessor implements InputProcessor {
 	
 	@Override
 	public boolean keyUp(int keycode) {
-		if (keycode == Keys.ESCAPE) {
-			GuiScreen screen = ChessGame.INSTANCE.getGuiLayer().getScreen();
-			if (screen == null) {
-				screen = new PauseMenuScreen();
-			} else {
-				screen = null;
-			}
-			
-			ChessGame.INSTANCE.getGuiLayer().setScreen(screen);
-			
-			return true;
+		switch (keycode) {
+			case Keys.F11:
+				WindowUtils.toggleFullscreen();
+				return true;
+				
+			case Keys.ESCAPE:
+				GuiScreen screen = ChessGame.INSTANCE.getGuiLayer().getScreen();
+				if (screen == null) {
+					screen = new PauseMenuScreen();
+				} else {
+					screen = null;
+				}
+				
+				ChessGame.INSTANCE.getGuiLayer().setScreen(screen);
+				
+				return true;
 		}
 		
 		return ChessGame.INSTANCE.getLayerManager().keyUp(keycode);

@@ -1,5 +1,6 @@
 package muscaa.chess.render;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -8,7 +9,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class Screen {
 	
-	public static final Viewport VIEWPORT = new ScreenViewport();
+	public static final OrthographicCamera CAMERA = new OrthographicCamera();
+	public static final Viewport VIEWPORT = new ScreenViewport(CAMERA);
 	public static final SpriteBatch SPRITES = new SpriteBatch();
 	public static final ShapeRenderer SHAPES = new ShapeRenderer();
 	

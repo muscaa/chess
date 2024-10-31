@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
@@ -42,8 +43,9 @@ public class Fonts {
     	return fonts;
 	}
 	
-	public static void draw(BitmapFont font, String text, float x, float y) {
+	public static void draw(BitmapFont font, String text, float x, float y, Color color) {
 		Screen.beginSprites();
+		font.setColor(color);
 		font.draw(Screen.SPRITES, text, x, y);
 		Screen.endSprites();
 	}
