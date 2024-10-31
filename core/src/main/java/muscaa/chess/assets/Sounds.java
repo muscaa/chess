@@ -14,6 +14,8 @@ public class Sounds {
 	public static final Sound CAPTURE = create("sounds/capture.ogg");
 	public static final Sound NOTIFY = create("sounds/notify.ogg");
 	
+	public static final Sound AMBIENT = create("sounds/ambient.ogg");
+	
 	private static Sound create(String path) {
 		Sound s = Gdx.audio.newSound(Gdx.files.internal(path));
 		REG.add(s);

@@ -3,6 +3,7 @@ package muscaa.chess.gui.screens;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 import muscaa.chess.ChessGame;
+import muscaa.chess.assets.Sounds;
 import muscaa.chess.board.Board;
 import muscaa.chess.gui.GuiScreen;
 import muscaa.chess.gui.Widgets;
@@ -12,11 +13,14 @@ public class MainMenuScreen extends GuiScreen {
 	
 	@Override
 	protected void init() {
+		Sounds.AMBIENT.loop(0.5F);
+		
 		VisTable main = Widgets.table(true);
 		
 		Widgets.button(main, "Offline", (button) -> {
 			ChessGame.INSTANCE.getBoardLayer().setBoard(new Board());
 			ChessGame.INSTANCE.getGuiLayer().setScreen(null);
+			Sounds.AMBIENT.stop();
 		})
 				.row();
 		Widgets.button(main, "Online", null)
