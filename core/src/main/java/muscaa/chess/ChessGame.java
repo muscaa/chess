@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import muscaa.chess.assets.Fonts;
+import muscaa.chess.assets.Sounds;
 import muscaa.chess.assets.Textures;
 import muscaa.chess.board.BoardLayer;
 import muscaa.chess.gui.GuiLayer;
@@ -34,6 +35,7 @@ public class ChessGame implements ApplicationListener {
     	
     	Fonts.init();
     	Textures.init();
+    	Sounds.init();
     	
     	boardLayer = new BoardLayer();
     	layerManager.register(boardLayer);
@@ -72,6 +74,7 @@ public class ChessGame implements ApplicationListener {
 	public void dispose() {
 		layerManager.dispose();
 		
+		Sounds.dispose();
 		Fonts.dispose();
 		Textures.dispose();
 		

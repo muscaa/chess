@@ -2,6 +2,8 @@ package muscaa.chess.board;
 
 import static muscaa.chess.board.ChessPieceType.*;
 
+import muscaa.chess.assets.Sounds;
+
 public class Board {
 	
 	public static final int SIZE = 8;
@@ -45,5 +47,7 @@ public class Board {
 		
 		setPiece(x2, y2, pieceType);
 		setPiece(x1, y1, null);
+		
+		Sounds.MOVE.play();
 	}
 }
