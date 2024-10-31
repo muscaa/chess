@@ -22,8 +22,8 @@ public class GuiLayer implements ILayerWrapper {
         skin = new Skin();
         VisUI.load(skin);
         
-        skin.add("default-font", Fonts.SONO_24, BitmapFont.class);
-        skin.add("small-font", Fonts.SONO_24, BitmapFont.class);
+        skin.add("default-font", Fonts.VARELA_24, BitmapFont.class);
+        skin.add("small-font", Fonts.VARELA_18, BitmapFont.class);
         skin.addRegions(new TextureAtlas(Gdx.files.internal("ui/uiskin.atlas")));
         skin.load(Gdx.files.internal("ui/uiskin.json"));
 	}

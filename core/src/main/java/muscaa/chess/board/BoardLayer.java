@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.Color;
 
 import muscaa.chess.assets.Fonts;
 import muscaa.chess.assets.Textures;
+import muscaa.chess.config.Theme;
 import muscaa.chess.layer.ILayer;
-import muscaa.chess.render.RenderUtils;
 import muscaa.chess.render.Screen;
 import muscaa.chess.render.Shapes;
 
@@ -16,20 +16,20 @@ public class BoardLayer implements ILayer {
     private float tileSize;
     private float boardX, boardY;
     
-    private Board board = new Board();
+    private Board board;
     private int x1 = -1;
     private int y1 = -1;
 	
 	public BoardLayer() {
-        tileSize = Math.min(Screen.VIEWPORT.getWorldWidth(), Screen.VIEWPORT.getWorldHeight()) / Board.SIZE;
+        tileSize = Math.min(Screen.WIDTH, Screen.HEIGHT) / Board.SIZE;
         
-        boardX = (Screen.VIEWPORT.getWorldWidth() - (tileSize * Board.SIZE)) / 2;
-        boardY = (Screen.VIEWPORT.getWorldHeight() - (tileSize * Board.SIZE)) / 2;
+        boardX = (Screen.WIDTH - (tileSize * Board.SIZE)) / 2;
+        boardY = (Screen.HEIGHT - (tileSize * Board.SIZE)) / 2;
 	}
 	
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
-		Shapes.rect(0, 0, Screen.VIEWPORT.getWorldWidth(), Screen.VIEWPORT.getWorldHeight(), Color.DARK_GRAY);
+		if (board == null) return;
 		
 		ChessPieceType hoveredPiece = null;
 		int hoveredRow = -1;
@@ -37,8 +37,7 @@ public class BoardLayer implements ILayer {
 		
         for (int row = 0; row < Board.SIZE; row++) {
             for (int col = 0; col < Board.SIZE; col++) {
-            	Color color = (row + col) % 2 == 0 ? RenderUtils.color(235, 236, 208)
-            			: RenderUtils.color(115, 149, 82);
+            	Color color = (row + col) % 2 == 0 ? Theme.BOARD_CELL_LIGHT : Theme.BOARD_CELL_DARK;
             	ChessPieceType pieceType = board.getPiece(col, row);
                 float x = boardX + col * tileSize;
                 float y = boardY + (Board.SIZE - row - 1) * tileSize;
@@ -64,20 +63,20 @@ public class BoardLayer implements ILayer {
         		hoveredRow + " : " + hoveredCol,
 		};
         
-        float y = Screen.VIEWPORT.getWorldHeight() - 10;
+        float y = Screen.HEIGHT - 10;
         for (String info : debug) {
-        	Fonts.draw(Fonts.SONO_24, info, 10, y, Color.WHITE);
+        	Fonts.draw(Fonts.VARELA_18, info, 10, y, Color.WHITE);
         	
-        	y -= Fonts.SONO_24.getLineHeight();
+        	y -= Fonts.VARELA_18.getLineHeight();
         }
 	}
 	
 	@Override
 	public void resize(int width, int height) {
-		tileSize = Math.min(Screen.VIEWPORT.getWorldWidth(), Screen.VIEWPORT.getWorldHeight()) / Board.SIZE;
+		tileSize = Math.min(Screen.WIDTH, Screen.HEIGHT) / Board.SIZE;
         
-        boardX = (Screen.VIEWPORT.getWorldWidth() - (tileSize * Board.SIZE)) / 2;
-        boardY = (Screen.VIEWPORT.getWorldHeight() - (tileSize * Board.SIZE)) / 2;
+        boardX = (Screen.WIDTH - (tileSize * Board.SIZE)) / 2;
+        boardY = (Screen.HEIGHT - (tileSize * Board.SIZE)) / 2;
 	}
 	
 	@Override
@@ -87,6 +86,8 @@ public class BoardLayer implements ILayer {
 	
 	@Override
 	public boolean mouseDown(int mouseX, int mouseY, int pointer, int button) {
+		if (board == null) return false;
+		
         for (int row = 0; row < Board.SIZE; row++) {
             for (int col = 0; col < Board.SIZE; col++) {
                 float x = boardX + col * tileSize;
@@ -111,5 +112,9 @@ public class BoardLayer implements ILayer {
 	
 	public Board getBoard() {
 		return board;
+	}
+	
+	public void setBoard(Board board) {
+		this.board = board;
 	}
 }

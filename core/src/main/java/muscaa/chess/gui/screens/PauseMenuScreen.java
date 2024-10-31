@@ -2,23 +2,28 @@ package muscaa.chess.gui.screens;
 
 import com.kotcrab.vis.ui.widget.VisTable;
 
+import muscaa.chess.ChessGame;
 import muscaa.chess.gui.GuiScreen;
 import muscaa.chess.gui.Widgets;
-import muscaa.chess.render.WindowUtils;
 
 public class PauseMenuScreen extends GuiScreen {
 	
-    private VisTable table;
-	
 	@Override
 	protected void init() {
-		table = new VisTable();
-		table.defaults().pad(4.0F);
-		table.setFillParent(true);
+		VisTable main = Widgets.table(true);
 		
-        Widgets.button(table::add, "Toggle Fullscreen", (button) -> WindowUtils.toggleFullscreen());
-		Widgets.button(table::add, "Exit", (button) -> WindowUtils.exit());
+		Widgets.button(main, "Options", null)
+				.row();
+		Widgets.empty(main)
+				.row();
+		Widgets.button(main, "Surrender", null)
+				.row();
+		Widgets.button(main, "Return to Main Menu", (button) -> {
+			ChessGame.INSTANCE.getBoardLayer().setBoard(null);
+			ChessGame.INSTANCE.getGuiLayer().setScreen(new MainMenuScreen());
+		})
+				.row();
 		
-		stage.addActor(table);
+		stage.addActor(main);
 	}
 }

@@ -9,10 +9,12 @@ import muscaa.chess.assets.Fonts;
 import muscaa.chess.assets.Sounds;
 import muscaa.chess.assets.Textures;
 import muscaa.chess.board.BoardLayer;
+import muscaa.chess.config.Theme;
 import muscaa.chess.gui.GuiLayer;
 import muscaa.chess.gui.screens.MainMenuScreen;
 import muscaa.chess.layer.LayerManager;
 import muscaa.chess.render.Screen;
+import muscaa.chess.render.Shapes;
 
 public class ChessGame implements ApplicationListener {
 	
@@ -53,6 +55,7 @@ public class ChessGame implements ApplicationListener {
     	float delta = Gdx.graphics.getDeltaTime();
     	
     	Screen.beginScreen();
+    	Shapes.rect(0, 0, Screen.WIDTH, Screen.HEIGHT, Theme.BACKGROUND);
     	layerManager.render((int) mouse.x, (int) mouse.y, delta);
     	Screen.endScreen();
 	}

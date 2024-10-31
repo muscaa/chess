@@ -14,19 +14,23 @@ public class Screen {
 	public static final SpriteBatch SPRITES = new SpriteBatch();
 	public static final ShapeRenderer SHAPES = new ShapeRenderer();
 	
+	public static int WIDTH = 0;
+	public static int HEIGHT = 0;
+	
 	public static void init(int width, int height) {
 		VIEWPORT.update(width, height, true);
+		
+		WIDTH = (int) VIEWPORT.getWorldWidth();
+		HEIGHT = (int) VIEWPORT.getWorldHeight();
 	}
 	
 	public static void beginScreen() {
 		VIEWPORT.apply(true);
-		SPRITES.setProjectionMatrix(VIEWPORT.getCamera().combined);
-		SHAPES.setProjectionMatrix(VIEWPORT.getCamera().combined);
+		SPRITES.setProjectionMatrix(CAMERA.combined);
+		SHAPES.setProjectionMatrix(CAMERA.combined);
 	}
 	
-	public static void endScreen() {
-		// nothing for now
-	}
+	public static void endScreen() {}
 	
 	public static void beginSprites() {
 		SPRITES.enableBlending();

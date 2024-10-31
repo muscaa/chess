@@ -1,38 +1,41 @@
 package muscaa.chess.gui;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 
 public class Widgets {
 	
-	public static void button(Function<Actor, Cell<? extends Actor>> addFunc, String text, Consumer<VisTextButton> action) {
-		VisTextButton button = new VisTextButton(text);
-        button.addListener(new ChangeListener() {
-            @Override
-            public void changed(final ChangeEvent event, final Actor actor) {
-            	action.accept(button);
-            }
-        });
-        addFunc.apply(button)
-        		.size(button.getWidth() * 1.5F, button.getHeight() * 1.5F)
-        		.row()
-        		;
+	public static VisTable table(boolean fillParent) {
+		VisTable table = new VisTable();
+		table.defaults()
+				.pad(4.0F)
+				;
+		table.setFillParent(fillParent);
+		return table;
 	}
 	
-	public static VisTextButton button(String text, Consumer<VisTextButton> action) {
+	public static Cell<?> empty(Table table) {
+		return table.add()
+				.size(20.0F, 20.0F)
+				;
+	}
+	
+	public static Cell<VisTextButton> button(Table table, String text, Consumer<VisTextButton> action) {
 		VisTextButton button = new VisTextButton(text);
         button.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-            	action.accept(button);
+            	if (action != null) action.accept(button);
             }
         });
-        button.setSize(button.getWidth() * 1.5F, button.getHeight() * 1.5F);
-        return button;
+        return table.add(button)
+        		.size(500.0F, 50.0F)
+        		;
 	}
 }

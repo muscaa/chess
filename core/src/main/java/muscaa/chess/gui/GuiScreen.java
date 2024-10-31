@@ -1,10 +1,10 @@
 package muscaa.chess.gui;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import muscaa.chess.ChessGame;
+import muscaa.chess.config.Theme;
 import muscaa.chess.layer.ILayer;
 import muscaa.chess.layer.ILayerWrapper;
 import muscaa.chess.layer.LayerUtils;
@@ -35,7 +35,7 @@ public abstract class GuiScreen implements ILayerWrapper {
 	}
 	
 	protected void renderBackground(int mouseX, int mouseY, float delta) {
-		Shapes.rect(0, 0, viewport.getWorldWidth(), viewport.getWorldHeight(), new Color(0.0F, 0.0F, 0.5F, 0.5F));
+		Shapes.rect(0, 0, viewport.getWorldWidth(), viewport.getWorldHeight(), Theme.GUISCREEN_BACKGROUND);
 	}
 	
 	protected boolean forceRenderBackground() {
