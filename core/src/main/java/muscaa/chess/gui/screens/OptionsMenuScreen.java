@@ -20,6 +20,10 @@ public class OptionsMenuScreen extends GuiScreen {
 		
 		Widgets.button(main, "Sound", null)
 				.row();
+		Widgets.slider(main, 0, 10, 1, 5, null)
+				.row();
+		Widgets.checkbox(main, "Checkbox Text", true, null)
+				.row();
 		Widgets.empty(main)
 				.row();
 		Widgets.button(main, "Back", (button) -> ChessGame.INSTANCE.getGuiLayer().setScreen(back))
