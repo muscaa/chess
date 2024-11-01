@@ -12,11 +12,13 @@ public class PauseMenuScreen extends GuiScreen {
 	protected void init() {
 		VisTable main = Widgets.table(true);
 		
-		Widgets.button(main, "Options", null)
+		Widgets.button(main, "Resume", (button) -> ChessGame.INSTANCE.getGuiLayer().setScreen(null))
 				.row();
-		Widgets.empty(main)
+		Widgets.button(main, "Options", (button) -> ChessGame.INSTANCE.getGuiLayer().setScreen(new OptionsMenuScreen(this)))
 				.row();
 		Widgets.button(main, "Surrender", null)
+				.row();
+		Widgets.empty(main)
 				.row();
 		Widgets.button(main, "Return to Main Menu", (button) -> {
 			ChessGame.INSTANCE.getBoardLayer().setBoard(null);

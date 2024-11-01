@@ -15,18 +15,18 @@ public class Fonts {
 	
 	private static final List<BitmapFont> REG = new LinkedList<>();
 	
-	//public static final BitmapFont SONO_24;
-	
 	public static final BitmapFont VARELA_24;
 	public static final BitmapFont VARELA_18;
 	
+	public static final BitmapFont MONTEZ_128;
+	
 	static {
-		//BitmapFont[] sono = generate("fonts/Sono-Regular.ttf", 24);
-		//SONO_24 = sono[0];
-		
 		BitmapFont[] varela = generate("fonts/VarelaRound-Regular.ttf", 24, 18);
 		VARELA_24 = varela[0];
 		VARELA_18 = varela[1];
+		
+		BitmapFont[] montez = generate("fonts/Montez-Regular.ttf", 128);
+		MONTEZ_128 = montez[0];
 	}
 	
 	private static BitmapFont[] generate(String path, int... sizes) {
