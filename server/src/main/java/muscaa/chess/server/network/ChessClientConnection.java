@@ -1,4 +1,4 @@
-package muscaa.chess.server;
+package muscaa.chess.server.network;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -13,17 +13,21 @@ import fluff.network.server.AbstractServer;
 
 public class ChessClientConnection extends AbstractClientConnection {
 	
-	private final UUID uuid;
+	private UUID uuid;
 	
-	public ChessClientConnection(AbstractServer server, UUID uuid, Socket socket, PacketContext<?> context,
+	public ChessClientConnection(AbstractServer server, Socket socket, PacketContext<?> context,
 			INetHandler handler, IPacketChannel channel) throws IOException, NetworkException {
 		super(server);
 		
-        this.uuid = uuid;
-        
-        setContextUnsafe(context, handler);
+		setContextUnsafe(context, handler);
         setChannel(channel);
         openConnection(socket);
+	}
+	
+	public void login(String name) {
+		if (uuid != null) return;
+		
+		uuid = UUID.nameUUIDFromBytes(name.getBytes());
 	}
 	
 	@Override

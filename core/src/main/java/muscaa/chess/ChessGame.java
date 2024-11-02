@@ -13,6 +13,7 @@ import muscaa.chess.config.Theme;
 import muscaa.chess.gui.GuiLayer;
 import muscaa.chess.gui.screens.MainMenuScreen;
 import muscaa.chess.layer.LayerManager;
+import muscaa.chess.network.ChessClient;
 import muscaa.chess.render.Screen;
 import muscaa.chess.render.Shapes;
 
@@ -24,6 +25,8 @@ public class ChessGame implements ApplicationListener {
 	
 	private BoardLayer boardLayer;
 	private GuiLayer guiLayer;
+	
+	private ChessClient networkClient;
 	
 	@Override
 	public void create() {
@@ -45,6 +48,8 @@ public class ChessGame implements ApplicationListener {
     	guiLayer = new GuiLayer();
     	layerManager.register(guiLayer);
     	guiLayer.setScreen(new MainMenuScreen());
+    	
+    	networkClient = new ChessClient();
 	}
 	
 	@Override
@@ -94,5 +99,9 @@ public class ChessGame implements ApplicationListener {
 	
 	public GuiLayer getGuiLayer() {
 		return guiLayer;
+	}
+	
+	public ChessClient getNetworkClient() {
+		return networkClient;
 	}
 }
