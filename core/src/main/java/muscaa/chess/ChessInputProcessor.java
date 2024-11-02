@@ -3,7 +3,7 @@ package muscaa.chess;
 import com.badlogic.gdx.Input.Keys;
 
 import muscaa.chess.gui.GuiScreen;
-import muscaa.chess.gui.screens.PauseMenuScreen;
+import muscaa.chess.gui.screens.PauseScreen;
 import muscaa.chess.layer.ILayer;
 import muscaa.chess.layer.LayerInputProcessor;
 import muscaa.chess.render.WindowUtils;
@@ -27,7 +27,7 @@ public class ChessInputProcessor extends LayerInputProcessor {
 				
 				GuiScreen screen = ChessGame.INSTANCE.getGuiLayer().getScreen();
 				if (screen == null) {
-					screen = new PauseMenuScreen();
+					screen = new PauseScreen();
 				} else {
 					screen = null;
 				}

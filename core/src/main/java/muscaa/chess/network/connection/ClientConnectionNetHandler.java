@@ -8,8 +8,10 @@ import javax.crypto.SecretKey;
 import fluff.network.AbstractClientNetHandler;
 import fluff.network.NetworkException;
 import fluff.network.packet.channels.EncryptedPacketChannel;
+import muscaa.chess.ChessGame;
 import muscaa.chess.network.ChessClient;
-import muscaa.chess.network.NetworkClient;
+import muscaa.chess.network.ClientContexts;
+import muscaa.chess.network.NetworkStatus;
 import muscaa.chess.network.connection.packets.PacketEncrypt;
 import muscaa.chess.network.connection.packets.PacketHandshake;
 import muscaa.chess.network.login.ClientLoginNetHandler;
@@ -20,14 +22,18 @@ public class ClientConnectionNetHandler extends AbstractClientNetHandler<ChessCl
 	@Override
 	public void onConnect() throws NetworkException {
 		client.send(new PacketEncrypt(generate()));
+		
+		ChessGame.INSTANCE.getNetwork().update(NetworkStatus.ENCRYPT);
 	}
 	
 	@Override
 	public void onPacketHandshake(PacketHandshake packet) {
 		client.setChannel(new EncryptedPacketChannel(packet.getKey()));
-		client.setContext(NetworkClient.LOGIN_CONTEXT, new ClientLoginNetHandler());
+		client.setContext(ClientContexts.LOGIN_CONTEXT, new ClientLoginNetHandler());
 		
-		client.send(new PacketLogin("muscaa"));
+		client.send(new PacketLogin(ChessGame.INSTANCE.getNetwork().getName()));
+		
+		ChessGame.INSTANCE.getNetwork().update(NetworkStatus.LOGIN);
 	}
 	
 	private static SecretKey generate() {

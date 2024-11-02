@@ -3,8 +3,9 @@ package muscaa.chess.board;
 import com.badlogic.gdx.graphics.Texture;
 
 import muscaa.chess.assets.Textures;
+import muscaa.chess.shared.board.IChessPiece;
 
-public enum ChessPieceType {
+public enum ClientChessPiece implements IChessPiece {
 	WHITE_KING(Textures.WHITE_KING),
 	WHITE_QUEEN(Textures.WHITE_QUEEN),
 	WHITE_BISHOP(Textures.WHITE_BISHOP),
@@ -22,7 +23,7 @@ public enum ChessPieceType {
 	
 	private final Texture texture;
 	
-	private ChessPieceType(Texture texture) {
+	private ClientChessPiece(Texture texture) {
 		this.texture = texture;
 	}
 	

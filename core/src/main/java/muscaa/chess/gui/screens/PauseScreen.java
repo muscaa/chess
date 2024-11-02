@@ -6,15 +6,15 @@ import muscaa.chess.ChessGame;
 import muscaa.chess.gui.GuiScreen;
 import muscaa.chess.gui.Widgets;
 
-public class PauseMenuScreen extends GuiScreen {
+public class PauseScreen extends GuiScreen {
 	
 	@Override
 	protected void init() {
 		VisTable main = Widgets.table(true);
 		
-		Widgets.button(main, "Resume", (button) -> ChessGame.INSTANCE.getGuiLayer().setScreen(null))
+		Widgets.button(main, "Resume", (button) -> setScreen(null))
 				.row();
-		Widgets.button(main, "Options", (button) -> ChessGame.INSTANCE.getGuiLayer().setScreen(new OptionsMenuScreen(this)))
+		Widgets.button(main, "Options", (button) -> setScreen(new OptionsScreen(this)))
 				.row();
 		Widgets.button(main, "Surrender", null)
 				.row();
@@ -22,7 +22,7 @@ public class PauseMenuScreen extends GuiScreen {
 				.row();
 		Widgets.button(main, "Return to Main Menu", (button) -> {
 			ChessGame.INSTANCE.getBoardLayer().setBoard(null);
-			ChessGame.INSTANCE.getGuiLayer().setScreen(new MainMenuScreen());
+			setScreen(new MainScreen());
 		})
 				.row();
 		

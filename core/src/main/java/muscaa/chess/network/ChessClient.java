@@ -15,11 +15,11 @@ public class ChessClient extends AbstractClient {
     	if (isConnected()) return false;
     	
         try {
-        	setContext(NetworkClient.CONNECTION_CONTEXT, new ClientConnectionNetHandler());
+        	setContext(ClientContexts.CONNECTION_CONTEXT, new ClientConnectionNetHandler());
     		setChannel(new DefaultPacketChannel());
 			openConnection(new Socket(host, port));
 			
-			return true;
+			return isConnected();
 		} catch (IOException | NetworkException e) {
 			e.printStackTrace();
 		}

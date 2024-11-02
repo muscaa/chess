@@ -4,56 +4,66 @@ import java.util.Objects;
 
 import com.badlogic.gdx.graphics.Color;
 
+import fluff.vecmath.gen._int.vector.Vec2i;
 import muscaa.chess.assets.Fonts;
 import muscaa.chess.assets.Textures;
 import muscaa.chess.config.Theme;
 import muscaa.chess.layer.ILayer;
 import muscaa.chess.render.Screen;
 import muscaa.chess.render.Shapes;
+import muscaa.chess.shared.board.ChessColor;
+import muscaa.chess.shared.board.IBoard;
 
 public class BoardLayer implements ILayer {
 	
     private float tileSize;
     private float boardX, boardY;
     
-    private Board board;
-    private int x1 = -1;
-    private int y1 = -1;
+    private IClientBoard board;
 	
 	public BoardLayer() {
-        tileSize = Math.min(Screen.WIDTH, Screen.HEIGHT) / Board.SIZE;
+        tileSize = Math.min(Screen.WIDTH, Screen.HEIGHT) / IBoard.SIZE;
         
-        boardX = (Screen.WIDTH - (tileSize * Board.SIZE)) / 2;
-        boardY = (Screen.HEIGHT - (tileSize * Board.SIZE)) / 2;
+        boardX = (Screen.WIDTH - (tileSize * IBoard.SIZE)) / 2;
+        boardY = (Screen.HEIGHT - (tileSize * IBoard.SIZE)) / 2;
 	}
 	
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
 		if (board == null) return;
 		
-		ChessPieceType hoveredPiece = null;
+		ClientChessPiece hoveredPiece = null;
 		int hoveredRow = -1;
 		int hoveredCol = -1;
 		
-        for (int row = 0; row < Board.SIZE; row++) {
-            for (int col = 0; col < Board.SIZE; col++) {
+        for (int row = 0; row < IBoard.SIZE; row++) {
+            for (int col = 0; col < IBoard.SIZE; col++) {
             	Color color = (row + col) % 2 == 0 ? Theme.BOARD_CELL_LIGHT : Theme.BOARD_CELL_DARK;
-            	ChessPieceType pieceType = board.getPiece(col, row);
+            	
+            	Vec2i cell = new Vec2i(col, row);
                 float x = boardX + col * tileSize;
-                float y = boardY + (Board.SIZE - row - 1) * tileSize;
+                float y = boardY + (IBoard.SIZE - row - 1) * tileSize;
                 float off = tileSize / 32;
-                
+            	
+        		if (board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK) {
+        			cell = new Vec2i(IBoard.SIZE - col - 1, IBoard.SIZE - row - 1);
+        			x = boardX + (IBoard.SIZE - col - 1) * tileSize;
+                    y = boardY + row * tileSize;
+        		}
+        		
+        		ClientChessPiece piece = board.getPiece(cell);
+            	
                 if (mouseX >= x && mouseY >= y && mouseX < x + tileSize && mouseY < y + tileSize) {
                 	color = Color.RED;
-                	hoveredPiece = pieceType;
+                	hoveredPiece = piece;
                 	hoveredRow = row;
                 	hoveredCol = col;
                 }
                 
                 Shapes.rect(x, y, tileSize, tileSize, color);
                 
-                if (pieceType != null) {
-                	Textures.draw(pieceType.getTexture(), x + off, y + off, tileSize - off * 2, tileSize - off * 2);
+                if (piece != null) {
+                	Textures.draw(piece.getTexture(), x + off, y + off, tileSize - off * 2, tileSize - off * 2);
                 }
             }
         }
@@ -73,10 +83,10 @@ public class BoardLayer implements ILayer {
 	
 	@Override
 	public void resize(int width, int height) {
-		tileSize = Math.min(Screen.WIDTH, Screen.HEIGHT) / Board.SIZE;
+		tileSize = Math.min(Screen.WIDTH, Screen.HEIGHT) / IBoard.SIZE;
         
-        boardX = (Screen.WIDTH - (tileSize * Board.SIZE)) / 2;
-        boardY = (Screen.HEIGHT - (tileSize * Board.SIZE)) / 2;
+        boardX = (Screen.WIDTH - (tileSize * IBoard.SIZE)) / 2;
+        boardY = (Screen.HEIGHT - (tileSize * IBoard.SIZE)) / 2;
 	}
 	
 	@Override
@@ -88,20 +98,18 @@ public class BoardLayer implements ILayer {
 	public boolean mouseDown(int mouseX, int mouseY, int pointer, int button) {
 		if (board == null) return false;
 		
-        for (int row = 0; row < Board.SIZE; row++) {
-            for (int col = 0; col < Board.SIZE; col++) {
+        for (int row = 0; row < IBoard.SIZE; row++) {
+            for (int col = 0; col < IBoard.SIZE; col++) {
                 float x = boardX + col * tileSize;
-                float y = boardY + (Board.SIZE - row - 1) * tileSize;
+                float y = boardY + (IBoard.SIZE - row - 1) * tileSize;
+            	
+        		if (board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK) {
+        			x = boardX + (IBoard.SIZE - col - 1) * tileSize;
+                    y = boardY + row * tileSize;
+        		}
                 
                 if (mouseX >= x && mouseY >= y && mouseX < x + tileSize && mouseY < y + tileSize) {
-                	if (x1 != -1 && y1 != -1) {
-                		board.move(x1, y1, col, row);
-                		x1 = -1;
-                		y1 = -1;
-                	} else {
-                		x1 = col;
-                		y1 = row;
-                	}
+                	board.click(new Vec2i(col, row));
                 	return true;
                 }
             }
@@ -110,11 +118,11 @@ public class BoardLayer implements ILayer {
 		return false;
 	}
 	
-	public Board getBoard() {
+	public IClientBoard getBoard() {
 		return board;
 	}
 	
-	public void setBoard(Board board) {
+	public void setBoard(IClientBoard board) {
 		this.board = board;
 	}
 }

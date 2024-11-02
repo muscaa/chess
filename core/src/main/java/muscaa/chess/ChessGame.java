@@ -11,11 +11,12 @@ import muscaa.chess.assets.Textures;
 import muscaa.chess.board.BoardLayer;
 import muscaa.chess.config.Theme;
 import muscaa.chess.gui.GuiLayer;
-import muscaa.chess.gui.screens.MainMenuScreen;
+import muscaa.chess.gui.screens.MainScreen;
 import muscaa.chess.layer.LayerManager;
-import muscaa.chess.network.ChessClient;
+import muscaa.chess.network.ClientNetwork;
 import muscaa.chess.render.Screen;
 import muscaa.chess.render.Shapes;
+import muscaa.chess.task.TaskManager;
 
 public class ChessGame implements ApplicationListener {
 	
@@ -26,7 +27,7 @@ public class ChessGame implements ApplicationListener {
 	private BoardLayer boardLayer;
 	private GuiLayer guiLayer;
 	
-	private ChessClient networkClient;
+	private ClientNetwork network;
 	
 	@Override
 	public void create() {
@@ -47,9 +48,9 @@ public class ChessGame implements ApplicationListener {
     	
     	guiLayer = new GuiLayer();
     	layerManager.register(guiLayer);
-    	guiLayer.setScreen(new MainMenuScreen());
+    	guiLayer.setScreen(new MainScreen());
     	
-    	networkClient = new ChessClient();
+    	network = new ClientNetwork();
 	}
 	
 	@Override
@@ -63,6 +64,8 @@ public class ChessGame implements ApplicationListener {
     	Shapes.rect(0, 0, Screen.WIDTH, Screen.HEIGHT, Theme.BACKGROUND);
     	layerManager.render((int) mouse.x, (int) mouse.y, delta);
     	Screen.endScreen();
+    	
+    	TaskManager.executeRender();
 	}
 	
 	@Override
@@ -101,7 +104,7 @@ public class ChessGame implements ApplicationListener {
 		return guiLayer;
 	}
 	
-	public ChessClient getNetworkClient() {
-		return networkClient;
+	public ClientNetwork getNetwork() {
+		return network;
 	}
 }

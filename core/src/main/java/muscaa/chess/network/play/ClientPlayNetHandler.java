@@ -8,5 +8,6 @@ public class ClientPlayNetHandler extends AbstractClientNetHandler<ChessClient> 
 	
 	@Override
 	public void onPacketBoard(PacketBoard packet) {
+		// TODO update board
 	}
 }

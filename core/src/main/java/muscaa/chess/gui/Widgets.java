@@ -12,6 +12,8 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisSlider;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
+import com.kotcrab.vis.ui.widget.VisTextField;
+import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
 
 public class Widgets {
 	
@@ -103,5 +105,33 @@ public class Widgets {
 	
 	public static Cell<VisCheckBox> checkbox(Table table, String text, boolean value, Consumer<VisCheckBox> action) {
 		return checkbox(table, text, value, action, WIDTH, HEIGHT);
+	}
+	
+	public static Cell<VisTextField> textfield(Table table, String placeholder, String text, boolean digitsOnly, Consumer<VisTextField> action, int width, int height) {
+		VisTextField textfield = new VisTextField();
+		textfield.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				if (action != null) action.accept(textfield);
+			}
+		});
+		textfield.setText(text);
+		textfield.setMessageText(placeholder);
+		if (digitsOnly) textfield.setTextFieldFilter(new DigitsOnlyFilter());
+		return table.add(textfield)
+				.size(width, height)
+				;
+	}
+	
+	public static Cell<VisTextField> textfield(Table table, String placeholder, String text, boolean digitsOnly, Consumer<VisTextField> action) {
+		return textfield(table, placeholder, text, digitsOnly, action, WIDTH, HEIGHT);
+	}
+	
+	public static Cell<VisTextField> textfield(Table table, String placeholder, boolean digitsOnly, Consumer<VisTextField> action) {
+		return textfield(table, placeholder, null, digitsOnly, action);
+	}
+	
+	public static Cell<VisTextField> textfield(Table table, String placeholder, Consumer<VisTextField> action) {
+		return textfield(table, placeholder, false, action);
 	}
 }

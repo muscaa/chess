@@ -55,4 +55,8 @@ public abstract class GuiScreen implements ILayerWrapper {
 	public void dispose() {
 		stage.dispose();
 	}
+	
+	public static void setScreen(GuiScreen screen) {
+		ChessGame.INSTANCE.getGuiLayer().setScreen(screen);
+	}
 }
