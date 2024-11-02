@@ -30,4 +30,8 @@ public class ServerBoard implements IBoard<ServerChessPiece> {
 	public ServerChessPiece getPiece(Vec2i cell) {
 		return pieces[cell.y][cell.x];
 	}
+	
+	public ServerChessPiece[][] getPieces() {
+		return pieces;
+	}
 }

@@ -46,7 +46,7 @@ public class BoardLayer implements ILayer {
                 float off = tileSize / 32;
             	
         		if (board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK) {
-        			cell = new Vec2i(IBoard.SIZE - col - 1, IBoard.SIZE - row - 1);
+        			//cell = new Vec2i(IBoard.SIZE - col - 1, IBoard.SIZE - row - 1);
         			x = boardX + (IBoard.SIZE - col - 1) * tileSize;
                     y = boardY + row * tileSize;
         		}
@@ -68,14 +68,15 @@ public class BoardLayer implements ILayer {
             }
         }
         
-        String[] debug = new String[] {
-        		Objects.toString(hoveredPiece),
+        Object[] debug = new Object[] {
+        		hoveredPiece,
         		hoveredRow + " : " + hoveredCol,
+        		board.getColor()
 		};
         
         float y = Screen.HEIGHT - 10;
-        for (String info : debug) {
-        	Fonts.draw(Fonts.VARELA_18, info, 10, y, Color.WHITE);
+        for (Object info : debug) {
+        	Fonts.draw(Fonts.VARELA_18, Objects.toString(info), 10, y, Color.WHITE);
         	
         	y -= Fonts.VARELA_18.getLineHeight();
         }

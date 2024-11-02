@@ -9,6 +9,7 @@ import muscaa.chess.server.network.ServerContexts;
 import muscaa.chess.server.network.login.packets.PacketLogin;
 import muscaa.chess.server.network.login.packets.PacketLoginSuccess;
 import muscaa.chess.server.network.play.ServerPlayNetHandler;
+import muscaa.chess.server.network.play.packet.PacketBoard;
 import muscaa.chess.shared.board.ChessColor;
 
 public class ServerLoginNetHandler extends AbstractServerNetHandler<ChessServer, ChessClientConnection> implements IServerLoginNetHandler {
@@ -25,6 +26,8 @@ public class ServerLoginNetHandler extends AbstractServerNetHandler<ChessServer,
 		
 		connection.send(new PacketLoginSuccess(color));
 		connection.setContext(ServerContexts.PLAY_CONTEXT, new ServerPlayNetHandler());
+		
+		connection.send(new PacketBoard(GameServer.INSTANCE.getBoard().getPieces()));
 	}
 	
 	@Override

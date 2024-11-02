@@ -11,7 +11,8 @@ import muscaa.chess.shared.board.IBoard;
 public class OnlineBoard implements IClientBoard {
 	
 	private final ChessColor color;
-	private final ClientChessPiece[][] pieces;
+	
+	private ClientChessPiece[][] pieces;
 	
 	public OnlineBoard(ChessColor color) {
 		this.color = color;
@@ -26,6 +27,11 @@ public class OnlineBoard implements IClientBoard {
 	@Override
 	public ClientChessPiece getPiece(Vec2i cell) {
 		return pieces[cell.y][cell.x];
+	}
+	
+	@Override
+	public void setPieces(ClientChessPiece[][] pieces) {
+		this.pieces = pieces;
 	}
 	
 	@Override

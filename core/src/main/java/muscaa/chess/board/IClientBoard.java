@@ -5,5 +5,7 @@ import muscaa.chess.shared.board.IBoard;
 
 public interface IClientBoard extends IBoard<ClientChessPiece> {
 	
+	void setPieces(ClientChessPiece[][] pieces);
+	
 	ChessColor getColor();
 }
