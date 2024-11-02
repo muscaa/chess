@@ -3,6 +3,7 @@ package muscaa.chess.server.network.login;
 import fluff.network.AbstractServerNetHandler;
 import fluff.network.NetworkException;
 import muscaa.chess.server.GameServer;
+import muscaa.chess.server.board.ServerBoard;
 import muscaa.chess.server.network.ChessClientConnection;
 import muscaa.chess.server.network.ChessServer;
 import muscaa.chess.server.network.ServerContexts;
@@ -18,11 +19,13 @@ public class ServerLoginNetHandler extends AbstractServerNetHandler<ChessServer,
 	public void onConnect() throws NetworkException {
 		System.out.println("Logged in");
 		
-		int size = GameServer.INSTANCE.players.size();
-		ChessColor color = size == 0 ? GameServer.INSTANCE.turn : GameServer.INSTANCE.turn.invert();
+		ServerBoard board = GameServer.INSTANCE.getBoard();
 		
-		GameServer.INSTANCE.players.put(color, connection);
-		GameServer.INSTANCE.colors.put(connection, color);
+		int size = board.players.size();
+		ChessColor color = size == 0 ? board.turn : board.turn.invert();
+		
+		board.players.put(color, connection);
+		board.colors.put(connection, color);
 		
 		connection.send(new PacketLoginSuccess(color));
 		connection.setContext(ServerContexts.PLAY_CONTEXT, new ServerPlayNetHandler());

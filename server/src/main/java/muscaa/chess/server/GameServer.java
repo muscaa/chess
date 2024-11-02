@@ -1,25 +1,17 @@
 package muscaa.chess.server;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 import fluff.network.NetworkException;
 import muscaa.chess.server.board.ServerBoard;
-import muscaa.chess.server.network.ChessClientConnection;
 import muscaa.chess.server.network.ServerNetwork;
-import muscaa.chess.shared.board.ChessColor;
 
 public class GameServer {
 	
 	public static final GameServer INSTANCE = new GameServer();
 	
-	private ServerBoard board;
+	private ServerBoard board; // TODO boards and lobbies
 	private ServerNetwork network;
-	
-	public ChessColor turn = ChessColor.WHITE;
-	public Map<ChessColor, ChessClientConnection> players = new HashMap<>();
-	public Map<ChessClientConnection, ChessColor> colors = new HashMap<>();
 	
 	public void start() throws NetworkException {
 		board = new ServerBoard();

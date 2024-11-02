@@ -16,7 +16,7 @@ public class ServerConnectionNetHandler extends AbstractServerNetHandler<ChessSe
 	public void onPacketEncrypt(PacketEncrypt packet) {
 		System.out.println("Received encrypt");
 		
-		if (GameServer.INSTANCE.players.size() == 2) {
+		if (GameServer.INSTANCE.getBoard().players.size() == 2) {
 			connection.disconnect();
 			return;
 		}

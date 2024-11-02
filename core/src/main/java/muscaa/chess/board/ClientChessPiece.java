@@ -3,6 +3,7 @@ package muscaa.chess.board;
 import com.badlogic.gdx.graphics.Texture;
 
 import muscaa.chess.assets.Textures;
+import muscaa.chess.shared.board.ChessColor;
 import muscaa.chess.shared.board.IChessPiece;
 
 public enum ClientChessPiece implements IChessPiece {
@@ -22,16 +23,23 @@ public enum ClientChessPiece implements IChessPiece {
 	;
 	
 	private final String id;
+	private final ChessColor color;
 	private final Texture texture;
 	
 	private ClientChessPiece(String id, Texture texture) {
 		this.id = id;
+		this.color = id.startsWith("w") ? ChessColor.WHITE : ChessColor.BLACK;
 		this.texture = texture;
 	}
 	
 	@Override
 	public String getID() {
 		return id;
+	}
+	
+	@Override
+	public ChessColor getColor() {
+		return color;
 	}
 	
 	public Texture getTexture() {

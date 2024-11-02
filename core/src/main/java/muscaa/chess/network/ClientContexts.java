@@ -10,6 +10,7 @@ import muscaa.chess.network.login.packets.PacketLoginSuccess;
 import muscaa.chess.network.play.IClientPlayNetHandler;
 import muscaa.chess.network.play.packets.PacketBoard;
 import muscaa.chess.network.play.packets.PacketClickCell;
+import muscaa.chess.network.play.packets.PacketMove;
 import muscaa.chess.shared.network.CommonContexts;
 
 public class ClientContexts {
@@ -30,5 +31,6 @@ public class ClientContexts {
 			new PacketContext<IClientPlayNetHandler>(CommonContexts.PLAY_CONTEXT)
 			.registerOutbound(0, PacketClickCell.class)
 			.registerInbound(1, PacketBoard::new, IClientPlayNetHandler::onPacketBoard)
+			.registerInbound(2, PacketMove::new, IClientPlayNetHandler::onPacketMove)
 			;
 }

@@ -39,16 +39,13 @@ public class BoardLayer implements ILayer {
         for (int row = 0; row < IBoard.SIZE; row++) {
             for (int col = 0; col < IBoard.SIZE; col++) {
             	Color color = (row + col) % 2 == 0 ? Theme.BOARD_CELL_LIGHT : Theme.BOARD_CELL_DARK;
-            	
-            	Vec2i cell = new Vec2i(col, row);
                 float x = boardX + col * tileSize;
                 float y = boardY + (IBoard.SIZE - row - 1) * tileSize;
                 float off = tileSize / 32;
-            	
+                
+                Vec2i cell = new Vec2i(col, row);
         		if (board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK) {
-        			//cell = new Vec2i(IBoard.SIZE - col - 1, IBoard.SIZE - row - 1);
-        			x = boardX + (IBoard.SIZE - col - 1) * tileSize;
-                    y = boardY + row * tileSize;
+        			cell = new Vec2i(IBoard.SIZE - col - 1, IBoard.SIZE - row - 1);
         		}
         		
         		ClientChessPiece piece = board.getPiece(cell);
@@ -56,8 +53,8 @@ public class BoardLayer implements ILayer {
                 if (mouseX >= x && mouseY >= y && mouseX < x + tileSize && mouseY < y + tileSize) {
                 	color = Color.RED;
                 	hoveredPiece = piece;
-                	hoveredRow = row;
-                	hoveredCol = col;
+                	hoveredRow = cell.y;
+                	hoveredCol = cell.x;
                 }
                 
                 Shapes.rect(x, y, tileSize, tileSize, color);
@@ -69,9 +66,9 @@ public class BoardLayer implements ILayer {
         }
         
         Object[] debug = new Object[] {
+        		board.getColor(),
         		hoveredPiece,
         		hoveredRow + " : " + hoveredCol,
-        		board.getColor()
 		};
         
         float y = Screen.HEIGHT - 10;
@@ -103,14 +100,14 @@ public class BoardLayer implements ILayer {
             for (int col = 0; col < IBoard.SIZE; col++) {
                 float x = boardX + col * tileSize;
                 float y = boardY + (IBoard.SIZE - row - 1) * tileSize;
-            	
+                
+                Vec2i cell = new Vec2i(col, row);
         		if (board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK) {
-        			x = boardX + (IBoard.SIZE - col - 1) * tileSize;
-                    y = boardY + row * tileSize;
+        			cell = new Vec2i(IBoard.SIZE - col - 1, IBoard.SIZE - row - 1);
         		}
                 
                 if (mouseX >= x && mouseY >= y && mouseX < x + tileSize && mouseY < y + tileSize) {
-                	board.click(new Vec2i(col, row));
+                	board.click(cell);
                 	return true;
                 }
             }

@@ -1,5 +1,6 @@
 package muscaa.chess.server.board;
 
+import muscaa.chess.shared.board.ChessColor;
 import muscaa.chess.shared.board.IChessPiece;
 
 public enum ServerChessPiece implements IChessPiece {
@@ -19,13 +20,20 @@ public enum ServerChessPiece implements IChessPiece {
 	;
 	
 	private final String id;
+	private final ChessColor color;
 	
 	private ServerChessPiece(String id) {
 		this.id = id;
+		this.color = id.startsWith("w") ? ChessColor.WHITE : ChessColor.BLACK;
 	}
 	
 	@Override
 	public String getID() {
 		return id;
+	}
+	
+	 @Override
+	public ChessColor getColor() {
+		return color;
 	}
 }

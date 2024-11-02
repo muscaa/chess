@@ -20,18 +20,23 @@ public class OnlineBoard implements IClientBoard {
 	}
 	
 	@Override
-	public void click(Vec2i cell) {
-		ChessGame.INSTANCE.getNetwork().getClient().send(new PacketClickCell(cell));
-	}
-	
-	@Override
 	public ClientChessPiece getPiece(Vec2i cell) {
 		return pieces[cell.y][cell.x];
 	}
 	
 	@Override
+	public void click(Vec2i cell) {
+		ChessGame.INSTANCE.getNetwork().getClient().send(new PacketClickCell(cell));
+	}
+	
+	@Override
 	public void setPieces(ClientChessPiece[][] pieces) {
 		this.pieces = pieces;
+	}
+	
+	@Override
+	public void setPiece(Vec2i cell, ClientChessPiece piece) {
+		pieces[cell.y][cell.x] = piece;
 	}
 	
 	@Override
