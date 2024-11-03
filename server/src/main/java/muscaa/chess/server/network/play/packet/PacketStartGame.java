@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import fluff.bin.IBinaryOutput;
 import fluff.network.packet.IPacketOutbound;
-import fluff.vecmath.gen._int.vector.Vec2i;
 import muscaa.chess.server.board.AbstractServerChessPiece;
+import muscaa.chess.shared.board.ChessCell;
 import muscaa.chess.shared.board.ChessColor;
 import muscaa.chess.shared.board.ChessPieceMatrix;
 
@@ -23,7 +23,7 @@ public class PacketStartGame implements IPacketOutbound {
 	public void writeData(IBinaryOutput out) throws IOException {
 		out.Int(color.getID());
 		
-		for (Vec2i cell : matrix) {
+		for (ChessCell cell : matrix) {
 			AbstractServerChessPiece piece = matrix.get(cell);
 			
 			out.Int(piece.getID());

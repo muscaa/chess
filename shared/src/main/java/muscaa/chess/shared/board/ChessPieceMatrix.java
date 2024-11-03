@@ -2,9 +2,7 @@ package muscaa.chess.shared.board;
 
 import java.util.Iterator;
 
-import fluff.vecmath.gen._int.vector.Vec2i;
-
-public class ChessPieceMatrix<P extends IChessPiece> implements Iterable<Vec2i> {
+public class ChessPieceMatrix<P extends IChessPiece> implements Iterable<ChessCell> {
 	
 	public static final int SIZE = 8;
 	
@@ -19,16 +17,16 @@ public class ChessPieceMatrix<P extends IChessPiece> implements Iterable<Vec2i> 
 		this.pieces = new IChessPiece[SIZE][SIZE];
 	}
 	
-	public P get(Vec2i cell) {
+	public P get(ChessCell cell) {
 		return (P) pieces[cell.y][cell.x];
 	}
 	
-	public void set(Vec2i cell, P piece) {
+	public void set(ChessCell cell, P piece) {
 		pieces[cell.y][cell.x] = piece;
 	}
 	
 	@Override
-	public Iterator<Vec2i> iterator() {
+	public Iterator<ChessCell> iterator() {
 		return new CellIterator();
 	}
 	
@@ -36,15 +34,15 @@ public class ChessPieceMatrix<P extends IChessPiece> implements Iterable<Vec2i> 
 	
 	public ChessPieceMatrix<P> copy() {
 		ChessPieceMatrix<P> copy = new ChessPieceMatrix<>();
-		for (Vec2i cell : this) {
+		for (ChessCell cell : this) {
 			copy.set(cell, (P) get(cell).copy());
 		}
 		return copy;
 	}
 	
-	private class CellIterator implements Iterator<Vec2i> {
+	private class CellIterator implements Iterator<ChessCell> {
 		
-		public Vec2i cell = new Vec2i(-1, 0);
+		public ChessCell cell = new ChessCell(-1, 0);
 		
 		@Override
 		public boolean hasNext() {
@@ -52,7 +50,7 @@ public class ChessPieceMatrix<P extends IChessPiece> implements Iterable<Vec2i> 
 		}
 		
 		@Override
-		public Vec2i next() {
+		public ChessCell next() {
 			if (cell.x + 1 >= SIZE) {
 				if (cell.y + 1 >= SIZE) {
 					return null;

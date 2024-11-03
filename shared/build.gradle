@@ -2,5 +2,5 @@ eclipse.project.name = appName + '-shared'
 
 dependencies {
 	api "com.github.muscaa:fluff-network:1.0.3"
-	api "com.github.muscaa:fluff-vecmath:1.0.8"
+	//api "com.github.muscaa:fluff-vecmath:1.0.8"
 }

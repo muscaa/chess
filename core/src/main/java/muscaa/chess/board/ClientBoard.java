@@ -2,7 +2,6 @@ package muscaa.chess.board;
 
 import java.util.List;
 
-import fluff.vecmath.gen._int.vector.Vec2i;
 import muscaa.chess.ChessGame;
 import muscaa.chess.assets.Sounds;
 import muscaa.chess.network.play.packets.PacketClickCell;
@@ -10,6 +9,7 @@ import muscaa.chess.network.play.packets.PacketEndGame;
 import muscaa.chess.network.play.packets.PacketMove;
 import muscaa.chess.network.play.packets.PacketStartGame;
 import muscaa.chess.shared.board.AbstractBoard;
+import muscaa.chess.shared.board.ChessCell;
 import muscaa.chess.shared.board.ChessColor;
 import muscaa.chess.task.TaskManager;
 
@@ -18,12 +18,12 @@ public class ClientBoard extends AbstractBoard<ClientChessPiece> {
 	private ChessColor color;
 	
 	@Override
-	public void click(Vec2i cell) {
+	public void click(ChessCell cell) {
 		ChessGame.INSTANCE.getNetwork().getClient().send(new PacketClickCell(cell));
 	}
 	
 	@Override
-	public List<Vec2i> getMoves(Vec2i cell) {
+	public List<ChessCell> getMoves(ChessCell cell) {
 		return null;
 	}
 	

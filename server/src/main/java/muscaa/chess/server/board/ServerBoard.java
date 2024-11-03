@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import fluff.network.packet.IPacketOutbound;
-import fluff.vecmath.gen._int.vector.Vec2i;
 import muscaa.chess.server.board.pieces.ServerBishopChessPiece;
 import muscaa.chess.server.board.pieces.ServerEmptyChessPiece;
 import muscaa.chess.server.board.pieces.ServerKingChessPiece;
@@ -18,6 +17,7 @@ import muscaa.chess.server.network.play.packet.PacketClickCell;
 import muscaa.chess.server.network.play.packet.PacketMove;
 import muscaa.chess.server.network.play.packet.PacketStartGame;
 import muscaa.chess.shared.board.AbstractBoard;
+import muscaa.chess.shared.board.ChessCell;
 import muscaa.chess.shared.board.ChessColor;
 import muscaa.chess.shared.board.ChessPieceMatrix;
 
@@ -27,14 +27,14 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 	private final Map<ChessClientConnection, ChessColor> colors = new HashMap<>();
 	
 	private ChessColor turn;
-	private Vec2i selectedCell;
+	private ChessCell selectedCell;
 	
 	public ServerBoard() {
 		reset();
 	}
 	
 	@Override
-	public void click(Vec2i cell) {
+	public void click(ChessCell cell) {
 		AbstractServerChessPiece p = matrix.get(cell);
 		
 		if (selectedCell == null) {
@@ -66,13 +66,13 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 	}
 	
 	@Override
-	public List<Vec2i> getMoves(Vec2i cell) {
+	public List<ChessCell> getMoves(ChessCell cell) {
 		return null;
 	}
 	
 	private void reset() {
 		matrix = new ChessPieceMatrix<>();
-		for (Vec2i cell : matrix) {
+		for (ChessCell cell : matrix) {
 			ChessColor color = cell.y >= ChessPieceMatrix.SIZE / 2 ? ChessColor.WHITE : ChessColor.BLACK;
 			
 			if (cell.y == 0 || cell.y == ChessPieceMatrix.SIZE - 1) {

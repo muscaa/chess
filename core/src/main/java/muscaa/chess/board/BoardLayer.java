@@ -4,7 +4,6 @@ import java.util.Objects;
 
 import com.badlogic.gdx.graphics.Color;
 
-import fluff.vecmath.gen._int.vector.Vec2i;
 import muscaa.chess.ChessGame;
 import muscaa.chess.assets.Fonts;
 import muscaa.chess.assets.Textures;
@@ -12,6 +11,7 @@ import muscaa.chess.config.Theme;
 import muscaa.chess.layer.ILayer;
 import muscaa.chess.render.Screen;
 import muscaa.chess.render.Shapes;
+import muscaa.chess.shared.board.ChessCell;
 import muscaa.chess.shared.board.ChessColor;
 import muscaa.chess.shared.board.ChessPieceMatrix;
 
@@ -36,15 +36,15 @@ public class BoardLayer implements ILayer {
 		int hoveredRow = -1;
 		int hoveredCol = -1;
 		
-		for (Vec2i cell : board.getMatrix()) {
+		for (ChessCell cell : board.getMatrix()) {
         	Color color = (cell.x + cell.y) % 2 == 0 ? Theme.BOARD_CELL_LIGHT : Theme.BOARD_CELL_DARK;
             float x = boardX + cell.x * tileSize;
             float y = boardY + (ChessPieceMatrix.SIZE - cell.y - 1) * tileSize;
             float off = tileSize / 32;
             
-            Vec2i niceCell = new Vec2i(cell);
+            ChessCell niceCell = cell.copy();
     		if (board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK) {
-    			niceCell = new Vec2i(ChessPieceMatrix.SIZE - cell.x - 1, ChessPieceMatrix.SIZE - cell.y - 1);
+    			niceCell = new ChessCell(ChessPieceMatrix.SIZE - cell.x - 1, ChessPieceMatrix.SIZE - cell.y - 1);
     		}
     		
     		ClientChessPiece piece = board.getMatrix().get(niceCell);
@@ -95,13 +95,13 @@ public class BoardLayer implements ILayer {
 		ClientBoard board = ChessGame.INSTANCE.getBoard();
 		if (board.getMatrix() == null) return false;
 		
-		for (Vec2i cell : board.getMatrix()) {
+		for (ChessCell cell : board.getMatrix()) {
             float x = boardX + cell.x * tileSize;
             float y = boardY + (ChessPieceMatrix.SIZE - cell.y - 1) * tileSize;
             
-            Vec2i niceCell = new Vec2i(cell);
+            ChessCell niceCell = cell.copy();
     		if (board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK) {
-    			niceCell = new Vec2i(ChessPieceMatrix.SIZE - cell.x - 1, ChessPieceMatrix.SIZE - cell.y - 1);
+    			niceCell = new ChessCell(ChessPieceMatrix.SIZE - cell.x - 1, ChessPieceMatrix.SIZE - cell.y - 1);
     		}
             
             if (mouseX >= x && mouseY >= y && mouseX < x + tileSize && mouseY < y + tileSize) {

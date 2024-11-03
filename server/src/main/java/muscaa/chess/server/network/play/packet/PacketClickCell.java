@@ -4,18 +4,19 @@ import java.io.IOException;
 
 import fluff.bin.IBinaryInput;
 import fluff.network.packet.IPacketInbound;
-import fluff.vecmath.gen._int.vector.Vec2i;
+import muscaa.chess.shared.board.ChessCell;
 
 public class PacketClickCell implements IPacketInbound {
 	
-	private Vec2i cell;
+	private ChessCell cell;
 	
 	@Override
 	public void readData(IBinaryInput in) throws IOException {
-		cell = new Vec2i(in.Int(), in.Int());
+		cell = new ChessCell();
+		in.Data(cell);
 	}
 	
-	public Vec2i getCell() {
+	public ChessCell getCell() {
 		return cell;
 	}
 }

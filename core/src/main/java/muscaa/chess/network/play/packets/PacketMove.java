@@ -4,14 +4,14 @@ import java.io.IOException;
 
 import fluff.bin.IBinaryInput;
 import fluff.network.packet.IPacketInbound;
-import fluff.vecmath.gen._int.vector.Vec2i;
 import muscaa.chess.board.ClientChessPiece;
+import muscaa.chess.shared.board.ChessCell;
 
 public class PacketMove implements IPacketInbound {
 	
-	private Vec2i from;
+	private ChessCell from;
 	private ClientChessPiece fromPiece;
-	private Vec2i to;
+	private ChessCell to;
 	private ClientChessPiece toPiece;
 	private ClientChessPiece capturePiece;
 	
@@ -19,16 +19,18 @@ public class PacketMove implements IPacketInbound {
 	
 	@Override
 	public void readData(IBinaryInput in) throws IOException {
-		from = new Vec2i(in.Int(), in.Int());
+		from = new ChessCell();
+		in.Data(from);
 		fromPiece = ClientChessPiece.of(in.Int());
 		
-		to = new Vec2i(in.Int(), in.Int());
+		to = new ChessCell();
+		in.Data(to);
 		toPiece = ClientChessPiece.of(in.Int());
 		
 		capturePiece = ClientChessPiece.of(in.Int());
 	}
 	
-	public Vec2i getFrom() {
+	public ChessCell getFrom() {
 		return from;
 	}
 	
@@ -36,7 +38,7 @@ public class PacketMove implements IPacketInbound {
 		return fromPiece;
 	}
 	
-	public Vec2i getTo() {
+	public ChessCell getTo() {
 		return to;
 	}
 	
