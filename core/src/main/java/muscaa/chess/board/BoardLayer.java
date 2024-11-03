@@ -32,29 +32,18 @@ public class BoardLayer implements ILayer {
 		ClientBoard board = ChessGame.INSTANCE.getBoard();
 		if (board.getMatrix() == null) return;
 		
-		ClientChessPiece hoveredPiece = null;
-		int hoveredRow = -1;
-		int hoveredCol = -1;
-		
 		for (ChessCell cell : board.getMatrix()) {
         	Color color = (cell.x + cell.y) % 2 == 0 ? Theme.BOARD_CELL_LIGHT : Theme.BOARD_CELL_DARK;
             float x = boardX + cell.x * tileSize;
             float y = boardY + (ChessPieceMatrix.SIZE - cell.y - 1) * tileSize;
             float off = tileSize / 32;
             
-            ChessCell niceCell = cell.copy();
-    		if (board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK) {
-    			niceCell = new ChessCell(ChessPieceMatrix.SIZE - cell.x - 1, ChessPieceMatrix.SIZE - cell.y - 1);
-    		}
-    		
+            ChessCell niceCell = cell.copy(board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK);
     		ClientChessPiece piece = board.getMatrix().get(niceCell);
-        	
-            if (mouseX >= x && mouseY >= y && mouseX < x + tileSize && mouseY < y + tileSize) {
-            	color = Color.RED;
-            	hoveredPiece = piece;
-            	hoveredRow = niceCell.y;
-            	hoveredCol = niceCell.x;
-            }
+    		
+    		if (board.getSelectedCell().equals(niceCell)) {
+    			color = Theme.BOARD_CELL_SELECTED;
+    		}
             
             Shapes.rect(x, y, tileSize, tileSize, color);
             
@@ -64,9 +53,6 @@ public class BoardLayer implements ILayer {
 		}
         
         Object[] debug = new Object[] {
-        		board.getColor(),
-        		hoveredPiece,
-        		hoveredRow + " : " + hoveredCol,
 		};
         
         float y = Screen.HEIGHT - 10;
@@ -99,11 +85,7 @@ public class BoardLayer implements ILayer {
             float x = boardX + cell.x * tileSize;
             float y = boardY + (ChessPieceMatrix.SIZE - cell.y - 1) * tileSize;
             
-            ChessCell niceCell = cell.copy();
-    		if (board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK) {
-    			niceCell = new ChessCell(ChessPieceMatrix.SIZE - cell.x - 1, ChessPieceMatrix.SIZE - cell.y - 1);
-    		}
-            
+            ChessCell niceCell = cell.copy(board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK);
             if (mouseX >= x && mouseY >= y && mouseX < x + tileSize && mouseY < y + tileSize) {
             	board.click(niceCell);
             	return true;

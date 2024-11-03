@@ -16,9 +16,9 @@ public class PacketMove implements IPacketOutbound {
 	private AbstractServerChessPiece capturePiece;
 	
 	public PacketMove(ChessCell from, AbstractServerChessPiece fromPiece, ChessCell to, AbstractServerChessPiece toPiece, AbstractServerChessPiece capturePiece) {
-		this.from = from;
+		this.from = from.copy();
 		this.fromPiece = fromPiece;
-		this.to = to;
+		this.to = to.copy();
 		this.toPiece = toPiece;
 		this.capturePiece = capturePiece;
 	}

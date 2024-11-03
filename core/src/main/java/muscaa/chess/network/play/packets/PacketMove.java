@@ -9,9 +9,9 @@ import muscaa.chess.shared.board.ChessCell;
 
 public class PacketMove implements IPacketInbound {
 	
-	private ChessCell from;
+	private ChessCell from = new ChessCell();
 	private ClientChessPiece fromPiece;
-	private ChessCell to;
+	private ChessCell to = new ChessCell();
 	private ClientChessPiece toPiece;
 	private ClientChessPiece capturePiece;
 	
@@ -19,11 +19,9 @@ public class PacketMove implements IPacketInbound {
 	
 	@Override
 	public void readData(IBinaryInput in) throws IOException {
-		from = new ChessCell();
 		in.Data(from);
 		fromPiece = ClientChessPiece.of(in.Int());
 		
-		to = new ChessCell();
 		in.Data(to);
 		toPiece = ClientChessPiece.of(in.Int());
 		

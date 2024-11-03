@@ -15,6 +15,7 @@ import muscaa.chess.server.board.pieces.ServerRookChessPiece;
 import muscaa.chess.server.network.ChessClientConnection;
 import muscaa.chess.server.network.play.packet.PacketClickCell;
 import muscaa.chess.server.network.play.packet.PacketMove;
+import muscaa.chess.server.network.play.packet.PacketSelectCell;
 import muscaa.chess.server.network.play.packet.PacketStartGame;
 import muscaa.chess.shared.board.AbstractBoard;
 import muscaa.chess.shared.board.ChessCell;
@@ -27,7 +28,7 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 	private final Map<ChessClientConnection, ChessColor> colors = new HashMap<>();
 	
 	private ChessColor turn;
-	private ChessCell selectedCell;
+	private final ChessCell selectedCell = new ChessCell();
 	
 	public ServerBoard() {
 		reset();
@@ -35,33 +36,37 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 	
 	@Override
 	public void click(ChessCell cell) {
-		AbstractServerChessPiece p = matrix.get(cell);
+		ChessClientConnection player = players.get(turn);
+		AbstractServerChessPiece piece = matrix.get(cell);
 		
-		if (selectedCell == null) {
-			if (!p.equals(ServerEmptyChessPiece.INSTANCE) && p.getColor() == turn) {
-				selectedCell = cell;
-				// TODO send PacketSelectCell
+		if (!selectedCell.isValid()) {
+			if (!piece.equals(ServerEmptyChessPiece.INSTANCE) && piece.getColor() == turn) {
+				selectedCell.set(cell);
+				player.send(new PacketSelectCell(selectedCell));
 			}
 			return;
 		} else {
-			if (!p.equals(ServerEmptyChessPiece.INSTANCE) && p.getColor() == turn) {
-				selectedCell = cell;
-				// TODO send PacketSelectCell
+			if (!piece.equals(ServerEmptyChessPiece.INSTANCE) && piece.getColor() == turn) {
+				if (selectedCell.equals(cell)) {
+					selectedCell.set(ChessCell.INVALID);
+				} else {
+					selectedCell.set(cell);
+				}
+				player.send(new PacketSelectCell(selectedCell));
 				return;
 			}
 			
 			// TODO check if piece move is valid
 			
-			AbstractServerChessPiece piece = matrix.get(selectedCell);
-			AbstractServerChessPiece capture = p;
-			
+			AbstractServerChessPiece selectedPiece = matrix.get(selectedCell);
 			matrix.set(selectedCell, ServerEmptyChessPiece.INSTANCE);
-			matrix.set(cell, piece);
+			matrix.set(cell, selectedPiece);
 			
-			send(new PacketMove(selectedCell, ServerEmptyChessPiece.INSTANCE, cell, piece, capture));
+			send(new PacketMove(selectedCell, ServerEmptyChessPiece.INSTANCE, cell, selectedPiece, piece));
 			
-			selectedCell = null;
 			turn = turn.invert();
+			selectedCell.set(ChessCell.INVALID);
+			player.send(new PacketSelectCell(selectedCell));
 		}
 	}
 	
@@ -94,7 +99,7 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 			}
 		}
 		turn = ChessColor.WHITE;
-		selectedCell = null;
+		selectedCell.set(ChessCell.INVALID);
 	}
 	
 	private void send(IPacketOutbound packet) {

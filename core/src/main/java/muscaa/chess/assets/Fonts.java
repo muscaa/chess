@@ -25,7 +25,7 @@ public class Fonts {
 		VARELA_24 = varela[0];
 		VARELA_18 = varela[1];
 		
-		BitmapFont[] montez = generate("fonts/Montez-Regular.ttf", 128);
+		BitmapFont[] montez = generate("fonts/Montez-Regular.ttf", 128, 64);
 		MONTEZ_128 = montez[0];
 	}
 	
@@ -60,9 +60,6 @@ public class Fonts {
 	public static void init() {}
 	
 	public static void dispose() {
-		for (BitmapFont font : REG) {
-			font.dispose();
-		}
 		REG.clear();
 	}
 }

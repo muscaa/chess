@@ -5,6 +5,7 @@ import muscaa.chess.ChessGame;
 import muscaa.chess.network.ChessClient;
 import muscaa.chess.network.play.packets.PacketEndGame;
 import muscaa.chess.network.play.packets.PacketMove;
+import muscaa.chess.network.play.packets.PacketSelectCell;
 import muscaa.chess.network.play.packets.PacketStartGame;
 
 public class ClientPlayNetHandler extends AbstractClientNetHandler<ChessClient> implements IClientPlayNetHandler {
@@ -22,5 +23,10 @@ public class ClientPlayNetHandler extends AbstractClientNetHandler<ChessClient> 
 	@Override
 	public void onPacketMove(PacketMove packet) {
 		ChessGame.INSTANCE.getBoard().onPacketMove(packet);
+	}
+	
+	@Override
+	public void onPacketSelectCell(PacketSelectCell packet) {
+		ChessGame.INSTANCE.getBoard().onPacketSelectCell(packet);
 	}
 }
