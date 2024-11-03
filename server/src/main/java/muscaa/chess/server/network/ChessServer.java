@@ -18,7 +18,8 @@ public class ChessServer extends AbstractServer {
 		ChessClientConnection client = new ChessClientConnection(this, socket,
 				defaultContext, defaultHandlerFunc.invoke(), defaultChannelFunc.invoke());
 		
-		if (!client.isConnected()) client.disconnect();
+		// TODO allow multiple people on the server using lobbies
+		if (!client.isConnected() || connections.size() == 2) client.disconnect();
 	}
 	
 	@Override

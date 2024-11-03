@@ -10,37 +10,41 @@ import muscaa.chess.board.ClientChessPiece;
 public class PacketMove implements IPacketInbound {
 	
 	private Vec2i from;
+	private ClientChessPiece fromPiece;
 	private Vec2i to;
-	private ClientChessPiece piece;
-	private ClientChessPiece capture;
+	private ClientChessPiece toPiece;
+	private ClientChessPiece capturePiece;
 	
 	public PacketMove() {}
 	
 	@Override
 	public void readData(IBinaryInput in) throws IOException {
 		from = new Vec2i(in.Int(), in.Int());
-		to = new Vec2i(in.Int(), in.Int());
+		fromPiece = ClientChessPiece.of(in.Int());
 		
-		int len = in.Int();
-    	piece = ClientChessPiece.of(len == 0 ? null : in.String(len));
-    	
-    	len = in.Int();
-    	capture = ClientChessPiece.of(len == 0 ? null : in.String(len));
+		to = new Vec2i(in.Int(), in.Int());
+		toPiece = ClientChessPiece.of(in.Int());
+		
+		capturePiece = ClientChessPiece.of(in.Int());
 	}
 	
 	public Vec2i getFrom() {
 		return from;
 	}
 	
+	public ClientChessPiece getFromPiece() {
+		return fromPiece;
+	}
+	
 	public Vec2i getTo() {
 		return to;
 	}
 	
-	public ClientChessPiece getPiece() {
-		return piece;
+	public ClientChessPiece getToPiece() {
+		return toPiece;
 	}
 	
-	public ClientChessPiece getCapture() {
-		return capture;
+	public ClientChessPiece getCapturePiece() {
+		return capturePiece;
 	}
 }

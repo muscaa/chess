@@ -5,6 +5,7 @@ import java.util.Objects;
 import com.badlogic.gdx.graphics.Color;
 
 import fluff.vecmath.gen._int.vector.Vec2i;
+import muscaa.chess.ChessGame;
 import muscaa.chess.assets.Fonts;
 import muscaa.chess.assets.Textures;
 import muscaa.chess.config.Theme;
@@ -12,58 +13,55 @@ import muscaa.chess.layer.ILayer;
 import muscaa.chess.render.Screen;
 import muscaa.chess.render.Shapes;
 import muscaa.chess.shared.board.ChessColor;
-import muscaa.chess.shared.board.IBoard;
+import muscaa.chess.shared.board.ChessPieceMatrix;
 
 public class BoardLayer implements ILayer {
 	
     private float tileSize;
     private float boardX, boardY;
     
-    private IClientBoard board;
-	
 	public BoardLayer() {
-        tileSize = Math.min(Screen.WIDTH, Screen.HEIGHT) / IBoard.SIZE;
+        tileSize = Math.min(Screen.WIDTH, Screen.HEIGHT) / ChessPieceMatrix.SIZE;
         
-        boardX = (Screen.WIDTH - (tileSize * IBoard.SIZE)) / 2;
-        boardY = (Screen.HEIGHT - (tileSize * IBoard.SIZE)) / 2;
+        boardX = (Screen.WIDTH - (tileSize * ChessPieceMatrix.SIZE)) / 2;
+        boardY = (Screen.HEIGHT - (tileSize * ChessPieceMatrix.SIZE)) / 2;
 	}
 	
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
-		if (board == null) return;
+		ClientBoard board = ChessGame.INSTANCE.getBoard();
+		if (board.getMatrix() == null) return;
 		
 		ClientChessPiece hoveredPiece = null;
 		int hoveredRow = -1;
 		int hoveredCol = -1;
 		
-        for (int row = 0; row < IBoard.SIZE; row++) {
-            for (int col = 0; col < IBoard.SIZE; col++) {
-            	Color color = (row + col) % 2 == 0 ? Theme.BOARD_CELL_LIGHT : Theme.BOARD_CELL_DARK;
-                float x = boardX + col * tileSize;
-                float y = boardY + (IBoard.SIZE - row - 1) * tileSize;
-                float off = tileSize / 32;
-                
-                Vec2i cell = new Vec2i(col, row);
-        		if (board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK) {
-        			cell = new Vec2i(IBoard.SIZE - col - 1, IBoard.SIZE - row - 1);
-        		}
-        		
-        		ClientChessPiece piece = board.getPiece(cell);
-            	
-                if (mouseX >= x && mouseY >= y && mouseX < x + tileSize && mouseY < y + tileSize) {
-                	color = Color.RED;
-                	hoveredPiece = piece;
-                	hoveredRow = cell.y;
-                	hoveredCol = cell.x;
-                }
-                
-                Shapes.rect(x, y, tileSize, tileSize, color);
-                
-                if (piece != null) {
-                	Textures.draw(piece.getTexture(), x + off, y + off, tileSize - off * 2, tileSize - off * 2);
-                }
+		for (Vec2i cell : board.getMatrix()) {
+        	Color color = (cell.x + cell.y) % 2 == 0 ? Theme.BOARD_CELL_LIGHT : Theme.BOARD_CELL_DARK;
+            float x = boardX + cell.x * tileSize;
+            float y = boardY + (ChessPieceMatrix.SIZE - cell.y - 1) * tileSize;
+            float off = tileSize / 32;
+            
+            Vec2i niceCell = new Vec2i(cell);
+    		if (board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK) {
+    			niceCell = new Vec2i(ChessPieceMatrix.SIZE - cell.x - 1, ChessPieceMatrix.SIZE - cell.y - 1);
+    		}
+    		
+    		ClientChessPiece piece = board.getMatrix().get(niceCell);
+        	
+            if (mouseX >= x && mouseY >= y && mouseX < x + tileSize && mouseY < y + tileSize) {
+            	color = Color.RED;
+            	hoveredPiece = piece;
+            	hoveredRow = niceCell.y;
+            	hoveredCol = niceCell.x;
             }
-        }
+            
+            Shapes.rect(x, y, tileSize, tileSize, color);
+            
+            if (piece != null && piece != ClientChessPiece.EMPTY) {
+            	Textures.draw(piece.getTexture(), x + off, y + off, tileSize - off * 2, tileSize - off * 2);
+            }
+		}
         
         Object[] debug = new Object[] {
         		board.getColor(),
@@ -81,46 +79,37 @@ public class BoardLayer implements ILayer {
 	
 	@Override
 	public void resize(int width, int height) {
-		tileSize = Math.min(Screen.WIDTH, Screen.HEIGHT) / IBoard.SIZE;
+		tileSize = Math.min(Screen.WIDTH, Screen.HEIGHT) / ChessPieceMatrix.SIZE;
         
-        boardX = (Screen.WIDTH - (tileSize * IBoard.SIZE)) / 2;
-        boardY = (Screen.HEIGHT - (tileSize * IBoard.SIZE)) / 2;
+        boardX = (Screen.WIDTH - (tileSize * ChessPieceMatrix.SIZE)) / 2;
+        boardY = (Screen.HEIGHT - (tileSize * ChessPieceMatrix.SIZE)) / 2;
 	}
 	
 	@Override
 	public boolean hover(int mouseX, int mouseY) {
-		return board != null;
+		return ChessGame.INSTANCE.getBoard().getMatrix() != null;
 	}
 	
 	@Override
 	public boolean mouseDown(int mouseX, int mouseY, int pointer, int button) {
-		if (board == null) return false;
+		ClientBoard board = ChessGame.INSTANCE.getBoard();
+		if (board.getMatrix() == null) return false;
 		
-        for (int row = 0; row < IBoard.SIZE; row++) {
-            for (int col = 0; col < IBoard.SIZE; col++) {
-                float x = boardX + col * tileSize;
-                float y = boardY + (IBoard.SIZE - row - 1) * tileSize;
-                
-                Vec2i cell = new Vec2i(col, row);
-        		if (board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK) {
-        			cell = new Vec2i(IBoard.SIZE - col - 1, IBoard.SIZE - row - 1);
-        		}
-                
-                if (mouseX >= x && mouseY >= y && mouseX < x + tileSize && mouseY < y + tileSize) {
-                	board.click(cell);
-                	return true;
-                }
+		for (Vec2i cell : board.getMatrix()) {
+            float x = boardX + cell.x * tileSize;
+            float y = boardY + (ChessPieceMatrix.SIZE - cell.y - 1) * tileSize;
+            
+            Vec2i niceCell = new Vec2i(cell);
+    		if (board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK) {
+    			niceCell = new Vec2i(ChessPieceMatrix.SIZE - cell.x - 1, ChessPieceMatrix.SIZE - cell.y - 1);
+    		}
+            
+            if (mouseX >= x && mouseY >= y && mouseX < x + tileSize && mouseY < y + tileSize) {
+            	board.click(niceCell);
+            	return true;
             }
-        }
+		}
 		
 		return false;
-	}
-	
-	public IClientBoard getBoard() {
-		return board;
-	}
-	
-	public void setBoard(IClientBoard board) {
-		this.board = board;
 	}
 }

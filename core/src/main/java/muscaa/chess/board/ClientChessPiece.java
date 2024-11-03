@@ -1,39 +1,48 @@
 package muscaa.chess.board;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.badlogic.gdx.graphics.Texture;
 
 import muscaa.chess.assets.Textures;
 import muscaa.chess.shared.board.ChessColor;
 import muscaa.chess.shared.board.IChessPiece;
 
-public enum ClientChessPiece implements IChessPiece {
-	WHITE_KING("wk", Textures.WHITE_KING),
-	WHITE_QUEEN("wq", Textures.WHITE_QUEEN),
-	WHITE_BISHOP("wb", Textures.WHITE_BISHOP),
-	WHITE_KNIGHT("wn", Textures.WHITE_KNIGHT),
-	WHITE_ROOK("wr", Textures.WHITE_ROOK),
-	WHITE_PAWN("wp", Textures.WHITE_PAWN),
+public class ClientChessPiece implements IChessPiece {
 	
-	BLACK_KING("bk", Textures.BLACK_KING),
-	BLACK_QUEEN("bq", Textures.BLACK_QUEEN),
-	BLACK_BISHOP("bb", Textures.BLACK_BISHOP),
-	BLACK_KNIGHT("bn", Textures.BLACK_KNIGHT),
-	BLACK_ROOK("br", Textures.BLACK_ROOK),
-	BLACK_PAWN("bp", Textures.BLACK_PAWN),
-	;
+	private static final Map<Integer, ClientChessPiece> REG = new HashMap<>();
 	
-	private final String id;
-	private final ChessColor color;
-	private final Texture texture;
+	public static final ClientChessPiece EMPTY = new ClientChessPiece(0, ChessColor.NONE, null);
 	
-	private ClientChessPiece(String id, Texture texture) {
+	public static final ClientChessPiece WHITE_KING = new ClientChessPiece(1, ChessColor.WHITE, Textures.WHITE_KING);
+	public static final ClientChessPiece WHITE_QUEEN = new ClientChessPiece(2, ChessColor.WHITE, Textures.WHITE_QUEEN);
+	public static final ClientChessPiece WHITE_BISHOP = new ClientChessPiece(3, ChessColor.WHITE, Textures.WHITE_BISHOP);
+	public static final ClientChessPiece WHITE_KNIGHT = new ClientChessPiece(4, ChessColor.WHITE, Textures.WHITE_KNIGHT);
+	public static final ClientChessPiece WHITE_ROOK = new ClientChessPiece(5, ChessColor.WHITE, Textures.WHITE_ROOK);
+	public static final ClientChessPiece WHITE_PAWN = new ClientChessPiece(6, ChessColor.WHITE, Textures.WHITE_PAWN);
+	
+	public static final ClientChessPiece BLACK_KING = new ClientChessPiece(-1, ChessColor.BLACK, Textures.BLACK_KING);
+	public static final ClientChessPiece BLACK_QUEEN = new ClientChessPiece(-2, ChessColor.BLACK, Textures.BLACK_QUEEN);
+	public static final ClientChessPiece BLACK_BISHOP = new ClientChessPiece(-3, ChessColor.BLACK, Textures.BLACK_BISHOP);
+	public static final ClientChessPiece BLACK_KNIGHT = new ClientChessPiece(-4, ChessColor.BLACK, Textures.BLACK_KNIGHT);
+	public static final ClientChessPiece BLACK_ROOK = new ClientChessPiece(-5, ChessColor.BLACK, Textures.BLACK_ROOK);
+	public static final ClientChessPiece BLACK_PAWN = new ClientChessPiece(-6, ChessColor.BLACK, Textures.BLACK_PAWN);
+	
+	protected final int id;
+	protected final ChessColor color;
+	protected final Texture texture;
+	
+	public ClientChessPiece(int id, ChessColor color, Texture texture) {
 		this.id = id;
-		this.color = id.startsWith("w") ? ChessColor.WHITE : ChessColor.BLACK;
+		this.color = color;
 		this.texture = texture;
+		
+		REG.put(id, this);
 	}
 	
 	@Override
-	public String getID() {
+	public int getID() {
 		return id;
 	}
 	
@@ -42,16 +51,16 @@ public enum ClientChessPiece implements IChessPiece {
 		return color;
 	}
 	
+	@Override
+	public IChessPiece copy() {
+		return this;
+	}
+	
 	public Texture getTexture() {
 		return texture;
 	}
 	
-	public static ClientChessPiece of(String id) {
-		if (id == null) return null;
-		
-		for (ClientChessPiece p : ClientChessPiece.values()) {
-			if (p.id.equals(id)) return p;
-		}
-		return null;
+	public static ClientChessPiece of(int id) {
+		return REG.get(id);
 	}
 }

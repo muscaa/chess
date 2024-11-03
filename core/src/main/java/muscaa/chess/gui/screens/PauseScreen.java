@@ -2,7 +2,6 @@ package muscaa.chess.gui.screens;
 
 import com.kotcrab.vis.ui.widget.VisTable;
 
-import muscaa.chess.ChessGame;
 import muscaa.chess.gui.GuiScreen;
 import muscaa.chess.gui.Widgets;
 
@@ -21,7 +20,7 @@ public class PauseScreen extends GuiScreen {
 		Widgets.empty(main)
 				.row();
 		Widgets.button(main, "Return to Main Menu", (button) -> {
-			ChessGame.INSTANCE.getBoardLayer().setBoard(null);
+			//ChessGame.INSTANCE.getBoardLayer().setBoard(null);
 			setScreen(new MainScreen());
 		})
 				.row();

@@ -1,99 +1,130 @@
 package muscaa.chess.server.board;
 
-import static muscaa.chess.server.board.ServerChessPiece.BLACK_BISHOP;
-import static muscaa.chess.server.board.ServerChessPiece.BLACK_KING;
-import static muscaa.chess.server.board.ServerChessPiece.BLACK_KNIGHT;
-import static muscaa.chess.server.board.ServerChessPiece.BLACK_PAWN;
-import static muscaa.chess.server.board.ServerChessPiece.BLACK_QUEEN;
-import static muscaa.chess.server.board.ServerChessPiece.BLACK_ROOK;
-import static muscaa.chess.server.board.ServerChessPiece.WHITE_BISHOP;
-import static muscaa.chess.server.board.ServerChessPiece.WHITE_KING;
-import static muscaa.chess.server.board.ServerChessPiece.WHITE_KNIGHT;
-import static muscaa.chess.server.board.ServerChessPiece.WHITE_PAWN;
-import static muscaa.chess.server.board.ServerChessPiece.WHITE_QUEEN;
-import static muscaa.chess.server.board.ServerChessPiece.WHITE_ROOK;
-
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import fluff.network.packet.IPacketOutbound;
 import fluff.vecmath.gen._int.vector.Vec2i;
+import muscaa.chess.server.board.pieces.ServerBishopChessPiece;
+import muscaa.chess.server.board.pieces.ServerEmptyChessPiece;
+import muscaa.chess.server.board.pieces.ServerKingChessPiece;
+import muscaa.chess.server.board.pieces.ServerKnightChessPiece;
+import muscaa.chess.server.board.pieces.ServerPawnChessPiece;
+import muscaa.chess.server.board.pieces.ServerQueenChessPiece;
+import muscaa.chess.server.board.pieces.ServerRookChessPiece;
 import muscaa.chess.server.network.ChessClientConnection;
+import muscaa.chess.server.network.play.packet.PacketClickCell;
 import muscaa.chess.server.network.play.packet.PacketMove;
+import muscaa.chess.server.network.play.packet.PacketStartGame;
+import muscaa.chess.shared.board.AbstractBoard;
 import muscaa.chess.shared.board.ChessColor;
-import muscaa.chess.shared.board.IBoard;
+import muscaa.chess.shared.board.ChessPieceMatrix;
 
-public class ServerBoard implements IBoard<ServerChessPiece> {
+public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 	
-	private final ServerChessPiece[][] pieces;
+	private final Map<ChessColor, ChessClientConnection> players = new HashMap<>();
+	private final Map<ChessClientConnection, ChessColor> colors = new HashMap<>();
 	
-	public ChessColor turn = ChessColor.WHITE;
-	public Map<ChessColor, ChessClientConnection> players = new HashMap<>();
-	public Map<ChessClientConnection, ChessColor> colors = new HashMap<>();
-	
+	private ChessColor turn;
 	private Vec2i selectedCell;
 	
 	public ServerBoard() {
-		this.pieces = new ServerChessPiece[][] {
-			{ BLACK_ROOK, BLACK_KNIGHT, BLACK_BISHOP, BLACK_QUEEN, BLACK_KING, BLACK_BISHOP, BLACK_KNIGHT, BLACK_ROOK },
-			{ BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN },
-			{ null, null, null, null, null, null, null, null },
-			{ null, null, null, null, null, null, null, null },
-			{ null, null, null, null, null, null, null, null },
-			{ null, null, null, null, null, null, null, null },
-			{ WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN },
-			{ WHITE_ROOK, WHITE_KNIGHT, WHITE_BISHOP, WHITE_QUEEN, WHITE_KING, WHITE_BISHOP, WHITE_KNIGHT, WHITE_ROOK },
-		};
+		reset();
 	}
 	
 	@Override
-	public ServerChessPiece getPiece(Vec2i cell) {
-		return pieces[cell.y][cell.x];
-	}
-	
-	public void click(Vec2i cell, ChessClientConnection client) {
-		ChessColor clientColor = colors.get(client);
-		if (clientColor != turn) return;
-		
-		ServerChessPiece p = getPiece(cell);
+	public void click(Vec2i cell) {
+		AbstractServerChessPiece p = matrix.get(cell);
 		
 		if (selectedCell == null) {
-			if (p != null && p.getColor() == turn) {
+			if (!p.equals(ServerEmptyChessPiece.INSTANCE) && p.getColor() == turn) {
 				selectedCell = cell;
+				// TODO send PacketSelectCell
 			}
 			return;
 		} else {
-			if (p != null && p.getColor() == turn) {
+			if (!p.equals(ServerEmptyChessPiece.INSTANCE) && p.getColor() == turn) {
 				selectedCell = cell;
+				// TODO send PacketSelectCell
 				return;
 			}
 			
 			// TODO check if piece move is valid
 			
-			ServerChessPiece piece = getPiece(selectedCell);
-			ServerChessPiece capture = p;
+			AbstractServerChessPiece piece = matrix.get(selectedCell);
+			AbstractServerChessPiece capture = p;
 			
-			setPiece(selectedCell, null);
-			setPiece(cell, piece);
+			matrix.set(selectedCell, ServerEmptyChessPiece.INSTANCE);
+			matrix.set(cell, piece);
 			
-			send(new PacketMove(selectedCell, cell, piece, capture));
+			send(new PacketMove(selectedCell, ServerEmptyChessPiece.INSTANCE, cell, piece, capture));
 			
 			selectedCell = null;
 			turn = turn.invert();
 		}
 	}
 	
-	public void setPiece(Vec2i cell, ServerChessPiece piece) {
-		pieces[cell.y][cell.x] = piece;
+	@Override
+	public List<Vec2i> getMoves(Vec2i cell) {
+		return null;
 	}
 	
-	public ServerChessPiece[][] getPieces() {
-		return pieces;
+	private void reset() {
+		matrix = new ChessPieceMatrix<>();
+		for (Vec2i cell : matrix) {
+			ChessColor color = cell.y >= ChessPieceMatrix.SIZE / 2 ? ChessColor.WHITE : ChessColor.BLACK;
+			
+			if (cell.y == 0 || cell.y == ChessPieceMatrix.SIZE - 1) {
+				if (cell.x == 0 || cell.x == ChessPieceMatrix.SIZE - 1) {
+					matrix.set(cell, new ServerRookChessPiece(color));
+				} else if (cell.x == 1 || cell.x == ChessPieceMatrix.SIZE - 2) {
+					matrix.set(cell, new ServerKnightChessPiece(color));
+				} else if (cell.x == 2 || cell.x == ChessPieceMatrix.SIZE - 3) {
+					matrix.set(cell, new ServerBishopChessPiece(color));
+				} else if (cell.x == 3) {
+					matrix.set(cell, new ServerQueenChessPiece(color));
+				} else if (cell.x == ChessPieceMatrix.SIZE - 4) {
+					matrix.set(cell, new ServerKingChessPiece(color));
+				}
+			} else if (cell.y == 1 || cell.y == ChessPieceMatrix.SIZE - 2) {
+				matrix.set(cell, new ServerPawnChessPiece(color));
+			} else {
+				matrix.set(cell, ServerEmptyChessPiece.INSTANCE);
+			}
+		}
+		turn = ChessColor.WHITE;
+		selectedCell = null;
 	}
 	
-	public void send(IPacketOutbound packet) {
+	private void send(IPacketOutbound packet) {
 		for (Map.Entry<ChessColor, ChessClientConnection> e : players.entrySet()) {
 			e.getValue().send(packet);
 		}
+	}
+	
+	public synchronized void onConnect(ChessClientConnection connection) {
+		ChessColor color = players.isEmpty() || !players.containsKey(turn) ? turn : turn.invert();
+		players.put(color, connection);
+		colors.put(connection, color);
+		
+		if (players.size() == 2) {
+			players.get(ChessColor.WHITE).send(new PacketStartGame(ChessColor.WHITE, matrix));
+			players.get(ChessColor.BLACK).send(new PacketStartGame(ChessColor.BLACK, matrix));
+		}
+	}
+	
+	public synchronized void onDisconnect(ChessClientConnection connection) {
+		ChessColor color = colors.remove(connection);
+		players.remove(color);
+		
+		reset();
+	}
+	
+	public synchronized void onPacketClickCell(ChessClientConnection connection, PacketClickCell packet) {
+		ChessColor clientColor = colors.get(connection);
+		if (clientColor != turn) return;
+		
+		click(packet.getCell());
 	}
 }

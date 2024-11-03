@@ -1,10 +1,7 @@
 package muscaa.chess.network;
 
 import muscaa.chess.ChessGame;
-import muscaa.chess.board.online.OnlineBoard;
 import muscaa.chess.gui.screens.StatusScreen;
-import muscaa.chess.shared.board.ChessColor;
-import muscaa.chess.task.TaskManager;
 
 public class ClientNetwork {
 	
@@ -13,8 +10,6 @@ public class ClientNetwork {
 	private String name;
 	private NetworkStatus status;
 	private StatusScreen statusScreen;
-	
-	private OnlineBoard board;
 	
 	public ClientNetwork() {
 		client = new ChessClient();
@@ -38,20 +33,15 @@ public class ClientNetwork {
 		
 		statusScreen.label.setText(status.getText());
 		
-		if (status == NetworkStatus.DONE) {
+		// wait for opponent
+		/*if (status == NetworkStatus.DONE) {
 			TaskManager.render(() -> {
 				ChessGame.INSTANCE.getGuiLayer().setScreen(null);
 			});
-		}
-	}
-	
-	public void createBoard(ChessColor color) {
-		ChessGame.INSTANCE.getBoardLayer().setBoard(board = new OnlineBoard(color));
+		}*/
 	}
 	
 	public void disconnect() {
-		ChessGame.INSTANCE.getBoardLayer().setBoard(board = null);
-		
 		client.disconnect();
 	}
 	
@@ -61,9 +51,5 @@ public class ClientNetwork {
 	
 	public String getName() {
 		return name;
-	}
-	
-	public OnlineBoard getBoard() {
-		return board;
 	}
 }

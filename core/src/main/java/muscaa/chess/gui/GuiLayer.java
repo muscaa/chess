@@ -53,7 +53,7 @@ public class GuiLayer implements ILayerWrapper {
 		
 		screen = newScreen;
 		if (screen == null) {
-			if (ChessGame.INSTANCE.getBoardLayer().getBoard() != null) return;
+			if (ChessGame.INSTANCE.getBoard().getMatrix() != null) return;
 			
 			screen = new MainScreen();
 		}

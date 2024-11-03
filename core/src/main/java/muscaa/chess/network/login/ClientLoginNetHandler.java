@@ -14,7 +14,6 @@ public class ClientLoginNetHandler extends AbstractClientNetHandler<ChessClient>
 	public void onPacketLoginSuccess(PacketLoginSuccess packet) {
 		client.setContext(ClientContexts.PLAY_CONTEXT, new ClientPlayNetHandler());
 		
-		ChessGame.INSTANCE.getNetwork().createBoard(packet.getColor());
 		ChessGame.INSTANCE.getNetwork().update(NetworkStatus.DONE);
 	}
 }

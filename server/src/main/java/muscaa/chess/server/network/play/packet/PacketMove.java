@@ -5,20 +5,22 @@ import java.io.IOException;
 import fluff.bin.IBinaryOutput;
 import fluff.network.packet.IPacketOutbound;
 import fluff.vecmath.gen._int.vector.Vec2i;
-import muscaa.chess.server.board.ServerChessPiece;
+import muscaa.chess.server.board.AbstractServerChessPiece;
 
 public class PacketMove implements IPacketOutbound {
 	
 	private Vec2i from;
+	private AbstractServerChessPiece fromPiece;
 	private Vec2i to;
-	private ServerChessPiece piece;
-	private ServerChessPiece capture;
+	private AbstractServerChessPiece toPiece;
+	private AbstractServerChessPiece capturePiece;
 	
-	public PacketMove(Vec2i from, Vec2i to, ServerChessPiece piece, ServerChessPiece capture) {
+	public PacketMove(Vec2i from, AbstractServerChessPiece fromPiece, Vec2i to, AbstractServerChessPiece toPiece, AbstractServerChessPiece capturePiece) {
 		this.from = from;
+		this.fromPiece = fromPiece;
 		this.to = to;
-		this.piece = piece;
-		this.capture = capture;
+		this.toPiece = toPiece;
+		this.capturePiece = capturePiece;
 	}
 	
 	@Override
@@ -26,19 +28,13 @@ public class PacketMove implements IPacketOutbound {
 		out.Int(from.x);
 		out.Int(from.y);
 		
+		out.Int(fromPiece.getID());
+		
 		out.Int(to.x);
 		out.Int(to.y);
 		
-    	if (piece == null) {
-    		out.Int(0);
-    	} else {
-    		out.LenString(piece.getID());
-    	}
-    	
-    	if (capture == null) {
-    		out.Int(0);
-    	} else {
-    		out.LenString(capture.getID());
-    	}
+		out.Int(toPiece.getID());
+		
+		out.Int(capturePiece.getID());
 	}
 }
