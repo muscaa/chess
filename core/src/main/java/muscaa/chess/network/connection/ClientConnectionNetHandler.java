@@ -5,22 +5,23 @@ import java.security.NoSuchAlgorithmException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
-import fluff.network.AbstractClientNetHandler;
 import fluff.network.NetworkException;
 import fluff.network.packet.channels.EncryptedPacketChannel;
 import muscaa.chess.ChessGame;
-import muscaa.chess.network.ChessClient;
 import muscaa.chess.network.ClientContexts;
 import muscaa.chess.network.NetworkStatus;
+import muscaa.chess.network.common.ClientCommonNetHandler;
 import muscaa.chess.network.connection.packets.PacketEncrypt;
 import muscaa.chess.network.connection.packets.PacketHandshake;
 import muscaa.chess.network.login.ClientLoginNetHandler;
 import muscaa.chess.network.login.packets.PacketLogin;
 
-public class ClientConnectionNetHandler extends AbstractClientNetHandler<ChessClient> implements IClientConnectionNetHandler {
+public class ClientConnectionNetHandler extends ClientCommonNetHandler implements IClientConnectionNetHandler {
 	
 	@Override
 	public void onConnect() throws NetworkException {
+		super.onConnect();
+		
 		client.send(new PacketEncrypt(generate()));
 		
 		ChessGame.INSTANCE.getNetwork().update(NetworkStatus.ENCRYPT);

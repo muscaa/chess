@@ -4,7 +4,6 @@ import java.util.Objects;
 
 import com.badlogic.gdx.graphics.Color;
 
-import muscaa.chess.ChessGame;
 import muscaa.chess.assets.Fonts;
 import muscaa.chess.assets.Textures;
 import muscaa.chess.config.Theme;
@@ -20,6 +19,8 @@ public class BoardLayer implements ILayer {
     private float tileSize;
     private float boardX, boardY;
     
+    private ClientBoard board;
+    
 	public BoardLayer() {
         tileSize = Math.min(Screen.WIDTH, Screen.HEIGHT) / ChessPieceMatrix.SIZE;
         
@@ -29,28 +30,7 @@ public class BoardLayer implements ILayer {
 	
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
-		ClientBoard board = ChessGame.INSTANCE.getBoard();
-		if (board.getMatrix() == null) return;
-		
-		/*for (ChessCell cell : board.getMatrix()) {
-        	Color color = (cell.x + cell.y) % 2 == 0 ? Theme.BOARD_CELL_LIGHT : Theme.BOARD_CELL_DARK;
-            float x = boardX + cell.x * tileSize;
-            float y = boardY + (ChessPieceMatrix.SIZE - cell.y - 1) * tileSize;
-            float off = tileSize / 32;
-            
-            ChessCell niceCell = cell.copy(board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK);
-    		ClientChessPiece piece = board.getMatrix().get(niceCell);
-    		
-    		if (board.getSelectedCell().equals(niceCell)) {
-    			color = Theme.BOARD_CELL_SELECTED;
-    		}
-            
-            Shapes.rect(x, y, tileSize, tileSize, color);
-            
-            if (piece != null && piece != ClientChessPiece.EMPTY) {
-            	Textures.draw(piece.getTexture(), x + off, y + off, tileSize - off * 2, tileSize - off * 2);
-            }
-		}*/
+		if (board == null) return;
 		
 		// chess table
 		for (ChessCell cell : board.getMatrix()) {
@@ -113,13 +93,12 @@ public class BoardLayer implements ILayer {
 	
 	@Override
 	public boolean hover(int mouseX, int mouseY) {
-		return ChessGame.INSTANCE.getBoard().getMatrix() != null;
+		return board != null;
 	}
 	
 	@Override
 	public boolean mouseDown(int mouseX, int mouseY, int pointer, int button) {
-		ClientBoard board = ChessGame.INSTANCE.getBoard();
-		if (board.getMatrix() == null) return false;
+		if (board == null) return false;
 		
 		for (ChessCell cell : board.getMatrix()) {
             float x = boardX + cell.x * tileSize;
@@ -133,5 +112,13 @@ public class BoardLayer implements ILayer {
 		}
 		
 		return false;
+	}
+	
+	public ClientBoard getBoard() {
+		return board;
+	}
+	
+	public void setBoard(ClientBoard board) {
+		this.board = board;
 	}
 }

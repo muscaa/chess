@@ -1,6 +1,6 @@
 package muscaa.chess.shared.network.login;
 
-import fluff.network.INetHandler;
+import muscaa.chess.shared.network.common.ICommonNetHandler;
 
-public interface ILoginNetHandler extends INetHandler {
+public interface ILoginNetHandler extends ICommonNetHandler {
 }

@@ -10,6 +10,7 @@ import fluff.network.packet.IPacketChannel;
 import fluff.network.packet.PacketContext;
 import fluff.network.server.AbstractClientConnection;
 import fluff.network.server.AbstractServer;
+import muscaa.chess.shared.network.common.packets.PacketDisconnect;
 
 public class ChessClientConnection extends AbstractClientConnection {
 	
@@ -28,6 +29,11 @@ public class ChessClientConnection extends AbstractClientConnection {
 		if (uuid != null) return;
 		
 		uuid = UUID.nameUUIDFromBytes(name.getBytes());
+	}
+	
+	public void disconnect(String message) {
+		send(new PacketDisconnect(message));
+		disconnect();
 	}
 	
 	@Override

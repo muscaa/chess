@@ -9,7 +9,6 @@ import muscaa.chess.assets.Fonts;
 import muscaa.chess.assets.Sounds;
 import muscaa.chess.assets.Textures;
 import muscaa.chess.board.BoardLayer;
-import muscaa.chess.board.ClientBoard;
 import muscaa.chess.config.Theme;
 import muscaa.chess.gui.GuiLayer;
 import muscaa.chess.gui.screens.MainScreen;
@@ -29,7 +28,6 @@ public class ChessGame implements ApplicationListener {
 	private GuiLayer guiLayer;
 	
 	private ClientNetwork network;
-	private ClientBoard board;
 	
 	@Override
 	public void create() {
@@ -50,10 +48,10 @@ public class ChessGame implements ApplicationListener {
     	
     	guiLayer = new GuiLayer();
     	layerManager.register(guiLayer);
-    	guiLayer.setScreen(new MainScreen());
     	
     	network = new ClientNetwork();
-    	board = new ClientBoard();
+    	
+    	returnToMainMenu();
 	}
 	
 	@Override
@@ -95,6 +93,12 @@ public class ChessGame implements ApplicationListener {
 		Screen.dispose();
 	}
 	
+	public void returnToMainMenu() {
+		network.disconnect();
+		boardLayer.setBoard(null);
+		guiLayer.setScreen(new MainScreen());
+	}
+	
 	public LayerManager getLayerManager() {
 		return layerManager;
 	}
@@ -109,9 +113,5 @@ public class ChessGame implements ApplicationListener {
 	
 	public ClientNetwork getNetwork() {
 		return network;
-	}
-	
-	public ClientBoard getBoard() {
-		return board;
 	}
 }

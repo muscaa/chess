@@ -1,7 +1,9 @@
 package muscaa.chess.network;
 
+import fluff.network.packet.IPacketOutbound;
 import muscaa.chess.ChessGame;
 import muscaa.chess.gui.screens.StatusScreen;
+import muscaa.chess.shared.network.common.packets.PacketDisconnect;
 
 public class ClientNetwork {
 	
@@ -32,21 +34,15 @@ public class ClientNetwork {
 		this.status = status;
 		
 		statusScreen.label.setText(status.getText());
-		
-		// wait for opponent
-		/*if (status == NetworkStatus.DONE) {
-			TaskManager.render(() -> {
-				ChessGame.INSTANCE.getGuiLayer().setScreen(null);
-			});
-		}*/
+	}
+	
+	public void send(IPacketOutbound packet) {
+		if (client.isConnected()) client.send(packet);
 	}
 	
 	public void disconnect() {
+		send(new PacketDisconnect("disconnected"));
 		client.disconnect();
-	}
-	
-	public ChessClient getClient() {
-		return client;
 	}
 	
 	public String getName() {

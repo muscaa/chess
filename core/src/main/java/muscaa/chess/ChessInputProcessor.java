@@ -23,14 +23,10 @@ public class ChessInputProcessor extends LayerInputProcessor {
 				return true;
 				
 			case Keys.ESCAPE:
-				if (ChessGame.INSTANCE.getBoard().getMatrix() == null) break;
+				if (ChessGame.INSTANCE.getBoardLayer().getBoard() == null) break;
 				
 				GuiScreen screen = ChessGame.INSTANCE.getGuiLayer().getScreen();
-				if (screen == null) {
-					screen = new PauseScreen();
-				} else {
-					screen = null;
-				}
+				screen = screen == null ? new PauseScreen() : null;
 				
 				ChessGame.INSTANCE.getGuiLayer().setScreen(screen);
 				

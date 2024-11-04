@@ -14,17 +14,22 @@ import muscaa.chess.network.play.packets.PacketStartGame;
 import muscaa.chess.shared.board.AbstractBoard;
 import muscaa.chess.shared.board.ChessCell;
 import muscaa.chess.shared.board.ChessColor;
-import muscaa.chess.task.TaskManager;
 
 public class ClientBoard extends AbstractBoard<ClientChessPiece> {
 	
-	private ChessColor color;
+	private final ChessColor color;
 	private final ChessCell selectedCell = new ChessCell();
 	private final List<ChessCell> moves = Collections.synchronizedList(new LinkedList<>());
 	
+	public ClientBoard(PacketStartGame packet) {
+		color = packet.getColor();
+		matrix = packet.getMatrix();
+		selectedCell.set(ChessCell.INVALID);
+	}
+	
 	@Override
 	public void click(ChessCell cell) {
-		ChessGame.INSTANCE.getNetwork().getClient().send(new PacketClickCell(cell));
+		ChessGame.INSTANCE.getNetwork().send(new PacketClickCell(cell));
 	}
 	
 	@Override
@@ -36,20 +41,10 @@ public class ClientBoard extends AbstractBoard<ClientChessPiece> {
 		return color;
 	}
 	
-	public synchronized void onPacketStartGame(PacketStartGame packet) {
-		color = packet.getColor();
-		matrix = packet.getMatrix();
-		selectedCell.set(ChessCell.INVALID);
-		
-		TaskManager.render(() -> {
-			ChessGame.INSTANCE.getGuiLayer().setScreen(null);
-		});
+	public synchronized void endGame(PacketEndGame packet) {
 	}
 	
-	public synchronized void onPacketEndGame(PacketEndGame packet) {
-	}
-	
-	public synchronized void onPacketMove(PacketMove packet) {
+	public synchronized void move(PacketMove packet) {
 		matrix.set(packet.getFrom(), packet.getFromPiece());
 		matrix.set(packet.getTo(), packet.getToPiece());
 		
@@ -60,7 +55,7 @@ public class ClientBoard extends AbstractBoard<ClientChessPiece> {
 		}
 	}
 	
-	public synchronized void onPacketSelectCell(PacketSelectCell packet) {
+	public synchronized void selectCell(PacketSelectCell packet) {
 		moves.clear();
 		
 		selectedCell.set(packet.getCell());

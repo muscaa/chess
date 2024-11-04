@@ -1,6 +1,6 @@
 package muscaa.chess.shared.network.play;
 
-import fluff.network.INetHandler;
+import muscaa.chess.shared.network.common.ICommonNetHandler;
 
-public interface IPlayNetHandler extends INetHandler {
+public interface IPlayNetHandler extends ICommonNetHandler {
 }

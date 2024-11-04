@@ -6,6 +6,7 @@ import java.net.Socket;
 import fluff.network.NetworkException;
 import fluff.network.server.AbstractServer;
 import fluff.network.server.IClientConnection;
+import muscaa.chess.shared.network.common.packets.PacketDisconnect;
 
 public class ChessServer extends AbstractServer {
 	
@@ -18,8 +19,7 @@ public class ChessServer extends AbstractServer {
 		ChessClientConnection client = new ChessClientConnection(this, socket,
 				defaultContext, defaultHandlerFunc.invoke(), defaultChannelFunc.invoke());
 		
-		// TODO allow multiple people on the server using lobbies
-		if (!client.isConnected() || connections.size() == 2) client.disconnect();
+		if (!client.isConnected()) client.disconnect();
 	}
 	
 	@Override
@@ -41,5 +41,15 @@ public class ChessServer extends AbstractServer {
 		boolean result = super.establishConnection(client);
 		System.out.println("timedout: " + !result);
 		return result;
+	}
+	
+	@Override
+	public void disconnectAll() {
+		sendAll(new PacketDisconnect("Server stopped!"));
+		super.disconnectAll();
+	}
+	
+	public int getTotalPlayers() {
+		return connections.size();
 	}
 }

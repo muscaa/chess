@@ -13,28 +13,28 @@ import muscaa.chess.server.network.play.packet.PacketEndGame;
 import muscaa.chess.server.network.play.packet.PacketMove;
 import muscaa.chess.server.network.play.packet.PacketSelectCell;
 import muscaa.chess.server.network.play.packet.PacketStartGame;
-import muscaa.chess.shared.network.CommonContexts;
+import muscaa.chess.shared.network.SharedContexts;
 
 public class ServerContexts {
 	
 	public static final PacketContext<IServerConnectionNetHandler> CONNECTION_CONTEXT =
-			new PacketContext<IServerConnectionNetHandler>(CommonContexts.CONNECTION_CONTEXT)
-			.registerInbound(0, PacketEncrypt::new, IServerConnectionNetHandler::onPacketEncrypt)
-			.registerOutbound(1, PacketHandshake.class)
+			new PacketContext<IServerConnectionNetHandler>(SharedContexts.CONNECTION_CONTEXT)
+			.registerInbound(100, PacketEncrypt::new, IServerConnectionNetHandler::onPacketEncrypt)
+			.registerOutbound(101, PacketHandshake.class)
 			;
 	
 	public static final PacketContext<IServerLoginNetHandler> LOGIN_CONTEXT =
-			new PacketContext<IServerLoginNetHandler>(CommonContexts.LOGIN_CONTEXT)
-			.registerInbound(0, PacketLogin::new, IServerLoginNetHandler::onPacketLogin)
-			.registerOutbound(1, PacketLoginSuccess.class)
+			new PacketContext<IServerLoginNetHandler>(SharedContexts.LOGIN_CONTEXT)
+			.registerInbound(200, PacketLogin::new, IServerLoginNetHandler::onPacketLogin)
+			.registerOutbound(201, PacketLoginSuccess.class)
 			;
 	
 	public static final PacketContext<IServerPlayNetHandler> PLAY_CONTEXT =
-			new PacketContext<IServerPlayNetHandler>(CommonContexts.PLAY_CONTEXT)
-			.registerInbound(0, PacketClickCell::new, IServerPlayNetHandler::onPacketClickCell)
-			.registerOutbound(1, PacketStartGame.class)
-			.registerOutbound(2, PacketEndGame.class)
-			.registerOutbound(3, PacketMove.class)
-			.registerOutbound(4, PacketSelectCell.class)
+			new PacketContext<IServerPlayNetHandler>(SharedContexts.PLAY_CONTEXT)
+			.registerInbound(300, PacketClickCell::new, IServerPlayNetHandler::onPacketClickCell)
+			.registerOutbound(301, PacketStartGame.class)
+			.registerOutbound(302, PacketEndGame.class)
+			.registerOutbound(303, PacketMove.class)
+			.registerOutbound(304, PacketSelectCell.class)
 			;
 }

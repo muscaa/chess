@@ -11,7 +11,7 @@ import muscaa.chess.network.connection.ClientConnectionNetHandler;
 public class ChessClient extends AbstractClient {
 	
     @SuppressWarnings("resource")
-	public boolean connect(String host, int port) {
+	protected boolean connect(String host, int port) {
     	if (isConnected()) return false;
     	
         try {

@@ -20,7 +20,7 @@ public abstract class GuiScreen implements ILayerWrapper {
 	
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
-		if (ChessGame.INSTANCE.getBoard().getMatrix() != null
+		if (ChessGame.INSTANCE.getBoardLayer().getBoard() != null
 				|| forceRenderBackground()) {
 			renderBackground(mouseX, mouseY, delta);
 		}
