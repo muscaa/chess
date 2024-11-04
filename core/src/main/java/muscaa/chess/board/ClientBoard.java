@@ -1,5 +1,7 @@
 package muscaa.chess.board;
 
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import muscaa.chess.ChessGame;
@@ -18,6 +20,7 @@ public class ClientBoard extends AbstractBoard<ClientChessPiece> {
 	
 	private ChessColor color;
 	private final ChessCell selectedCell = new ChessCell();
+	private final List<ChessCell> moves = Collections.synchronizedList(new LinkedList<>());
 	
 	@Override
 	public void click(ChessCell cell) {
@@ -58,10 +61,17 @@ public class ClientBoard extends AbstractBoard<ClientChessPiece> {
 	}
 	
 	public synchronized void onPacketSelectCell(PacketSelectCell packet) {
+		moves.clear();
+		
 		selectedCell.set(packet.getCell());
+		moves.addAll(packet.getMoves());
 	}
 	
 	public ChessCell getSelectedCell() {
 		return selectedCell;
+	}
+	
+	public List<ChessCell> getMoves() {
+		return moves;
 	}
 }

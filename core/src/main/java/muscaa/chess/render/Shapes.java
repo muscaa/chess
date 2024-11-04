@@ -13,4 +13,13 @@ public class Shapes {
 		
 		Screen.endShapes();
 	}
+	
+	public static void circle(float x, float y, float radius, Color color) {
+		Screen.beginShapes(ShapeType.Filled);
+		
+		Screen.SHAPES.setColor(color);
+		Screen.SHAPES.circle(x, y, radius);
+		
+		Screen.endShapes();
+	}
 }

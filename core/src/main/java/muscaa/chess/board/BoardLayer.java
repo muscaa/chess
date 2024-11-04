@@ -32,7 +32,7 @@ public class BoardLayer implements ILayer {
 		ClientBoard board = ChessGame.INSTANCE.getBoard();
 		if (board.getMatrix() == null) return;
 		
-		for (ChessCell cell : board.getMatrix()) {
+		/*for (ChessCell cell : board.getMatrix()) {
         	Color color = (cell.x + cell.y) % 2 == 0 ? Theme.BOARD_CELL_LIGHT : Theme.BOARD_CELL_DARK;
             float x = boardX + cell.x * tileSize;
             float y = boardY + (ChessPieceMatrix.SIZE - cell.y - 1) * tileSize;
@@ -50,6 +50,46 @@ public class BoardLayer implements ILayer {
             if (piece != null && piece != ClientChessPiece.EMPTY) {
             	Textures.draw(piece.getTexture(), x + off, y + off, tileSize - off * 2, tileSize - off * 2);
             }
+		}*/
+		
+		// chess table
+		for (ChessCell cell : board.getMatrix()) {
+        	Color color = (cell.x + cell.y) % 2 == 0 ? Theme.BOARD_CELL_LIGHT : Theme.BOARD_CELL_DARK;
+            float x = boardX + cell.x * tileSize;
+            float y = boardY + (ChessPieceMatrix.SIZE - cell.y - 1) * tileSize;
+            
+            ChessCell niceCell = cell.copy(board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK);
+    		
+    		if (board.getSelectedCell().equals(niceCell)) {
+    			color = Theme.BOARD_CELL_SELECTED;
+    		}
+            
+            Shapes.rect(x, y, tileSize, tileSize, color);
+		}
+		
+		// chess pieces
+		for (ChessCell cell : board.getMatrix()) {
+            float x = boardX + cell.x * tileSize;
+            float y = boardY + (ChessPieceMatrix.SIZE - cell.y - 1) * tileSize;
+            float off = tileSize / 32;
+            
+            ChessCell niceCell = cell.copy(board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK);
+    		ClientChessPiece piece = board.getMatrix().get(niceCell);
+            
+            if (!piece.equals(ClientChessPiece.EMPTY)) {
+            	Textures.draw(piece.getTexture(), x + off, y + off, tileSize - off * 2, tileSize - off * 2);
+            }
+		}
+		
+		// chess moves
+		synchronized (board.getMoves()) {
+			for (ChessCell move : board.getMoves()) {
+				ChessCell niceCell = move.copy(board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK);
+	            float x = boardX + niceCell.x * tileSize;
+	            float y = boardY + (ChessPieceMatrix.SIZE - niceCell.y - 1) * tileSize;
+	            
+	            Shapes.circle(x + tileSize / 2, y + tileSize / 2, tileSize / 6, Theme.BOARD_CELL_MOVE_AVAILABLE);
+			}
 		}
         
         Object[] debug = new Object[] {

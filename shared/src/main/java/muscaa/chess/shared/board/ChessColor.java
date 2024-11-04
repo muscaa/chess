@@ -1,10 +1,20 @@
 package muscaa.chess.shared.board;
 
 public enum ChessColor {
-	WHITE,
-	BLACK,
-	NONE,
+	WHITE(new ChessCell(0, -1)),
+	BLACK(new ChessCell(0, 1)),
+	NONE(new ChessCell(0, 0)),
 	;
+	
+	private final ChessCell direction;
+	
+	private ChessColor(ChessCell direction) {
+		this.direction = direction;
+	}
+	
+	public ChessCell getDirection() {
+		return direction;
+	}
 	
 	public int getID() {
 		return ordinal();

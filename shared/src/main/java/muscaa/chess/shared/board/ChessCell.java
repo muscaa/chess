@@ -5,10 +5,20 @@ import java.io.IOException;
 import fluff.bin.IBinaryInput;
 import fluff.bin.IBinaryOutput;
 import fluff.bin.data.IBinaryData;
+import fluff.vecmath.gen._int.vector.AbstractIntVec2;
 
-public class ChessCell implements IBinaryData {
+public class ChessCell extends AbstractIntVec2<ChessCell> implements IBinaryData {
 	
 	public static final ChessCell INVALID = new ChessCell(-1, -1);
+	
+	public static final ChessCell ZERO_ZERO = new ChessCell(0, 0);
+	public static final ChessCell ONE_ONE = new ChessCell(1, 1);
+	public static final ChessCell ONE_ZERO = new ChessCell(1, 0);
+	public static final ChessCell ZERO_ONE = new ChessCell(0, 1);
+	
+	public static final ChessCell SIZE_ZERO = new ChessCell(ChessPieceMatrix.SIZE, 0);
+	public static final ChessCell ZERO_SIZE = new ChessCell(0, ChessPieceMatrix.SIZE);
+	public static final ChessCell SIZE_SIZE = new ChessCell(ChessPieceMatrix.SIZE, ChessPieceMatrix.SIZE);
 	
 	public int x;
 	public int y;
@@ -25,17 +35,30 @@ public class ChessCell implements IBinaryData {
 		set(INVALID);
 	}
 	
-	public void set(int x, int y) {
-		this.x = x;
-		this.y = y;
-	}
-	
+    @Override
+    protected int proj_1() {
+        return x;
+    }
+    
+    @Override
+    protected int proj_2() {
+        return y;
+    }
+    
+    @Override
+    public ChessCell set(int proj_1, int proj_2) {
+        this.x = proj_1;
+        this.y = proj_2;
+        return this;
+    }
+    
 	public void set(ChessCell cell) {
 		set(cell.x, cell.y);
 	}
 	
-	public boolean isValid() {
-		return !this.equals(INVALID);
+	@Override
+	public ChessCell copy() {
+		return copy(false);
 	}
 	
 	public ChessCell copy(boolean invert) {
@@ -43,8 +66,8 @@ public class ChessCell implements IBinaryData {
 				: new ChessCell(this);
 	}
 	
-	public ChessCell copy() {
-		return copy(false);
+	public boolean isValid() {
+		return !this.equals(INVALID);
 	}
 	
 	@Override
@@ -58,27 +81,4 @@ public class ChessCell implements IBinaryData {
 		out.Int(x);
 		out.Int(y);
 	}
-	
-    @Override
-    public String toString() {
-        return "(" + x + ", " + y + ")";
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof ChessCell cell) {
-            return x == cell.x &&
-                    y == cell.y
-                    ;
-        }
-        return false;
-    }
-    
-    @Override
-    public int hashCode() {
-        long bits = 1L;
-        bits = 31L * bits + x;
-        bits = 31L * bits + y;
-        return (int) (bits ^ (bits >> 32));
-    }
 }

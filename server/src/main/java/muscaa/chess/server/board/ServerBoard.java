@@ -42,7 +42,7 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 		if (!selectedCell.isValid()) {
 			if (!piece.equals(ServerEmptyChessPiece.INSTANCE) && piece.getColor() == turn) {
 				selectedCell.set(cell);
-				player.send(new PacketSelectCell(selectedCell));
+				player.send(new PacketSelectCell(selectedCell, getMoves(selectedCell)));
 			}
 			return;
 		} else {
@@ -52,7 +52,7 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 				} else {
 					selectedCell.set(cell);
 				}
-				player.send(new PacketSelectCell(selectedCell));
+				player.send(new PacketSelectCell(selectedCell, getMoves(selectedCell)));
 				return;
 			}
 			
@@ -66,13 +66,15 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 			
 			turn = turn.invert();
 			selectedCell.set(ChessCell.INVALID);
-			player.send(new PacketSelectCell(selectedCell));
+			player.send(new PacketSelectCell(selectedCell, getMoves(selectedCell)));
 		}
 	}
 	
 	@Override
 	public List<ChessCell> getMoves(ChessCell cell) {
-		return null;
+		if (cell.equals(ChessCell.INVALID)) return List.of();
+		
+		return matrix.get(cell).getMoves(matrix, cell).getList();
 	}
 	
 	private void reset() {
@@ -127,9 +129,14 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 	}
 	
 	public synchronized void onPacketClickCell(ChessClientConnection connection, PacketClickCell packet) {
+		if (players.size() != 2) return;
+		
 		ChessColor clientColor = colors.get(connection);
 		if (clientColor != turn) return;
 		
-		click(packet.getCell());
+		ChessCell cell = packet.getCell();
+		if (cell.x < 0 || cell.y < 0 || cell.x >= ChessPieceMatrix.SIZE || cell.y >= ChessPieceMatrix.SIZE) return;
+		
+		click(cell);
 	}
 }
