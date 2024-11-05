@@ -16,12 +16,12 @@ public class ServerBishopChessPiece extends AbstractServerChessPiece {
 	@Override
 	public void findMoves(ChessMoves<AbstractServerChessPiece> moves, ChessCell cell) {
 		// primary diagonal
-		moves.path(cell, cell.copy().add(ChessCell.SIZE_SIZE), ChessCell.ONE_ONE, Validators.OUT_OF_BOUNDS);
-		moves.path(cell, cell.copy().subtract(ChessCell.SIZE_SIZE), ChessCell.ONE_ONE.copy().negate(), Validators.OUT_OF_BOUNDS);
+		moves.path(cell, cell.copy().add(ChessCell.SIZE_SIZE), ChessCell.ONE_ONE, Validators.DEFAULT);
+		moves.path(cell, cell.copy().subtract(ChessCell.SIZE_SIZE), ChessCell.ONE_ONE.copy().negate(), Validators.DEFAULT);
 		
 		// secondary diagonal
-		moves.path(cell, cell.copy().add(ChessCell.SIZE_ZERO).subtract(ChessCell.ZERO_SIZE), ChessCell.ONE_ZERO.copy().subtract(ChessCell.ZERO_ONE), Validators.OUT_OF_BOUNDS);
-		moves.path(cell, cell.copy().subtract(ChessCell.SIZE_ZERO).add(ChessCell.ZERO_SIZE), ChessCell.ZERO_ONE.copy().subtract(ChessCell.ONE_ZERO), Validators.OUT_OF_BOUNDS);
+		moves.path(cell, cell.copy().add(ChessCell.SIZE_ZERO).subtract(ChessCell.ZERO_SIZE), ChessCell.ONE_ZERO.copy().subtract(ChessCell.ZERO_ONE), Validators.DEFAULT);
+		moves.path(cell, cell.copy().subtract(ChessCell.SIZE_ZERO).add(ChessCell.ZERO_SIZE), ChessCell.ZERO_ONE.copy().subtract(ChessCell.ONE_ZERO), Validators.DEFAULT);
 	}
 	
 	@Override

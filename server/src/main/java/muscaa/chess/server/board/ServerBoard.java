@@ -51,15 +51,18 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 				return;
 			}
 			
-			ChessMoves<AbstractServerChessPiece> moves = getMoves(selectedCell);
+			List<ChessCell> moves = getMoves(selectedCell);
 			
 			boolean validMove = false;
-			for (ChessCell move : moves.getList()) {
+			for (ChessCell move : moves) {
 				if (move.equals(cell)) {
 					validMove = true;
 					break;
 				}
 			}
+			
+			// TODO check if king will be in check by moving the piece on a matrix copy
+			// (maybe this can be handled in the validators? so we have the moves displayed?)
 			
 			if (validMove) {
 				AbstractServerChessPiece selectedPiece = matrix.get(selectedCell);
@@ -67,6 +70,8 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 				matrix.set(cell, selectedPiece);
 				
 				send(new PacketMove(selectedCell, ServerEmptyChessPiece.INSTANCE, cell, selectedPiece, piece));
+				
+				// TODO check for check/mate after move (each piece can check so find everything)
 				
 				turn = turn.invert();
 			}
@@ -78,18 +83,16 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 	public void selectCell(ChessClientConnection player, ChessCell cell) {
 		selectedCell.set(cell);
 		
-		ChessMoves<AbstractServerChessPiece> moves = getMoves(selectedCell);
-		player.send(new PacketSelectCell(selectedCell, moves.getList()));
+		List<ChessCell> moves = getMoves(selectedCell);
+		player.send(new PacketSelectCell(selectedCell, moves));
 	}
 	
-	public ChessMoves<AbstractServerChessPiece> getMoves(ChessCell cell) {
-		ChessMoves<AbstractServerChessPiece> moves = new ChessMoves<>(matrix);
+	public List<ChessCell> getMoves(ChessCell cell) {
+		if (cell.equals(ChessCell.INVALID)) return List.of();
 		
-		if (!cell.equals(ChessCell.INVALID)) {
-			matrix.get(cell).findMoves(moves, cell);
-		}
-		
-		return moves;
+		ChessMoves<AbstractServerChessPiece> moves = new ChessMoves<>(matrix, matrix.get(cell));
+		matrix.get(cell).findMoves(moves, cell);
+		return moves.getList();
 	}
 	
 	private void reset() {

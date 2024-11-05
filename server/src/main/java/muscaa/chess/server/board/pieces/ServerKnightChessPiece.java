@@ -16,18 +16,18 @@ public class ServerKnightChessPiece extends AbstractServerChessPiece {
 	@Override
 	public void findMoves(ChessMoves<AbstractServerChessPiece> moves, ChessCell cell) {
 		// left top
-		moves.cell(cell.copy().add(new ChessCell(-1, -2)), Validators.OUT_OF_BOUNDS);
-		moves.cell(cell.copy().add(new ChessCell(-2, -1)), Validators.OUT_OF_BOUNDS);
+		moves.cell(cell.copy().add(new ChessCell(-1, -2)), Validators.DEFAULT);
+		moves.cell(cell.copy().add(new ChessCell(-2, -1)), Validators.DEFAULT);
 		
 		// left bot
-		moves.cell(cell.copy().add(new ChessCell(-1, 2)), Validators.OUT_OF_BOUNDS);
-		moves.cell(cell.copy().add(new ChessCell(-2, 1)), Validators.OUT_OF_BOUNDS);
+		moves.cell(cell.copy().add(new ChessCell(-1, 2)), Validators.DEFAULT);
+		moves.cell(cell.copy().add(new ChessCell(-2, 1)), Validators.DEFAULT);
 		
-		moves.cell(cell.copy().add(new ChessCell(1, 2)), Validators.OUT_OF_BOUNDS);
-		moves.cell(cell.copy().add(new ChessCell(2, 1)), Validators.OUT_OF_BOUNDS);
+		moves.cell(cell.copy().add(new ChessCell(1, 2)), Validators.DEFAULT);
+		moves.cell(cell.copy().add(new ChessCell(2, 1)), Validators.DEFAULT);
 		
-		moves.cell(cell.copy().add(new ChessCell(1, -2)), Validators.OUT_OF_BOUNDS);
-		moves.cell(cell.copy().add(new ChessCell(2, -1)), Validators.OUT_OF_BOUNDS);
+		moves.cell(cell.copy().add(new ChessCell(1, -2)), Validators.DEFAULT);
+		moves.cell(cell.copy().add(new ChessCell(2, -1)), Validators.DEFAULT);
 	}
 	
 	@Override

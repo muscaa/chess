@@ -16,20 +16,20 @@ public class ServerKingChessPiece extends AbstractServerChessPiece {
 	@Override
 	public void findMoves(ChessMoves<AbstractServerChessPiece> moves, ChessCell cell) {
 		// horizontal
-		moves.cell(cell.copy().add(ChessCell.ONE_ZERO), Validators.OUT_OF_BOUNDS);
-		moves.cell(cell.copy().subtract(ChessCell.ONE_ZERO), Validators.OUT_OF_BOUNDS);
+		moves.cell(cell.copy().add(ChessCell.ONE_ZERO), Validators.DEFAULT);
+		moves.cell(cell.copy().subtract(ChessCell.ONE_ZERO), Validators.DEFAULT);
 		
 		// vertical
-		moves.cell(cell.copy().add(ChessCell.ZERO_ONE), Validators.OUT_OF_BOUNDS);
-		moves.cell(cell.copy().subtract(ChessCell.ZERO_ONE), Validators.OUT_OF_BOUNDS);
+		moves.cell(cell.copy().add(ChessCell.ZERO_ONE), Validators.DEFAULT);
+		moves.cell(cell.copy().subtract(ChessCell.ZERO_ONE), Validators.DEFAULT);
 		
 		// primary diagonal
-		moves.cell(cell.copy().add(ChessCell.ONE_ONE), Validators.OUT_OF_BOUNDS);
-		moves.cell(cell.copy().subtract(ChessCell.ONE_ONE), Validators.OUT_OF_BOUNDS);
+		moves.cell(cell.copy().add(ChessCell.ONE_ONE), Validators.DEFAULT);
+		moves.cell(cell.copy().subtract(ChessCell.ONE_ONE), Validators.DEFAULT);
 		
 		// secondary diagonal
-		moves.cell(cell.copy().add(ChessCell.ONE_ZERO).subtract(ChessCell.ZERO_ONE), Validators.OUT_OF_BOUNDS);
-		moves.cell(cell.copy().subtract(ChessCell.ONE_ZERO).add(ChessCell.ZERO_ONE), Validators.OUT_OF_BOUNDS);
+		moves.cell(cell.copy().add(ChessCell.ONE_ZERO).subtract(ChessCell.ZERO_ONE), Validators.DEFAULT);
+		moves.cell(cell.copy().subtract(ChessCell.ONE_ZERO).add(ChessCell.ZERO_ONE), Validators.DEFAULT);
 	}
 	
 	@Override

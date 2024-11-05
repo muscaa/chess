@@ -1,6 +1,6 @@
 package muscaa.chess.shared.board;
 
-public interface IValidator {
+public interface IValidator<P extends IChessPiece> {
 	
-	ValidationResult validate(ChessCell cell);
+	ValidationResult validate(ChessMoves<P> moves, ChessCell cell);
 }

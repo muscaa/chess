@@ -15,7 +15,7 @@ public class ServerPawnChessPiece extends AbstractServerChessPiece {
 	
 	@Override
 	public void findMoves(ChessMoves<AbstractServerChessPiece> moves, ChessCell cell) {
-		moves.cell(cell.copy().add(color.getDirection()), Validators.OUT_OF_BOUNDS);
+		moves.cell(cell.copy().add(color.getDirection()), Validators.DEFAULT);
 	}
 	
 	@Override

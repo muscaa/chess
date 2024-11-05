@@ -16,12 +16,12 @@ public class ServerRookChessPiece extends AbstractServerChessPiece {
 	@Override
 	public void findMoves(ChessMoves<AbstractServerChessPiece> moves, ChessCell cell) {
 		// horizontal
-		moves.path(cell, cell.copy().add(ChessCell.SIZE_ZERO), ChessCell.ONE_ZERO, Validators.OUT_OF_BOUNDS);
-		moves.path(cell, cell.copy().subtract(ChessCell.SIZE_ZERO), ChessCell.ONE_ZERO.copy().negate(), Validators.OUT_OF_BOUNDS);
+		moves.path(cell, cell.copy().add(ChessCell.SIZE_ZERO), ChessCell.ONE_ZERO, Validators.DEFAULT);
+		moves.path(cell, cell.copy().subtract(ChessCell.SIZE_ZERO), ChessCell.ONE_ZERO.copy().negate(), Validators.DEFAULT);
 		
 		// vertical
-		moves.path(cell, cell.copy().add(ChessCell.ZERO_SIZE), ChessCell.ZERO_ONE, Validators.OUT_OF_BOUNDS);
-		moves.path(cell, cell.copy().subtract(ChessCell.ZERO_SIZE), ChessCell.ZERO_ONE.copy().negate(), Validators.OUT_OF_BOUNDS);
+		moves.path(cell, cell.copy().add(ChessCell.ZERO_SIZE), ChessCell.ZERO_ONE, Validators.DEFAULT);
+		moves.path(cell, cell.copy().subtract(ChessCell.ZERO_SIZE), ChessCell.ZERO_ONE.copy().negate(), Validators.DEFAULT);
 	}
 	
 	@Override
