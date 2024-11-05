@@ -1,6 +1,7 @@
 package muscaa.chess.server.board;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import fluff.network.packet.IPacketOutbound;
@@ -41,36 +42,44 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 		
 		if (selectedCell.equals(ChessCell.INVALID)) {
 			if (!piece.equals(ServerEmptyChessPiece.INSTANCE) && piece.getColor() == turn) {
-				selectedCell.set(cell);
-				ChessMoves<AbstractServerChessPiece> moves = getMoves(selectedCell);
-				player.send(new PacketSelectCell(selectedCell, moves.getList()));
+				selectCell(player, cell);
 			}
 			return;
 		} else {
 			if (!piece.equals(ServerEmptyChessPiece.INSTANCE) && piece.getColor() == turn) {
-				if (selectedCell.equals(cell)) {
-					selectedCell.set(ChessCell.INVALID);
-				} else {
-					selectedCell.set(cell);
-				}
-				ChessMoves<AbstractServerChessPiece> moves = getMoves(selectedCell);
-				player.send(new PacketSelectCell(selectedCell, moves.getList()));
+				selectCell(player, selectedCell.equals(cell) ? ChessCell.INVALID : cell);
 				return;
 			}
 			
-			// TODO check if piece move is valid
-			
-			AbstractServerChessPiece selectedPiece = matrix.get(selectedCell);
-			matrix.set(selectedCell, ServerEmptyChessPiece.INSTANCE);
-			matrix.set(cell, selectedPiece);
-			
-			send(new PacketMove(selectedCell, ServerEmptyChessPiece.INSTANCE, cell, selectedPiece, piece));
-			
-			turn = turn.invert();
-			selectedCell.set(ChessCell.INVALID);
 			ChessMoves<AbstractServerChessPiece> moves = getMoves(selectedCell);
-			player.send(new PacketSelectCell(selectedCell, moves.getList()));
+			
+			boolean validMove = false;
+			for (ChessCell move : moves.getList()) {
+				if (move.equals(cell)) {
+					validMove = true;
+					break;
+				}
+			}
+			
+			if (validMove) {
+				AbstractServerChessPiece selectedPiece = matrix.get(selectedCell);
+				matrix.set(selectedCell, ServerEmptyChessPiece.INSTANCE);
+				matrix.set(cell, selectedPiece);
+				
+				send(new PacketMove(selectedCell, ServerEmptyChessPiece.INSTANCE, cell, selectedPiece, piece));
+				
+				turn = turn.invert();
+			}
+			
+			selectCell(player, ChessCell.INVALID);
 		}
+	}
+	
+	public void selectCell(ChessClientConnection player, ChessCell cell) {
+		selectedCell.set(cell);
+		
+		ChessMoves<AbstractServerChessPiece> moves = getMoves(selectedCell);
+		player.send(new PacketSelectCell(selectedCell, moves.getList()));
 	}
 	
 	public ChessMoves<AbstractServerChessPiece> getMoves(ChessCell cell) {
