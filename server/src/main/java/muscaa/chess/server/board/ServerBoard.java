@@ -1,7 +1,6 @@
 package muscaa.chess.server.board;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import fluff.network.packet.IPacketOutbound;
@@ -20,6 +19,7 @@ import muscaa.chess.server.network.play.packet.PacketStartGame;
 import muscaa.chess.shared.board.AbstractBoard;
 import muscaa.chess.shared.board.ChessCell;
 import muscaa.chess.shared.board.ChessColor;
+import muscaa.chess.shared.board.ChessMoves;
 import muscaa.chess.shared.board.ChessPieceMatrix;
 
 public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
@@ -39,10 +39,11 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 		ChessClientConnection player = players.get(turn);
 		AbstractServerChessPiece piece = matrix.get(cell);
 		
-		if (!selectedCell.isValid()) {
+		if (selectedCell.equals(ChessCell.INVALID)) {
 			if (!piece.equals(ServerEmptyChessPiece.INSTANCE) && piece.getColor() == turn) {
 				selectedCell.set(cell);
-				player.send(new PacketSelectCell(selectedCell, getMoves(selectedCell)));
+				ChessMoves<AbstractServerChessPiece> moves = getMoves(selectedCell);
+				player.send(new PacketSelectCell(selectedCell, moves.getList()));
 			}
 			return;
 		} else {
@@ -52,7 +53,8 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 				} else {
 					selectedCell.set(cell);
 				}
-				player.send(new PacketSelectCell(selectedCell, getMoves(selectedCell)));
+				ChessMoves<AbstractServerChessPiece> moves = getMoves(selectedCell);
+				player.send(new PacketSelectCell(selectedCell, moves.getList()));
 				return;
 			}
 			
@@ -66,15 +68,19 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 			
 			turn = turn.invert();
 			selectedCell.set(ChessCell.INVALID);
-			player.send(new PacketSelectCell(selectedCell, getMoves(selectedCell)));
+			ChessMoves<AbstractServerChessPiece> moves = getMoves(selectedCell);
+			player.send(new PacketSelectCell(selectedCell, moves.getList()));
 		}
 	}
 	
-	@Override
-	public List<ChessCell> getMoves(ChessCell cell) {
-		if (cell.equals(ChessCell.INVALID)) return List.of();
+	public ChessMoves<AbstractServerChessPiece> getMoves(ChessCell cell) {
+		ChessMoves<AbstractServerChessPiece> moves = new ChessMoves<>(matrix);
 		
-		return matrix.get(cell).getMoves(matrix, cell).getList();
+		if (!cell.equals(ChessCell.INVALID)) {
+			matrix.get(cell).findMoves(moves, cell);
+		}
+		
+		return moves;
 	}
 	
 	private void reset() {

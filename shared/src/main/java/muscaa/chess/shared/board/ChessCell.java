@@ -66,10 +66,6 @@ public class ChessCell extends AbstractIntVec2<ChessCell> implements IBinaryData
 				: new ChessCell(this);
 	}
 	
-	public boolean isValid() {
-		return !this.equals(INVALID);
-	}
-	
 	@Override
 	public void readData(IBinaryInput in) throws IOException {
 		x = in.Int();

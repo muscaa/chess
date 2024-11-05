@@ -3,7 +3,6 @@ package muscaa.chess.server.board;
 import muscaa.chess.shared.board.ChessCell;
 import muscaa.chess.shared.board.ChessColor;
 import muscaa.chess.shared.board.ChessMoves;
-import muscaa.chess.shared.board.ChessPieceMatrix;
 import muscaa.chess.shared.board.IChessPiece;
 
 public abstract class AbstractServerChessPiece implements IChessPiece {
@@ -18,7 +17,7 @@ public abstract class AbstractServerChessPiece implements IChessPiece {
 		this.color = color;
 	}
 	
-	public abstract ChessMoves getMoves(ChessPieceMatrix<AbstractServerChessPiece> matrix, ChessCell cell);
+	public abstract void findMoves(ChessMoves<AbstractServerChessPiece> moves, ChessCell cell);
 	
 	@Override
 	public int getID() {

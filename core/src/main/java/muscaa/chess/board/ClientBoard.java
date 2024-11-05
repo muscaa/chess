@@ -32,11 +32,6 @@ public class ClientBoard extends AbstractBoard<ClientChessPiece> {
 		ChessGame.INSTANCE.getNetwork().send(new PacketClickCell(cell));
 	}
 	
-	@Override
-	public List<ChessCell> getMoves(ChessCell cell) {
-		return null;
-	}
-	
 	public ChessColor getColor() {
 		return color;
 	}
