@@ -19,6 +19,8 @@ public abstract class AbstractServerChessPiece implements IChessPiece {
 	
 	public abstract void findMoves(ChessMoves<AbstractServerChessPiece> moves, ChessCell cell);
 	
+	protected void onMove(ChessCell cell) {}
+	
 	@Override
 	public int getID() {
 		return id;

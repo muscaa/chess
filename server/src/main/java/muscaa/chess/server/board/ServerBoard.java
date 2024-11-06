@@ -68,6 +68,7 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 				AbstractServerChessPiece selectedPiece = matrix.get(selectedCell);
 				matrix.set(selectedCell, ServerEmptyChessPiece.INSTANCE);
 				matrix.set(cell, selectedPiece);
+				selectedPiece.onMove(cell);
 				
 				send(new PacketMove(selectedCell, ServerEmptyChessPiece.INSTANCE, cell, selectedPiece, piece));
 				
