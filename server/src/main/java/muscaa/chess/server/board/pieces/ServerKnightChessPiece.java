@@ -5,7 +5,6 @@ import muscaa.chess.shared.board.ChessCell;
 import muscaa.chess.shared.board.ChessColor;
 import muscaa.chess.shared.board.ChessMoves;
 import muscaa.chess.shared.board.IChessPiece;
-import muscaa.chess.shared.board.IValidator;
 import muscaa.chess.shared.board.Validators;
 
 public class ServerKnightChessPiece extends AbstractServerChessPiece {
@@ -16,29 +15,45 @@ public class ServerKnightChessPiece extends AbstractServerChessPiece {
 	
 	@Override
 	public void findMoves(ChessMoves<AbstractServerChessPiece> moves, ChessCell cell) {
-		IValidator main = Validators.and(
-				Validators.IN_BOUNDS,
-				Validators.or(
-						Validators.EMPTY,
-						Validators.DIFFERENT_COLOR
-				)
+		// left top
+		moves.cell(
+				cell.copy().add(new ChessCell(-1, -2)),
+				Validators.mainCell()
+		);
+		moves.cell(
+				cell.copy().add(new ChessCell(-2, -1)),
+				Validators.mainCell()
 		);
 		
-		// left top
-		moves.cell(cell.copy().add(new ChessCell(-1, -2)), main);
-		moves.cell(cell.copy().add(new ChessCell(-2, -1)), main);
-		
 		// left bot
-		moves.cell(cell.copy().add(new ChessCell(-1, 2)), main);
-		moves.cell(cell.copy().add(new ChessCell(-2, 1)), main);
+		moves.cell(
+				cell.copy().add(new ChessCell(-1, 2)),
+				Validators.mainCell()
+		);
+		moves.cell(
+				cell.copy().add(new ChessCell(-2, 1)),
+				Validators.mainCell()
+		);
 		
 		// right bot
-		moves.cell(cell.copy().add(new ChessCell(1, 2)), main);
-		moves.cell(cell.copy().add(new ChessCell(2, 1)), main);
+		moves.cell(
+				cell.copy().add(new ChessCell(1, 2)),
+				Validators.mainCell()
+		);
+		moves.cell(
+				cell.copy().add(new ChessCell(2, 1)),
+				Validators.mainCell()
+		);
 		
 		// right top
-		moves.cell(cell.copy().add(new ChessCell(1, -2)), main);
-		moves.cell(cell.copy().add(new ChessCell(2, -1)), main);
+		moves.cell(
+				cell.copy().add(new ChessCell(1, -2)),
+				Validators.mainCell()
+		);
+		moves.cell(
+				cell.copy().add(new ChessCell(2, -1)),
+				Validators.mainCell()
+		);
 	}
 	
 	@Override

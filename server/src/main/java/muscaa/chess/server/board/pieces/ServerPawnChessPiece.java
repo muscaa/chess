@@ -27,11 +27,25 @@ public class ServerPawnChessPiece extends AbstractServerChessPiece {
 				Validators.DIFFERENT_COLOR
 		);
 		
-		moves.cell(cell.copy().add(color.getDirection()), main);
-		if (totalMoves == 0) moves.cell(cell.copy().add(color.getDirection().copy().multiply(2)), main);
+		moves.cell(
+				cell.copy().add(color.getDirection()),
+				main
+		);
+		if (totalMoves == 0) {
+			moves.cell(
+					cell.copy().add(color.getDirection().copy().multiply(2)),
+					main
+			);
+		}
 		
-		moves.cell(cell.copy().add(color.getDirection()).add(new ChessCell(1, 0)), take);
-		moves.cell(cell.copy().add(color.getDirection()).add(new ChessCell(-1, 0)), take);
+		moves.cell(
+				cell.copy().add(color.getDirection()).add(new ChessCell(1, 0)),
+				take
+		);
+		moves.cell(
+				cell.copy().add(color.getDirection()).add(new ChessCell(-1, 0)),
+				take
+		);
 	}
 	
 	@Override

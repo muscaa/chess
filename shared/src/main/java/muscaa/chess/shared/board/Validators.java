@@ -1,5 +1,7 @@
 package muscaa.chess.shared.board;
 
+import java.util.Map;
+
 public class Validators {
 	
 	public static final IValidator IN_BOUNDS = (moves, cell) -> {
@@ -58,8 +60,8 @@ public class Validators {
 		};
 	}
 	
-	public static IValidator count(IValidator validator, int max) {
-		return new IValidator<IChessPiece>() {
+	public static IValidator count(int max, Map<IValidator, Integer> validators) {
+		return new IValidator<>() {
 			
 			private int count = 0;
 			
@@ -67,12 +69,36 @@ public class Validators {
 			public ValidationResult validate(ChessMoves<IChessPiece> moves, ChessCell cell) {
 				if (count >= max) return ValidationResult.INVALID;
 				
-				ValidationResult result = validator.validate(moves, cell);
-				if (result == ValidationResult.VALID) {
-					count++;
+				ValidationResult result = ValidationResult.INVALID;
+				for (Map.Entry<IValidator, Integer> e : validators.entrySet()) {
+					result = e.getKey().validate(moves, cell);
+					if (result == ValidationResult.VALID) {
+						count += e.getValue();
+						break;
+					}
 				}
 				return result;
 			}
 		};
+	}
+	
+	public static IValidator mainPath() {
+		return and(
+				IN_BOUNDS,
+				count(1, Map.of(
+						EMPTY, 0,
+						DIFFERENT_COLOR, 1
+				))
+		);
+	}
+	
+	public static IValidator mainCell() {
+		return and(
+				IN_BOUNDS,
+				or(
+						Validators.EMPTY,
+						Validators.DIFFERENT_COLOR
+				)
+		);
 	}
 }
