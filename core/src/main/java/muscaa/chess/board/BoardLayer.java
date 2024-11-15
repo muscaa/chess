@@ -12,6 +12,7 @@ import muscaa.chess.render.Screen;
 import muscaa.chess.render.Shapes;
 import muscaa.chess.shared.board.ChessCell;
 import muscaa.chess.shared.board.ChessColor;
+import muscaa.chess.shared.board.ChessMove;
 import muscaa.chess.shared.board.ChessPieceMatrix;
 
 public class BoardLayer implements ILayer {
@@ -63,8 +64,8 @@ public class BoardLayer implements ILayer {
 		
 		// chess moves
 		synchronized (board.getMoves()) {
-			for (ChessCell move : board.getMoves()) {
-				ChessCell niceCell = move.copy(board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK);
+			for (ChessMove move : board.getMoves()) {
+				ChessCell niceCell = move.getCell().copy(board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK);
 	            float x = boardX + niceCell.x * tileSize;
 	            float y = boardY + (ChessPieceMatrix.SIZE - niceCell.y - 1) * tileSize;
 	            

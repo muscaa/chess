@@ -7,11 +7,12 @@ import java.util.List;
 import fluff.bin.IBinaryInput;
 import fluff.network.packet.IPacketInbound;
 import muscaa.chess.shared.board.ChessCell;
+import muscaa.chess.shared.board.ChessMove;
 
 public class PacketSelectCell implements IPacketInbound {
 	
 	private ChessCell cell = new ChessCell();
-	private List<ChessCell> moves = new LinkedList<>();
+	private List<ChessMove> moves = new LinkedList<>();
 	
 	public PacketSelectCell() {}
 	
@@ -21,7 +22,7 @@ public class PacketSelectCell implements IPacketInbound {
 		
 		int len = in.Int();
 		for (int i = 0; i < len; i++) {
-			ChessCell move = new ChessCell();
+			ChessMove move = new ChessMove();
 			in.Data(move);
 			
 			moves.add(move);
@@ -32,7 +33,7 @@ public class PacketSelectCell implements IPacketInbound {
 		return cell;
 	}
 	
-	public List<ChessCell> getMoves() {
+	public List<ChessMove> getMoves() {
 		return moves;
 	}
 }

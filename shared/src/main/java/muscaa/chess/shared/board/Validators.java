@@ -1,6 +1,9 @@
 package muscaa.chess.shared.board;
 
+import java.util.Collection;
 import java.util.Map;
+
+import fluff.functions.gen.obj.BooleanFunc1;
 
 public class Validators {
 	
@@ -79,6 +82,22 @@ public class Validators {
 				}
 				return result;
 			}
+		};
+	}
+	
+	public static IValidator avoid(Collection<ChessCell> cells) {
+		return (moves, cell) -> {
+			if (cells.contains(cell)) return ValidationResult.INVALID;
+			
+			return ValidationResult.VALID;
+		};
+	}
+	
+	public static <P extends IChessPiece> IValidator when(BooleanFunc1<P> func) {
+		return (moves, cell) -> {
+			if (func.invoke((P) moves.getPiece())) return ValidationResult.VALID;
+			
+			return ValidationResult.INVALID;
 		};
 	}
 	

@@ -20,6 +20,7 @@ import muscaa.chess.server.network.play.packet.PacketStartGame;
 import muscaa.chess.shared.board.AbstractBoard;
 import muscaa.chess.shared.board.ChessCell;
 import muscaa.chess.shared.board.ChessColor;
+import muscaa.chess.shared.board.ChessMove;
 import muscaa.chess.shared.board.ChessMoves;
 import muscaa.chess.shared.board.ChessPieceMatrix;
 
@@ -51,11 +52,11 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 				return;
 			}
 			
-			List<ChessCell> moves = getMoves(selectedCell);
+			List<ChessMove> moves = getMoves(selectedCell);
 			
 			boolean validMove = false;
-			for (ChessCell move : moves) {
-				if (move.equals(cell)) {
+			for (ChessMove move : moves) {
+				if (move.getCell().equals(cell)) {
 					validMove = true;
 					break;
 				}
@@ -66,9 +67,10 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 			
 			if (validMove) {
 				AbstractServerChessPiece selectedPiece = matrix.get(selectedCell);
+				selectedPiece = selectedPiece.onMove(cell);
+				
 				matrix.set(selectedCell, ServerEmptyChessPiece.INSTANCE);
 				matrix.set(cell, selectedPiece);
-				selectedPiece.onMove(cell);
 				
 				send(new PacketMove(selectedCell, ServerEmptyChessPiece.INSTANCE, cell, selectedPiece, piece));
 				
@@ -84,15 +86,16 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 	public void selectCell(ChessClientConnection player, ChessCell cell) {
 		selectedCell.set(cell);
 		
-		List<ChessCell> moves = getMoves(selectedCell);
+		List<ChessMove> moves = getMoves(selectedCell);
 		player.send(new PacketSelectCell(selectedCell, moves));
 	}
 	
-	public List<ChessCell> getMoves(ChessCell cell) {
+	public List<ChessMove> getMoves(ChessCell cell) {
 		if (cell.equals(ChessCell.INVALID)) return List.of();
 		
-		ChessMoves<AbstractServerChessPiece> moves = new ChessMoves<>(matrix, matrix.get(cell));
-		matrix.get(cell).findMoves(moves, cell);
+		AbstractServerChessPiece piece = matrix.get(cell);
+		ChessMoves<AbstractServerChessPiece> moves = new ChessMoves<>(matrix, piece, false);
+		piece.findMoves(moves, cell);
 		return moves.getList();
 	}
 	

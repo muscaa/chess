@@ -6,12 +6,12 @@ import muscaa.chess.shared.board.ChessColor;
 import muscaa.chess.shared.board.ChessMoves;
 import muscaa.chess.shared.board.IChessPiece;
 
-public class ServerEmptyChessPiece extends AbstractServerChessPiece {
+public class ServerEmptyChessPiece extends AbstractServerChessPiece<ServerEmptyChessPiece> {
 	
 	public static final ServerEmptyChessPiece INSTANCE = new ServerEmptyChessPiece();
 	
 	private ServerEmptyChessPiece() {
-		super(0, ChessColor.NONE);
+		super(0, ChessColor.NONE, null);
 	}
 	
 	@Override

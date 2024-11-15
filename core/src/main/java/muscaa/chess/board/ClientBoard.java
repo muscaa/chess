@@ -15,13 +15,14 @@ import muscaa.chess.network.play.packets.PacketStartGame;
 import muscaa.chess.shared.board.AbstractBoard;
 import muscaa.chess.shared.board.ChessCell;
 import muscaa.chess.shared.board.ChessColor;
+import muscaa.chess.shared.board.ChessMove;
 import muscaa.chess.task.TaskManager;
 
 public class ClientBoard extends AbstractBoard<ClientChessPiece> {
 	
 	private final ChessColor color;
 	private final ChessCell selectedCell = new ChessCell();
-	private final List<ChessCell> moves = Collections.synchronizedList(new LinkedList<>());
+	private final List<ChessMove> moves = Collections.synchronizedList(new LinkedList<>());
 	
 	public ClientBoard(PacketStartGame packet) {
 		color = packet.getColor();
@@ -68,7 +69,7 @@ public class ClientBoard extends AbstractBoard<ClientChessPiece> {
 		return selectedCell;
 	}
 	
-	public List<ChessCell> getMoves() {
+	public List<ChessMove> getMoves() {
 		return moves;
 	}
 }

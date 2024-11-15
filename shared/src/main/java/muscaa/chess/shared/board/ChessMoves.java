@@ -7,29 +7,31 @@ public class ChessMoves<P extends IChessPiece> {
 	
 	private final ChessPieceMatrix<P> matrix;
 	private final P piece;
-	private final List<ChessCell> list = new LinkedList<>();
+	private final boolean emulated;
+	private final List<ChessMove> list = new LinkedList<>();
 	
-	public ChessMoves(ChessPieceMatrix<P> matrix, P piece) {
+	public ChessMoves(ChessPieceMatrix<P> matrix, P piece, boolean emulated) {
 		this.matrix = matrix;
 		this.piece = piece;
+		this.emulated = emulated;
 	}
 	
-	public ValidationResult cell(ChessCell cell, IValidator<P> validator) {
+	public ValidationResult cell(ChessMoveType type, ChessCell cell, IValidator<P> validator) {
 		ValidationResult result = validator.validate(this, cell);
 		
-		if (result == ValidationResult.VALID) {
-			list.add(cell.copy());
+		if (result == ValidationResult.VALID || emulated) {
+			list.add(new ChessMove(cell.copy(), type));
 		}
 		return result;
 	}
 	
-	public ValidationResult path(ChessCell origin, ChessCell destination, ChessCell increment, IValidator<P> validator) {
+	public ValidationResult path(ChessMoveType type, ChessCell origin, ChessCell destination, ChessCell increment, IValidator<P> validator) {
 		ChessCell cell = origin.copy();
 		
 		while (!cell.equals(destination)) {
 			cell.add(increment); // skip origin
 			
-			ValidationResult result = cell(cell, validator);
+			ValidationResult result = cell(type, cell, validator);
 			if (result == ValidationResult.INVALID) return result;
 		}
 		
@@ -44,7 +46,11 @@ public class ChessMoves<P extends IChessPiece> {
 		return piece;
 	}
 	
-	public List<ChessCell> getList() {
+	public boolean isEmulated() {
+		return emulated;
+	}
+	
+	public List<ChessMove> getList() {
 		return list;
 	}
 }
