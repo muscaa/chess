@@ -100,24 +100,4 @@ public class Validators {
 			return ValidationResult.INVALID;
 		};
 	}
-	
-	public static IValidator mainPath() {
-		return and(
-				IN_BOUNDS,
-				count(1, Map.of(
-						EMPTY, 0,
-						DIFFERENT_COLOR, 1
-				))
-		);
-	}
-	
-	public static IValidator mainCell() {
-		return and(
-				IN_BOUNDS,
-				or(
-						Validators.EMPTY,
-						Validators.DIFFERENT_COLOR
-				)
-		);
-	}
 }

@@ -19,6 +19,10 @@ public class ServerEmptyChessPiece extends AbstractServerChessPiece<ServerEmptyC
 	}
 	
 	@Override
+	public void simulateMoves(ChessMoves<AbstractServerChessPiece> moves, ChessCell cell) {
+	}
+	
+	@Override
 	public IChessPiece copy() {
 		return INSTANCE;
 	}

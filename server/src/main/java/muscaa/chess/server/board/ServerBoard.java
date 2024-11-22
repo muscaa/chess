@@ -94,7 +94,7 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 		if (cell.equals(ChessCell.INVALID)) return List.of();
 		
 		AbstractServerChessPiece piece = matrix.get(cell);
-		ChessMoves<AbstractServerChessPiece> moves = new ChessMoves<>(matrix, piece, false);
+		ChessMoves<AbstractServerChessPiece> moves = new ChessMoves<>(matrix, piece);
 		piece.findMoves(moves, cell);
 		return moves.getList();
 	}

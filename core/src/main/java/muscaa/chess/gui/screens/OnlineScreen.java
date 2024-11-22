@@ -20,7 +20,7 @@ public class OnlineScreen extends GuiScreen {
 	
 	@Override
 	protected void init() {
-		ip = "192.168.0.100";
+		ip = "localhost";
 		port = 40755;
 		username = "muscaa";
 		

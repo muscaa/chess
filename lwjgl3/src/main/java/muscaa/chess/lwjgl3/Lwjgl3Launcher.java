@@ -24,7 +24,8 @@ public class Lwjgl3Launcher {
 		c.setTitle("Chess");
 		c.useVsync(true);
 		c.setForegroundFPS(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate + 1);
-		c.setWindowedMode(16 * 100, 9 * 100);
+		//c.setWindowedMode(16 * 100, 9 * 100);
+		c.setWindowedMode(640, 480);
 		c.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");
 		c.setBackBufferConfig(8, 8, 8, 8, 16, 0, samples);
 		c.setWindowSizeLimits(640, 480, -1, -1);

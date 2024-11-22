@@ -12,7 +12,7 @@ public class MainScreen extends GuiScreen {
 	
 	@Override
 	protected void init() {
-		Sounds.AMBIENT.loop(0.5F);
+		//Sounds.AMBIENT.loop(0.5F);
 		
 		VisTable main = Widgets.table(true);
 		
