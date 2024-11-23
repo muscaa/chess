@@ -1,28 +1,33 @@
 package muscaa.chess.server.board;
 
-import java.util.Map;
-
 import fluff.functions.gen.obj.Func1;
-import muscaa.chess.server.board.pieces.ServerKingChessPiece;
 import muscaa.chess.shared.board.ChessCell;
 import muscaa.chess.shared.board.ChessColor;
 import muscaa.chess.shared.board.ChessMoves;
 import muscaa.chess.shared.board.IChessPiece;
 import muscaa.chess.shared.board.IValidator;
-import muscaa.chess.shared.board.Validators;
+
+import static muscaa.chess.shared.board.Validators.*;
+import static muscaa.chess.shared.board.IPair.*;
 
 public abstract class AbstractServerChessPiece<P extends AbstractServerChessPiece<P>> implements IChessPiece {
 	
 	protected final int id;
 	protected final ChessColor color;
+	protected final boolean checkable;
 	protected final Func1<P, ChessColor> newInstanceFunc;
 	
 	protected int totalMoves = 0;
 	
-	public AbstractServerChessPiece(int id, ChessColor color, Func1<P, ChessColor> newInstanceFunc) {
+	public AbstractServerChessPiece(int id, ChessColor color, boolean checkable, Func1<P, ChessColor> newInstanceFunc) {
 		this.id = color == ChessColor.WHITE ? id : -id;
 		this.color = color;
+		this.checkable = checkable;
 		this.newInstanceFunc = newInstanceFunc;
+	}
+	
+	public AbstractServerChessPiece(int id, ChessColor color, Func1<P, ChessColor> newInstanceFunc) {
+		this(id, color, false, newInstanceFunc);
 	}
 	
 	public abstract void findMoves(ChessMoves<AbstractServerChessPiece> moves, ChessCell cell);
@@ -45,6 +50,11 @@ public abstract class AbstractServerChessPiece<P extends AbstractServerChessPiec
 		return color;
 	}
 	
+	@Override
+	public boolean isCheckable() {
+		return checkable;
+	}
+	
 	protected void copy(P newInstance) {
 		newInstance.totalMoves = totalMoves;
 	}
@@ -57,23 +67,26 @@ public abstract class AbstractServerChessPiece<P extends AbstractServerChessPiec
 	}
 	
 	public static IValidator findValidator() {
-		return Validators.and(
-				Validators.IN_BOUNDS,
-				Validators.count(1, Map.of(
-						Validators.EMPTY, 0,
-						Validators.DIFFERENT_COLOR, 1
-				))
+		return and(
+				IN_BOUNDS,
+				count(1,
+						of(0, EMPTY),
+						of(1, DIFFERENT_COLOR)
+				)
 		);
 	}
 	
 	public static IValidator simulateValidator() {
-		return Validators.and(
-				Validators.IN_BOUNDS,
-				Validators.count(1, Map.of(
-						Validators.EMPTY, 0,
-						Validators.when(piece -> piece instanceof ServerKingChessPiece), 0,
-						Validators.NOT_EMPTY, 1
-				))
+		return and(
+				IN_BOUNDS,
+				count(1,
+						of(0, EMPTY),
+						of(0, and(
+								CHECKABLE,
+								DIFFERENT_COLOR
+								)),
+						of(1, DIFFERENT_COLOR)
+				)
 		);
 	}
 }

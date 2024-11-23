@@ -1,7 +1,6 @@
 package muscaa.chess.shared.board;
 
 import java.util.Collection;
-import java.util.Map;
 
 import fluff.functions.gen.obj.BooleanFunc1;
 
@@ -21,6 +20,14 @@ public class Validators {
 		return ValidationResult.INVALID;
 	};
 	public static final IValidator NOT_EMPTY = negate(EMPTY);
+	
+	public static final IValidator CHECKABLE = (moves, cell) -> {
+		if (moves.getMatrix().get(cell).isCheckable()) {
+			return ValidationResult.VALID;
+		}
+		return ValidationResult.INVALID;
+	};
+	public static final IValidator NOT_CHECKABLE = negate(CHECKABLE);
 	
 	public static final IValidator SAME_COLOR = (moves, cell) -> {
 		ChessColor color = moves.getPiece().getColor();
@@ -63,7 +70,7 @@ public class Validators {
 		};
 	}
 	
-	public static IValidator count(int max, Map<IValidator, Integer> validators) {
+	public static IValidator count(int max, IPair<Integer, IValidator>... validators) {
 		return new IValidator<>() {
 			
 			private int count = 0;
@@ -73,10 +80,10 @@ public class Validators {
 				if (count >= max) return ValidationResult.INVALID;
 				
 				ValidationResult result = ValidationResult.INVALID;
-				for (Map.Entry<IValidator, Integer> e : validators.entrySet()) {
-					result = e.getKey().validate(moves, cell);
+				for (IPair<Integer, IValidator> p : validators) {
+					result = p.getValue().validate(moves, cell);
 					if (result == ValidationResult.VALID) {
-						count += e.getValue();
+						count += p.getKey();
 						break;
 					}
 				}

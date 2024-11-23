@@ -6,5 +6,7 @@ public interface IChessPiece {
 	
 	ChessColor getColor();
 	
+	boolean isCheckable();
+	
 	IChessPiece copy();
 }

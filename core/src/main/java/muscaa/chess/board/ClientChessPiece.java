@@ -15,14 +15,14 @@ public class ClientChessPiece implements IChessPiece {
 	
 	public static final ClientChessPiece EMPTY = new ClientChessPiece(0, ChessColor.NONE, null);
 	
-	public static final ClientChessPiece WHITE_KING = new ClientChessPiece(1, ChessColor.WHITE, Textures.WHITE_KING);
+	public static final ClientChessPiece WHITE_KING = new ClientChessPiece(1, ChessColor.WHITE, true, Textures.WHITE_KING);
 	public static final ClientChessPiece WHITE_QUEEN = new ClientChessPiece(2, ChessColor.WHITE, Textures.WHITE_QUEEN);
 	public static final ClientChessPiece WHITE_BISHOP = new ClientChessPiece(3, ChessColor.WHITE, Textures.WHITE_BISHOP);
 	public static final ClientChessPiece WHITE_KNIGHT = new ClientChessPiece(4, ChessColor.WHITE, Textures.WHITE_KNIGHT);
 	public static final ClientChessPiece WHITE_ROOK = new ClientChessPiece(5, ChessColor.WHITE, Textures.WHITE_ROOK);
 	public static final ClientChessPiece WHITE_PAWN = new ClientChessPiece(6, ChessColor.WHITE, Textures.WHITE_PAWN);
 	
-	public static final ClientChessPiece BLACK_KING = new ClientChessPiece(-1, ChessColor.BLACK, Textures.BLACK_KING);
+	public static final ClientChessPiece BLACK_KING = new ClientChessPiece(-1, ChessColor.BLACK, true, Textures.BLACK_KING);
 	public static final ClientChessPiece BLACK_QUEEN = new ClientChessPiece(-2, ChessColor.BLACK, Textures.BLACK_QUEEN);
 	public static final ClientChessPiece BLACK_BISHOP = new ClientChessPiece(-3, ChessColor.BLACK, Textures.BLACK_BISHOP);
 	public static final ClientChessPiece BLACK_KNIGHT = new ClientChessPiece(-4, ChessColor.BLACK, Textures.BLACK_KNIGHT);
@@ -31,14 +31,20 @@ public class ClientChessPiece implements IChessPiece {
 	
 	protected final int id;
 	protected final ChessColor color;
+	protected final boolean checkable;
 	protected final Texture texture;
 	
-	public ClientChessPiece(int id, ChessColor color, Texture texture) {
+	public ClientChessPiece(int id, ChessColor color, boolean checkable, Texture texture) {
 		this.id = id;
 		this.color = color;
+		this.checkable = checkable;
 		this.texture = texture;
 		
 		REG.put(id, this);
+	}
+	
+	public ClientChessPiece(int id, ChessColor color, Texture texture) {
+		this(id, color, false, texture);
 	}
 	
 	@Override
@@ -49,6 +55,11 @@ public class ClientChessPiece implements IChessPiece {
 	@Override
 	public ChessColor getColor() {
 		return color;
+	}
+	
+	@Override
+	public boolean isCheckable() {
+		return checkable;
 	}
 	
 	@Override

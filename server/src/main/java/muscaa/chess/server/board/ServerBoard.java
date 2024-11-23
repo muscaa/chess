@@ -21,7 +21,6 @@ import muscaa.chess.shared.board.AbstractBoard;
 import muscaa.chess.shared.board.ChessCell;
 import muscaa.chess.shared.board.ChessColor;
 import muscaa.chess.shared.board.ChessMove;
-import muscaa.chess.shared.board.ChessMoves;
 import muscaa.chess.shared.board.ChessPieceMatrix;
 
 public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
@@ -52,7 +51,7 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 				return;
 			}
 			
-			List<ChessMove> moves = getMoves(selectedCell);
+			List<ChessMove> moves = BoardUtils.findMoves(matrix, selectedCell);
 			
 			boolean validMove = false;
 			for (ChessMove move : moves) {
@@ -86,17 +85,8 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 	public void selectCell(ChessClientConnection player, ChessCell cell) {
 		selectedCell.set(cell);
 		
-		List<ChessMove> moves = getMoves(selectedCell);
+		List<ChessMove> moves = BoardUtils.findMoves(matrix, selectedCell);
 		player.send(new PacketSelectCell(selectedCell, moves));
-	}
-	
-	public List<ChessMove> getMoves(ChessCell cell) {
-		if (cell.equals(ChessCell.INVALID)) return List.of();
-		
-		AbstractServerChessPiece piece = matrix.get(cell);
-		ChessMoves<AbstractServerChessPiece> moves = new ChessMoves<>(matrix, piece);
-		piece.findMoves(moves, cell);
-		return moves.getList();
 	}
 	
 	private void reset() {
