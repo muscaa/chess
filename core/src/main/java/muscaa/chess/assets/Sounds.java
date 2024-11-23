@@ -10,9 +10,13 @@ public class Sounds {
 	
 	private static final List<Sound> REG = new LinkedList<>();
 	
+	public static final Sound GAME_START = create("sounds/game-start.ogg");
+	public static final Sound GAME_END = create("sounds/game-end.ogg");
+	public static final Sound NOTIFY = create("sounds/notify.ogg");
 	public static final Sound MOVE = create("sounds/move.ogg");
 	public static final Sound CAPTURE = create("sounds/capture.ogg");
-	public static final Sound NOTIFY = create("sounds/notify.ogg");
+	public static final Sound CHECK = create("sounds/check.ogg");
+	public static final Sound PROMOTE = create("sounds/promote.ogg");
 	
 	public static final Sound AMBIENT = create("sounds/ambient.ogg");
 	
