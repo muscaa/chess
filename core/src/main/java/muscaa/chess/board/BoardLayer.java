@@ -43,6 +43,8 @@ public class BoardLayer implements ILayer {
     		
     		if (board.getSelectedCell().equals(niceCell)) {
     			color = Theme.BOARD_CELL_SELECTED;
+    		} else if (board.getCheckCell().equals(niceCell)) {
+    			color = Theme.BOARD_CELL_CHECK;
     		}
             
             Shapes.rect(x, y, tileSize, tileSize, color);

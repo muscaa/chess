@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.badlogic.gdx.audio.Sound;
+
 import muscaa.chess.ChessGame;
 import muscaa.chess.assets.Sounds;
 import muscaa.chess.gui.screens.DisconnectedScreen;
@@ -22,6 +24,7 @@ public class ClientBoard extends AbstractBoard<ClientChessPiece> {
 	
 	private final ChessColor color;
 	private final ChessCell selectedCell = new ChessCell();
+	private final ChessCell checkCell = new ChessCell();
 	private final List<ChessMove> moves = Collections.synchronizedList(new LinkedList<>());
 	
 	public ClientBoard(PacketStartGame packet) {
@@ -50,12 +53,16 @@ public class ClientBoard extends AbstractBoard<ClientChessPiece> {
 	public synchronized void move(PacketMove packet) {
 		matrix.set(packet.getFrom(), packet.getFromPiece());
 		matrix.set(packet.getTo(), packet.getToPiece());
+		checkCell.set(packet.getCheckCell());
 		
-		if (packet.getCapturePiece() != null) {
-			Sounds.CAPTURE.play();
-		} else {
-			Sounds.MOVE.play();
+		Sound sound = Sounds.MOVE;
+		if (!packet.getCheckCell().equals(ChessCell.INVALID)) {
+			sound = Sounds.CHECK;
+		} else if (!packet.getCapturePiece().equals(ClientChessPiece.EMPTY)) {
+			sound = Sounds.CAPTURE;
 		}
+		
+		sound.play();
 	}
 	
 	public synchronized void selectCell(PacketSelectCell packet) {
@@ -71,5 +78,9 @@ public class ClientBoard extends AbstractBoard<ClientChessPiece> {
 	
 	public List<ChessMove> getMoves() {
 		return moves;
+	}
+	
+	public ChessCell getCheckCell() {
+		return checkCell;
 	}
 }

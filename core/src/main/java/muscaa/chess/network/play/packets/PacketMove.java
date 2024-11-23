@@ -14,6 +14,7 @@ public class PacketMove implements IPacketInbound {
 	private ChessCell to = new ChessCell();
 	private ClientChessPiece toPiece;
 	private ClientChessPiece capturePiece;
+	private ChessCell checkCell = new ChessCell();
 	
 	public PacketMove() {}
 	
@@ -26,6 +27,8 @@ public class PacketMove implements IPacketInbound {
 		toPiece = ClientChessPiece.of(in.Int());
 		
 		capturePiece = ClientChessPiece.of(in.Int());
+		
+		in.Data(checkCell);
 	}
 	
 	public ChessCell getFrom() {
@@ -46,5 +49,9 @@ public class PacketMove implements IPacketInbound {
 	
 	public ClientChessPiece getCapturePiece() {
 		return capturePiece;
+	}
+	
+	public ChessCell getCheckCell() {
+		return checkCell;
 	}
 }

@@ -14,13 +14,15 @@ public class PacketMove implements IPacketOutbound {
 	private ChessCell to;
 	private AbstractServerChessPiece toPiece;
 	private AbstractServerChessPiece capturePiece;
+	private ChessCell checkCell;
 	
-	public PacketMove(ChessCell from, AbstractServerChessPiece fromPiece, ChessCell to, AbstractServerChessPiece toPiece, AbstractServerChessPiece capturePiece) {
+	public PacketMove(ChessCell from, AbstractServerChessPiece fromPiece, ChessCell to, AbstractServerChessPiece toPiece, AbstractServerChessPiece capturePiece, ChessCell checkCell) {
 		this.from = from.copy();
 		this.fromPiece = fromPiece;
 		this.to = to.copy();
 		this.toPiece = toPiece;
 		this.capturePiece = capturePiece;
+		this.checkCell = checkCell.copy();
 	}
 	
 	@Override
@@ -32,5 +34,7 @@ public class PacketMove implements IPacketOutbound {
 		out.Int(toPiece.getID());
 		
 		out.Int(capturePiece.getID());
+		
+		out.Data(checkCell);
 	}
 }

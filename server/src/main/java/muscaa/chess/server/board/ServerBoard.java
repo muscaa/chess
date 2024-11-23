@@ -3,6 +3,8 @@ package muscaa.chess.server.board;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import fluff.network.packet.IPacketOutbound;
 import muscaa.chess.server.board.pieces.ServerBishopChessPiece;
@@ -21,6 +23,7 @@ import muscaa.chess.shared.board.AbstractBoard;
 import muscaa.chess.shared.board.ChessCell;
 import muscaa.chess.shared.board.ChessColor;
 import muscaa.chess.shared.board.ChessMove;
+import muscaa.chess.shared.board.ChessMoveType;
 import muscaa.chess.shared.board.ChessPieceMatrix;
 
 public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
@@ -30,6 +33,7 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 	
 	private ChessColor turn;
 	private final ChessCell selectedCell = new ChessCell();
+	private final ChessCell checkCell = new ChessCell();
 	
 	public ServerBoard() {
 		reset();
@@ -61,19 +65,31 @@ public class ServerBoard extends AbstractBoard<AbstractServerChessPiece> {
 				}
 			}
 			
-			// TODO check if king will be in check by moving the piece on a matrix copy
-			// (maybe this can be handled in the validators? so we have the moves displayed?)
-			
 			if (validMove) {
 				AbstractServerChessPiece selectedPiece = matrix.get(selectedCell);
 				selectedPiece = selectedPiece.onMove(cell);
 				
 				matrix.set(selectedCell, ServerEmptyChessPiece.INSTANCE);
 				matrix.set(cell, selectedPiece);
+				checkCell.set(ChessCell.INVALID);
 				
-				send(new PacketMove(selectedCell, ServerEmptyChessPiece.INSTANCE, cell, selectedPiece, piece));
+				Set<ChessCell> inCheck = BoardUtils.simulateMoves(matrix, turn)
+						.stream()
+						.filter(move -> move.getType() == ChessMoveType.TAKE)
+						.map(ChessMove::getCell)
+						.collect(Collectors.toSet());
 				
-				// TODO check for check/mate after move (each piece can check so find everything)
+				for (ChessCell ccell : matrix) {
+					AbstractServerChessPiece checkablePiece = matrix.get(ccell);
+					if (!checkablePiece.isCheckable()) continue;
+					if (checkablePiece.getColor() == turn) continue;
+					
+					if (inCheck.contains(ccell)) {
+						checkCell.set(ccell);
+					}
+				}
+				
+				send(new PacketMove(selectedCell, ServerEmptyChessPiece.INSTANCE, cell, selectedPiece, piece, checkCell));
 				
 				turn = turn.invert();
 			}
