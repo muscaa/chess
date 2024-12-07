@@ -1,11 +1,8 @@
 package muscaa.chess.server.network;
 
-import java.io.IOException;
-import java.net.Socket;
 import java.util.UUID;
 
 import fluff.network.INetHandler;
-import fluff.network.NetworkException;
 import fluff.network.packet.IPacketChannel;
 import fluff.network.packet.PacketContext;
 import fluff.network.server.AbstractClientConnection;
@@ -16,13 +13,11 @@ public class ChessClientConnection extends AbstractClientConnection {
 	
 	private UUID uuid;
 	
-	public ChessClientConnection(AbstractServer server, Socket socket, PacketContext<?> context,
-			INetHandler handler, IPacketChannel channel) throws IOException, NetworkException {
+	public ChessClientConnection(AbstractServer server, PacketContext<?> context, INetHandler handler, IPacketChannel channel) {
 		super(server);
 		
 		setContextUnsafe(context, handler);
         setChannel(channel);
-        openConnection(socket);
 	}
 	
 	public void login(String name) {

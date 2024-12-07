@@ -1,47 +1,44 @@
 package muscaa.chess.server.network;
 
-import java.io.IOException;
-import java.net.Socket;
-
 import fluff.network.NetworkException;
+import fluff.network.server.AbstractClientConnection;
 import fluff.network.server.AbstractServer;
-import fluff.network.server.IClientConnection;
+import fluff.network.server.modules.TimeoutModule;
 import muscaa.chess.shared.network.common.packets.PacketDisconnect;
 
 public class ChessServer extends AbstractServer {
 	
 	public ChessServer(int port) {
 		super(port);
-	}
-	
-	@Override
-	protected void createConnection(Socket socket) throws IOException, NetworkException {
-		ChessClientConnection client = new ChessClientConnection(this, socket,
-				defaultContext, defaultHandlerFunc.invoke(), defaultChannelFunc.invoke());
 		
-		if (!client.isConnected()) client.disconnect();
+		addModule(new TimeoutModule());
 	}
 	
 	@Override
-	protected void onConnect(IClientConnection client) throws NetworkException {
-		System.out.println(client.hashCode() + " connected");
+	protected AbstractClientConnection createConnection() {
+		return new ChessClientConnection(this, defaultContext, defaultHandlerFunc.invoke(), defaultChannelFunc.invoke());
+	}
+	
+	@Override
+	protected void onConnect(AbstractClientConnection connection) throws NetworkException {
+		System.out.println(connection.hashCode() + " connected");
 		
-		super.onConnect(client);
+		super.onConnect(connection);
 	}
 	
 	@Override
-	protected void onDisconnect(IClientConnection client) {
-		System.out.println(client.hashCode() + " disconnected");
+	protected void onDisconnect(AbstractClientConnection connection) {
+		System.out.println(connection.hashCode() + " disconnected");
 		
-		super.onDisconnect(client);
+		super.onDisconnect(connection);
 	}
 	
-	@Override
+	/*@Override
 	protected boolean establishConnection(IClientConnection client) {
 		boolean result = super.establishConnection(client);
 		System.out.println("timedout: " + !result);
 		return result;
-	}
+	}*/
 	
 	@Override
 	public void disconnectAll() {
