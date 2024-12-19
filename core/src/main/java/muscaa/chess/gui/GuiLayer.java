@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.kotcrab.vis.ui.VisUI;
 
-import muscaa.chess.ChessGame;
+import muscaa.chess.Core;
 import muscaa.chess.assets.Fonts;
 import muscaa.chess.gui.screens.MainScreen;
 import muscaa.chess.layer.ILayer;
@@ -53,7 +53,7 @@ public class GuiLayer implements ILayerWrapper {
 		
 		screen = newScreen;
 		if (screen == null) {
-			if (ChessGame.INSTANCE.getBoardLayer().getBoard() != null) return;
+			if (Core.INSTANCE.getBoardLayer().isInGame()) return;
 			
 			screen = new MainScreen();
 		}

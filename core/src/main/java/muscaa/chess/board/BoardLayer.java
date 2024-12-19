@@ -1,115 +1,133 @@
 package muscaa.chess.board;
 
-import java.util.Objects;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import com.badlogic.gdx.graphics.Color;
 
-import muscaa.chess.assets.Fonts;
-import muscaa.chess.assets.Textures;
+import muscaa.chess.Core;
+import muscaa.chess.assets.Sounds;
+import muscaa.chess.assets.TextureAsset;
 import muscaa.chess.config.Theme;
+import muscaa.chess.gui.screens.DisconnectedScreen;
 import muscaa.chess.layer.ILayer;
+import muscaa.chess.network.play.packets.CPacketBoard;
+import muscaa.chess.network.play.packets.CPacketClickCell;
+import muscaa.chess.network.play.packets.CPacketEndGame;
+import muscaa.chess.network.play.packets.CPacketHighlightCells;
+import muscaa.chess.network.play.packets.CPacketStartGame;
+import muscaa.chess.network.play.packets.CPacketTeam;
 import muscaa.chess.render.Screen;
 import muscaa.chess.render.Shapes;
-import muscaa.chess.shared.board.ChessCell;
-import muscaa.chess.shared.board.ChessColor;
-import muscaa.chess.shared.board.ChessMove;
-import muscaa.chess.shared.board.ChessPieceMatrix;
+import muscaa.chess.shared.board.Cell;
+import muscaa.chess.shared.board.Highlight;
+import muscaa.chess.shared.board.Team;
+import muscaa.chess.shared.registry.registries.HighlightRegistry;
+import muscaa.chess.shared.registry.registries.TeamRegistry;
+import muscaa.chess.task.TaskManager;
 
 public class BoardLayer implements ILayer {
-	
+    
+	private boolean inGame;
+    private ClientMatrix matrix;
+    private Team team;
+    private Map<Cell, Highlight> highlights = new HashMap<>();
+    
     private float tileSize;
     private float boardX, boardY;
-    
-    private ClientBoard board;
-    
-	public BoardLayer() {
-        tileSize = Math.min(Screen.WIDTH, Screen.HEIGHT) / ChessPieceMatrix.SIZE;
-        
-        boardX = (Screen.WIDTH - (tileSize * ChessPieceMatrix.SIZE)) / 2;
-        boardY = (Screen.HEIGHT - (tileSize * ChessPieceMatrix.SIZE)) / 2;
-	}
 	
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
-		if (board == null) return;
+		if (!isReady()) return;
 		
 		// chess table
-		for (ChessCell cell : board.getMatrix()) {
+		for (Cell cell : matrix) {
         	Color color = (cell.x + cell.y) % 2 == 0 ? Theme.BOARD_CELL_LIGHT : Theme.BOARD_CELL_DARK;
             float x = boardX + cell.x * tileSize;
-            float y = boardY + (ChessPieceMatrix.SIZE - cell.y - 1) * tileSize;
-            
-            ChessCell niceCell = cell.copy(board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK);
-    		
-    		if (board.getSelectedCell().equals(niceCell)) {
-    			color = Theme.BOARD_CELL_SELECTED;
-    		} else if (board.getCheckCell().equals(niceCell)) {
-    			color = Theme.BOARD_CELL_CHECK;
-    		}
+            float y = boardY + (matrix.getHeight() - cell.y - 1) * tileSize;
             
             Shapes.rect(x, y, tileSize, tileSize, color);
 		}
 		
-		// chess pieces
-		for (ChessCell cell : board.getMatrix()) {
-            float x = boardX + cell.x * tileSize;
-            float y = boardY + (ChessPieceMatrix.SIZE - cell.y - 1) * tileSize;
-            float off = tileSize / 32;
+		// chess highlights under
+		for (Map.Entry<Cell, Highlight> highlightEntry : highlights.entrySet()) {
+			Cell niceCell = highlightEntry.getKey().copy(team == TeamRegistry.BLACK && Theme.INVERT_TABLE_IF_BLACK);
+            float x = boardX + niceCell.x * tileSize;
+            float y = boardY + (matrix.getHeight() - niceCell.y - 1) * tileSize;
             
-            ChessCell niceCell = cell.copy(board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK);
-    		ClientChessPiece piece = board.getMatrix().get(niceCell);
+            Highlight highlight = highlightEntry.getValue();
             
-            if (!piece.equals(ClientChessPiece.EMPTY)) {
-            	Textures.draw(piece.getTexture(), x + off, y + off, tileSize - off * 2, tileSize - off * 2);
+            Color color = null;
+            if (highlight == HighlightRegistry.SELECTED) {
+            	color = Theme.BOARD_CELL_SELECTED;
+            } else if (highlight == HighlightRegistry.CHECK) {
+            	color = Theme.BOARD_CELL_CHECK;
+            }
+            
+            if (color != null) {
+            	Shapes.rect(x, y, tileSize, tileSize, color);
             }
 		}
 		
-		// chess moves
-		synchronized (board.getMoves()) {
-			for (ChessMove move : board.getMoves()) {
-				ChessCell niceCell = move.getCell().copy(board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK);
-	            float x = boardX + niceCell.x * tileSize;
-	            float y = boardY + (ChessPieceMatrix.SIZE - niceCell.y - 1) * tileSize;
-	            
-	            Shapes.circle(x + tileSize / 2, y + tileSize / 2, tileSize / 6, Theme.BOARD_CELL_MOVE_AVAILABLE);
+		// chess pieces
+		for (Cell cell : matrix) {
+            float x = boardX + cell.x * tileSize;
+            float y = boardY + (matrix.getHeight() - cell.y - 1) * tileSize;
+            float off = tileSize / 32;
+            
+            Cell niceCell = cell.copy(team == TeamRegistry.BLACK && Theme.INVERT_TABLE_IF_BLACK);
+    		TexturedPiece piece = matrix.get(niceCell);
+        	TextureAsset texture = piece.getTexture();
+        	
+        	texture.draw(x + off, y + off, tileSize - off * 2, tileSize - off * 2);
+		}
+		
+		// chess highlights above
+		for (Map.Entry<Cell, Highlight> highlightEntry : highlights.entrySet()) {
+			Cell niceCell = highlightEntry.getKey().copy(team == TeamRegistry.BLACK && Theme.INVERT_TABLE_IF_BLACK);
+            float x = boardX + niceCell.x * tileSize;
+            float y = boardY + (matrix.getHeight() - niceCell.y - 1) * tileSize;
+            
+            Highlight highlight = highlightEntry.getValue();
+            
+            Color color = null;
+            if (highlight == HighlightRegistry.MOVE_AVAILABLE) {
+            	color = Theme.BOARD_CELL_MOVE_AVAILABLE;
+            }
+            
+			if (color != null) {
+				Shapes.circle(x + tileSize / 2, y + tileSize / 2, tileSize / 6, color);
 			}
 		}
-        
-        Object[] debug = new Object[] {
-		};
-        
-        float y = Screen.HEIGHT - 10;
-        for (Object info : debug) {
-        	Fonts.draw(Fonts.VARELA_18, Objects.toString(info), 10, y, Color.WHITE);
-        	
-        	y -= Fonts.VARELA_18.getLineHeight();
-        }
 	}
 	
 	@Override
 	public void resize(int width, int height) {
-		tileSize = Math.min(Screen.WIDTH, Screen.HEIGHT) / ChessPieceMatrix.SIZE;
+		if (matrix == null) return;
+		
+        tileSize = Math.min(width, height) / Math.max(matrix.getWidth(), matrix.getHeight());
         
-        boardX = (Screen.WIDTH - (tileSize * ChessPieceMatrix.SIZE)) / 2;
-        boardY = (Screen.HEIGHT - (tileSize * ChessPieceMatrix.SIZE)) / 2;
+        boardX = (width - (tileSize * matrix.getWidth())) / 2;
+        boardY = (height - (tileSize * matrix.getHeight())) / 2;
 	}
 	
 	@Override
 	public boolean hover(int mouseX, int mouseY) {
-		return board != null;
+		return isReady();
 	}
 	
 	@Override
 	public boolean mouseDown(int mouseX, int mouseY, int pointer, int button) {
-		if (board == null) return false;
+		if (!isReady()) return false;
 		
-		for (ChessCell cell : board.getMatrix()) {
+		for (Cell cell : matrix) {
             float x = boardX + cell.x * tileSize;
-            float y = boardY + (ChessPieceMatrix.SIZE - cell.y - 1) * tileSize;
+            float y = boardY + (matrix.getHeight() - cell.y - 1) * tileSize;
             
-            ChessCell niceCell = cell.copy(board.getColor() == ChessColor.BLACK && Theme.INVERT_TABLE_IF_BLACK);
+            Cell niceCell = cell.copy(team == TeamRegistry.BLACK && Theme.INVERT_TABLE_IF_BLACK);
             if (mouseX >= x && mouseY >= y && mouseX < x + tileSize && mouseY < y + tileSize) {
-            	board.click(niceCell);
+            	Core.INSTANCE.getNetwork().send(new CPacketClickCell(niceCell));
             	return true;
             }
 		}
@@ -117,11 +135,68 @@ public class BoardLayer implements ILayer {
 		return false;
 	}
 	
-	public ClientBoard getBoard() {
-		return board;
+	public void onPacketStartGame(CPacketStartGame packet) {
+		inGame = true;
+		
+		TaskManager.render(() -> {
+			Core.INSTANCE.getGuiLayer().setScreen(null);
+		});
 	}
 	
-	public void setBoard(ClientBoard board) {
-		this.board = board;
+	public void onPacketBoard(CPacketBoard packet) {
+		if (matrix == null) {
+			matrix = new ClientMatrix(packet.getWidth(), packet.getHeight());
+		} else if (matrix.getWidth() != packet.getWidth() || matrix.getHeight() != packet.getHeight()) {
+			matrix.reset(packet.getWidth(), packet.getHeight());
+		}
+		
+		Iterator<TexturedPiece> it = packet.getPieces().iterator();
+		for (Cell cell : matrix) {
+			TexturedPiece piece = it.next();
+			
+			matrix.set(cell, piece);
+		}
+		
+		resize(Screen.WIDTH, Screen.HEIGHT);
+		
+		Sounds.MOVE.play();
+	}
+	
+	public void onPacketTeam(CPacketTeam packet) {
+		team = packet.getTeam();
+	}
+	
+	public void onPacketHighlightCells(CPacketHighlightCells packet) {
+		highlights = packet.getHighlights();
+	}
+	
+	public void onPacketEndGame(CPacketEndGame packet) {
+		System.out.println(packet.getWinner().getID());
+		
+		TaskManager.render(() -> {
+			System.out.println("why this not getting called?");
+			Core.INSTANCE.getGuiLayer().setScreen(new DisconnectedScreen(packet.getWinner() == TeamRegistry.NULL ? "Stalemate"
+					: packet.getWinner() == team ? "You win"
+							: "Opponent wins"));
+		});
+		
+		disconnect();
+	}
+	
+	public void disconnect() {
+		Core.INSTANCE.getNetwork().disconnect();
+		
+		inGame = false;
+		matrix = null;
+		team = null;
+		highlights = new HashMap<>();
+	}
+	
+	public boolean isInGame() {
+		return inGame;
+	}
+	
+	public boolean isReady() {
+		return matrix != null && team != null;
 	}
 }

@@ -16,25 +16,25 @@ public class MainScreen extends GuiScreen {
 		
 		VisTable main = Widgets.table(true);
 		
-		Widgets.label(main, Widgets.FONT_TITLE, "Chess", Color.WHITE)
-				.row();
+		Widgets.label(main, Widgets.FONT_TITLE, "Chess", Color.WHITE);
+		main.row();
 		
 		Widgets.button(main, "Offline", (button) -> {
 			//ChessGame.INSTANCE.getBoardLayer().setBoard(new Board());
 			setScreen(null);
 			Sounds.AMBIENT.stop();
-		})
-				.row();
-		Widgets.button(main, "Online", (button) -> setScreen(new OnlineScreen(this)))
-				.row();
-		Widgets.button(main, "Options", (button) -> setScreen(new OptionsScreen(this)))
-				.row();
-		Widgets.empty(main)
-				.row();
-		Widgets.button(main, "Exit", (button) -> WindowUtils.exit())
-				.row();
-		Widgets.empty(main, 100)
-				.row();
+		}).getActor().setDisabled(true);
+		main.row();
+		Widgets.button(main, "Online", (button) -> setScreen(new OnlineScreen(this)));
+		main.row();
+		Widgets.button(main, "Options", (button) -> setScreen(new OptionsScreen(this)));
+		main.row();
+		Widgets.empty(main);
+		main.row();
+		Widgets.button(main, "Exit", (button) -> WindowUtils.exit());
+		main.row();
+		Widgets.empty(main, 100);
+		main.row();
 		
 		stage.addActor(main);
 	}

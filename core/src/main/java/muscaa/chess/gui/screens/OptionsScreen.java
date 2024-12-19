@@ -17,16 +17,16 @@ public class OptionsScreen extends GuiScreen {
 	protected void init() {
 		VisTable main = Widgets.table(true);
 		
-		Widgets.button(main, "Sound", null)
-				.row();
-		Widgets.slider(main, 0, 10, 1, 5, null)
-				.row();
-		Widgets.checkbox(main, "Checkbox Text", true, null)
-				.row();
-		Widgets.empty(main)
-				.row();
-		Widgets.button(main, "Back", (button) -> setScreen(parent))
-				.row();
+		Widgets.button(main, "Sound", null);
+		main.row();
+		Widgets.slider(main, 0, 10, 1, 5, null);
+		main.row();
+		Widgets.checkbox(main, "Checkbox Text", true, null);
+		main.row();
+		Widgets.empty(main);
+		main.row();
+		Widgets.button(main, "Back", (button) -> setScreen(parent));
+		main.row();
 		
 		stage.addActor(main);
 	}

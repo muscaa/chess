@@ -3,7 +3,7 @@ package muscaa.chess.gui;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import muscaa.chess.ChessGame;
+import muscaa.chess.Core;
 import muscaa.chess.config.Theme;
 import muscaa.chess.layer.ILayer;
 import muscaa.chess.layer.ILayerWrapper;
@@ -20,7 +20,7 @@ public abstract class GuiScreen implements ILayerWrapper {
 	
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
-		if (ChessGame.INSTANCE.getBoardLayer().getBoard() != null
+		if (Core.INSTANCE.getBoardLayer().isInGame()
 				|| forceRenderBackground()) {
 			renderBackground(mouseX, mouseY, delta);
 		}
@@ -57,6 +57,6 @@ public abstract class GuiScreen implements ILayerWrapper {
 	}
 	
 	public static void setScreen(GuiScreen screen) {
-		ChessGame.INSTANCE.getGuiLayer().setScreen(screen);
+		Core.INSTANCE.getGuiLayer().setScreen(screen);
 	}
 }

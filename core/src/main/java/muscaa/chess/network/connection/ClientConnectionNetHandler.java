@@ -7,14 +7,14 @@ import javax.crypto.SecretKey;
 
 import fluff.network.NetworkException;
 import fluff.network.packet.channels.EncryptedPacketChannel;
-import muscaa.chess.ChessGame;
+import muscaa.chess.Core;
 import muscaa.chess.network.ClientContexts;
 import muscaa.chess.network.NetworkStatus;
 import muscaa.chess.network.common.ClientCommonNetHandler;
-import muscaa.chess.network.connection.packets.PacketEncrypt;
-import muscaa.chess.network.connection.packets.PacketHandshake;
+import muscaa.chess.network.connection.packets.CPacketEncrypt;
+import muscaa.chess.network.connection.packets.CPacketHandshake;
 import muscaa.chess.network.login.ClientLoginNetHandler;
-import muscaa.chess.network.login.packets.PacketLogin;
+import muscaa.chess.network.login.packets.CPacketLogin;
 
 public class ClientConnectionNetHandler extends ClientCommonNetHandler implements IClientConnectionNetHandler {
 	
@@ -22,19 +22,19 @@ public class ClientConnectionNetHandler extends ClientCommonNetHandler implement
 	public void onConnect() throws NetworkException {
 		super.onConnect();
 		
-		client.send(new PacketEncrypt(generate()));
+		client.send(new CPacketEncrypt(generate()));
 		
-		ChessGame.INSTANCE.getNetwork().update(NetworkStatus.ENCRYPT);
+		Core.INSTANCE.getNetwork().update(NetworkStatus.ENCRYPT);
 	}
 	
 	@Override
-	public void onPacketHandshake(PacketHandshake packet) {
+	public void onPacketHandshake(CPacketHandshake packet) {
 		client.setChannel(new EncryptedPacketChannel(packet.getKey()));
 		client.setContext(ClientContexts.LOGIN_CONTEXT, new ClientLoginNetHandler());
 		
-		client.send(new PacketLogin(ChessGame.INSTANCE.getNetwork().getName()));
+		client.send(new CPacketLogin(Core.INSTANCE.getNetwork().getName()));
 		
-		ChessGame.INSTANCE.getNetwork().update(NetworkStatus.LOGIN);
+		Core.INSTANCE.getNetwork().update(NetworkStatus.LOGIN);
 	}
 	
 	private static SecretKey generate() {

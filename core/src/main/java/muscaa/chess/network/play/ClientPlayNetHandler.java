@@ -1,37 +1,37 @@
 package muscaa.chess.network.play;
 
-import muscaa.chess.ChessGame;
-import muscaa.chess.board.ClientBoard;
+import muscaa.chess.Core;
 import muscaa.chess.network.common.ClientCommonNetHandler;
-import muscaa.chess.network.play.packets.PacketEndGame;
-import muscaa.chess.network.play.packets.PacketMove;
-import muscaa.chess.network.play.packets.PacketSelectCell;
-import muscaa.chess.network.play.packets.PacketStartGame;
-import muscaa.chess.task.TaskManager;
+import muscaa.chess.network.play.packets.CPacketBoard;
+import muscaa.chess.network.play.packets.CPacketEndGame;
+import muscaa.chess.network.play.packets.CPacketHighlightCells;
+import muscaa.chess.network.play.packets.CPacketStartGame;
+import muscaa.chess.network.play.packets.CPacketTeam;
 
 public class ClientPlayNetHandler extends ClientCommonNetHandler implements IClientPlayNetHandler {
 	
 	@Override
-	public void onPacketStartGame(PacketStartGame packet) {
-		ChessGame.INSTANCE.getBoardLayer().setBoard(new ClientBoard(packet));
-		
-		TaskManager.render(() -> {
-			ChessGame.INSTANCE.getGuiLayer().setScreen(null);
-		});
+	public void onPacketStartGame(CPacketStartGame packet) {
+		Core.INSTANCE.getBoardLayer().onPacketStartGame(packet);
 	}
 	
 	@Override
-	public void onPacketEndGame(PacketEndGame packet) {
-		ChessGame.INSTANCE.getBoardLayer().getBoard().endGame(packet);
+	public void onPacketBoard(CPacketBoard packet) {
+		Core.INSTANCE.getBoardLayer().onPacketBoard(packet);
 	}
 	
 	@Override
-	public void onPacketMove(PacketMove packet) {
-		ChessGame.INSTANCE.getBoardLayer().getBoard().move(packet);
+	public void onPacketTeam(CPacketTeam packet) {
+		Core.INSTANCE.getBoardLayer().onPacketTeam(packet);
 	}
 	
 	@Override
-	public void onPacketSelectCell(PacketSelectCell packet) {
-		ChessGame.INSTANCE.getBoardLayer().getBoard().selectCell(packet);
+	public void onPacketHighlightCells(CPacketHighlightCells packet) {
+		Core.INSTANCE.getBoardLayer().onPacketHighlightCells(packet);
+	}
+	
+	@Override
+	public void onPacketEndGame(CPacketEndGame packet) {
+		Core.INSTANCE.getBoardLayer().onPacketEndGame(packet);
 	}
 }

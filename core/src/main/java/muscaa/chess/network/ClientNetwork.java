@@ -1,7 +1,7 @@
 package muscaa.chess.network;
 
 import fluff.network.packet.IPacketOutbound;
-import muscaa.chess.ChessGame;
+import muscaa.chess.Core;
 import muscaa.chess.gui.screens.StatusScreen;
 import muscaa.chess.shared.network.common.packets.PacketDisconnect;
 
@@ -21,7 +21,7 @@ public class ClientNetwork {
 		this.name = name;
 		
 		status = NetworkStatus.CONNECT;
-		ChessGame.INSTANCE.getGuiLayer().setScreen(statusScreen = new StatusScreen(status.getText()));
+		Core.INSTANCE.getGuiLayer().setScreen(statusScreen = new StatusScreen(status.getText()));
 		
 		if (client.isConnected()) disconnect();
 		
@@ -37,10 +37,14 @@ public class ClientNetwork {
 	}
 	
 	public void send(IPacketOutbound packet) {
-		if (client.isConnected()) client.send(packet);
+		if (!client.isConnected()) return;
+		
+		client.send(packet);
 	}
 	
 	public void disconnect() {
+		if (!client.isConnected()) return;
+		
 		send(new PacketDisconnect("disconnected"));
 		client.disconnect();
 	}

@@ -2,7 +2,7 @@ package muscaa.chess.network.common;
 
 import fluff.network.AbstractClientNetHandler;
 import fluff.network.NetworkException;
-import muscaa.chess.ChessGame;
+import muscaa.chess.Core;
 import muscaa.chess.gui.screens.DisconnectedScreen;
 import muscaa.chess.network.ChessClient;
 import muscaa.chess.shared.network.common.ICommonNetHandler;
@@ -30,14 +30,14 @@ public class ClientCommonNetHandler extends AbstractClientNetHandler<ChessClient
 	
 	@Override
 	public void onPacketDisconnect(PacketDisconnect packet) {
-		if (!connected) return;
-		connected = false;
+		/*if (!connected) return;
+		connected = false;*/
+		// TODO fix this
+		
+		TaskManager.render(() -> {
+			Core.INSTANCE.getGuiLayer().setScreen(new DisconnectedScreen(packet.getMessage()));
+		});
 		
 		client.disconnect();
-		
-		String message = packet.getMessage();
-		TaskManager.render(() -> {
-			ChessGame.INSTANCE.getGuiLayer().setScreen(new DisconnectedScreen(message));
-		});
 	}
 }

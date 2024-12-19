@@ -1,18 +1,21 @@
 package muscaa.chess.network.play;
 
-import muscaa.chess.network.play.packets.PacketEndGame;
-import muscaa.chess.network.play.packets.PacketMove;
-import muscaa.chess.network.play.packets.PacketSelectCell;
-import muscaa.chess.network.play.packets.PacketStartGame;
+import muscaa.chess.network.play.packets.CPacketBoard;
+import muscaa.chess.network.play.packets.CPacketEndGame;
+import muscaa.chess.network.play.packets.CPacketHighlightCells;
+import muscaa.chess.network.play.packets.CPacketStartGame;
+import muscaa.chess.network.play.packets.CPacketTeam;
 import muscaa.chess.shared.network.play.IPlayNetHandler;
 
 public interface IClientPlayNetHandler extends IPlayNetHandler {
 	
-	void onPacketStartGame(PacketStartGame packet);
+	void onPacketStartGame(CPacketStartGame packet);
 	
-	void onPacketEndGame(PacketEndGame packet);
+	void onPacketBoard(CPacketBoard packet);
 	
-	void onPacketMove(PacketMove packet);
+	void onPacketTeam(CPacketTeam packet);
 	
-	void onPacketSelectCell(PacketSelectCell packet);
+	void onPacketHighlightCells(CPacketHighlightCells packet);
+	
+	void onPacketEndGame(CPacketEndGame packet);
 }
