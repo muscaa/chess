@@ -1,6 +1,6 @@
 package muscaa.chess.server;
 
-import muscaa.chess.shared.Server;
+import muscaa.chess.Server;
 
 public class ServerLauncher {
 	

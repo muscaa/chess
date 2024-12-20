@@ -27,7 +27,7 @@ if (JavaVersion.current().isJava9Compatible()) {
 	compileJava.options.release.set(17)
 }
 
-mainClassName = "muscaa.chess.lwjgl3.Lwjgl3Launcher"
+mainClassName = "muscaa.chess.client.loader.Lwjgl3Launcher"
 application.setMainClass(mainClassName)
 sourceSets.main.resources.srcDirs += [ rootProject.file("assets").path ]
 
