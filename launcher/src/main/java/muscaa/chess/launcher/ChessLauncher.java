@@ -1,13 +1,20 @@
 package muscaa.chess.launcher;
 
-import javax.swing.JFrame;
+import muscaa.chess.launcher.gui.MainFrame;
+import muscaa.chess.launcher.gui.panels.TabsPanel;
 
 public class ChessLauncher {
 	
-    public static void main(String[] args) throws Exception {
-    	JFrame frame = new JFrame("Launcher");
-    	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    	frame.setSize(300, 300);
-    	frame.setVisible(true);
-    }
+	public static final ChessLauncher INSTANCE = new ChessLauncher();
+	
+	public final MainFrame mainFrame = new MainFrame();
+	
+	public void start() {
+		mainFrame.setContentPane(new TabsPanel());
+		mainFrame.setVisible(true);
+	}
+	
+	public void stop() {
+		mainFrame.dispose();
+	}
 }
