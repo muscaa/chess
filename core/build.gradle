@@ -1,13 +1,13 @@
-[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-eclipse.project.name = appName + '-core'
+[compileJava, compileTestJava]*.options*.encoding = "UTF-8"
+eclipse.project.name = appName + "-core"
 
 dependencies {
-  api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-  api "com.badlogicgames.gdx:gdx:$gdxVersion"
-  api "com.kotcrab.vis:vis-ui:$visUiVersion"
-  api project(':shared')
-
-  if(enableGraalNative == 'true') {
-    implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
-  }
+	api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+	api "com.badlogicgames.gdx:gdx:$gdxVersion"
+	api "com.kotcrab.vis:vis-ui:$visUiVersion"
+	api project(":shared")
+	
+	if (enableGraalNative == "true") {
+		implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
+	}
 }
