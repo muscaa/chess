@@ -14,6 +14,8 @@ gradle-app.setting
 /headless/build/
 /server/build/
 /shared/build/
+/installer/build/
+/launcher/build/
 
 ## Java:
 *.class
@@ -78,6 +80,8 @@ www-test/
 /headless/bin/
 /server/bin/
 /shared/bin/
+/installer/bin/
+/launcher/bin/
 *.tmp
 *.bak
 *.swp
@@ -102,6 +106,8 @@ www-test/
 /headless/nbproject/private/
 /server/nbproject/private/
 /shared/nbproject/private/
+/installer/nbproject/private/
+/launcher/nbproject/private/
 
 /nbbuild/
 /android/nbbuild/
@@ -115,6 +121,8 @@ www-test/
 /headless/nbbuild/
 /server/nbbuild/
 /shared/nbbuild/
+/installer/nbbuild/
+/launcher/nbbuild/
 
 /dist/
 /android/dist/
@@ -128,6 +136,8 @@ www-test/
 /headless/dist/
 /server/dist/
 /shared/dist/
+/installer/dist/
+/launcher/dist/
 
 /nbdist/
 /android/nbdist/
@@ -141,6 +151,8 @@ www-test/
 /headless/nbdist/
 /server/nbdist/
 /shared/nbdist/
+/installer/nbdist/
+/launcher/nbdist/
 
 nbactions.xml
 nb-configuration.xml
