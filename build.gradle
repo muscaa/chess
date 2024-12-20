@@ -23,7 +23,7 @@ allprojects {
 	}
 }
 
-eclipse.project.name = "$projectName" + "-parent"
+eclipse.project.name = "$projectName"
 
 configure(subprojects) {
 	apply plugin: "java-library"

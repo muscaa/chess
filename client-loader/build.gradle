@@ -18,7 +18,7 @@ apply plugin: "io.github.fourlastor.construo"
 
 import io.github.fourlastor.construo.Target
 
-eclipse.project.name = appName + "-lwjgl3"
+eclipse.project.name = appName + "-client-loader"
 
 java.sourceCompatibility = 17
 java.targetCompatibility = 17
@@ -35,7 +35,7 @@ dependencies {
 	implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
 	implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
 	implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-	implementation project(":core")
+	implementation project(":client")
 
 	if (enableGraalNative == "true") {
 		implementation "io.github.berstanio:gdx-svmhelper-backend-lwjgl3:$graalHelperVersion"
@@ -133,7 +133,7 @@ distributions {
 	}
 }
 
-startScripts.dependsOn(":lwjgl3:jar")
+startScripts.dependsOn(":client-loader:jar")
 startScripts.classpath = project.tasks.jar.outputs.files
 
 if (enableGraalNative == "true") {
