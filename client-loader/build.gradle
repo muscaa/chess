@@ -18,6 +18,7 @@ apply plugin: "io.github.fourlastor.construo"
 
 import io.github.fourlastor.construo.Target
 
+[compileJava, compileTestJava]*.options*.encoding = "UTF-8"
 eclipse.project.name = appName + "-client-loader"
 
 java.sourceCompatibility = 17
