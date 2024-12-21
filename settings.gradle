@@ -5,4 +5,3 @@
 include "shared"
 include "client-loader", "client"
 include "server"
-include "installer", "launcher"
