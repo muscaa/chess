@@ -1,14 +1,6 @@
 apply plugin: "application"
 
-[compileJava, compileTestJava]*.options*.encoding = "UTF-8"
-eclipse.project.name = appName + "-server"
-
-java.sourceCompatibility = 17
-java.targetCompatibility = 17
-
-if (JavaVersion.current().isJava9Compatible()) {
-	compileJava.options.release.set(17)
-}
+ext.subName = "server"
 
 mainClassName = "muscaa.chess.server.ServerLauncher"
 application.setMainClass(mainClassName)
@@ -18,8 +10,6 @@ dependencies {
 }
 
 jar {
-	//archiveBaseName.set(appName)
-	archiveFileName.set("${appName}-${projectVersion}.jar")
 	// the duplicatesStrategy matters starting in Gradle 7.0; this setting works.
 	duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
 	dependsOn configurations.runtimeClasspath

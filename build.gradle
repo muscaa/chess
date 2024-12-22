@@ -23,14 +23,10 @@ allprojects {
 	}
 }
 
-eclipse.project.name = "$projectName"
-
 configure(subprojects) {
 	apply plugin: "java-library"
+	apply plugin: "maven-publish"
 	
-	sourceCompatibility = 17
-	targetCompatibility = 17
-
 	// From https://lyze.dev/2021/04/29/libGDX-Internal-Assets-List/
 	// The article can be helpful when using assets.txt in your project.
 	tasks.register("generateAssetList") {
@@ -59,16 +55,63 @@ configure(subprojects) {
 }
 
 subprojects {
-	version = "$projectVersion"
-	ext.appName = "$projectName"
-	
-	repositories {
-		mavenCentral()
-		maven { url "https://s01.oss.sonatype.org" }
-		// You may want to remove the following line if you have errors downloading dependencies.
-		mavenLocal()
-		maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-		maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
-		maven { url "https://jitpack.io" }
-	}
+    beforeEvaluate {
+    	[compileJava, compileTestJava]*.options*.encoding = "UTF-8"
+    	
+    	sourceCompatibility = 17
+		targetCompatibility = 17
+    	
+        repositories {
+			mavenCentral()
+			maven { url "https://s01.oss.sonatype.org" }
+			// You may want to remove the following line if you have errors downloading dependencies.
+			mavenLocal()
+			maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+			maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
+			maven { url "https://jitpack.io" }
+		}
+    }
+    
+    afterEvaluate {
+        eclipse.project.name = "${projectName}-${subName}"
+        
+		jar {
+			archiveFileName.set("${subName}-${version}.jar")
+			
+			duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+			
+			into("META-INF") {
+	            from("${rootProject.projectDir}/LICENSE")
+	            from("${rootProject.projectDir}/NOTICE")
+	        }
+			
+			dependsOn configurations.runtimeClasspath
+			from {
+				configurations.runtimeClasspath.collect {
+					it.isDirectory() ? it : zipTree(it)
+				}
+			}
+			
+			exclude("META-INF/INDEX.LIST", "META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA")
+			dependencies {
+				exclude("META-INF/INDEX.LIST", "META-INF/maven/**")
+			}
+		}
+		
+		java {
+			withSourcesJar()
+			withJavadocJar()
+		}
+		
+		publishing {
+			publications {
+				maven(MavenPublication) {
+					groupId project.group
+					artifactId project.name
+					version project.version
+					from components.java
+				}
+			}
+		}
+    }
 }

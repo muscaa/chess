@@ -1,5 +1,4 @@
-[compileJava, compileTestJava]*.options*.encoding = "UTF-8"
-eclipse.project.name = appName + "-shared"
+ext.subName = "shared"
 
 dependencies {
 	api "com.github.muscaa:fluff-network:1.0.4"
