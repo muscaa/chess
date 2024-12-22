@@ -1,0 +1,22 @@
+plugins {
+	id "application"
+}
+
+ext.subName = "server-bootstrap"
+
+mainClassName = "muscaa.chess.server.ServerLauncher"
+application.setMainClass(mainClassName)
+
+dependencies {
+	implementation project(":shared")
+}
+
+jar {
+	manifest {
+		attributes "Main-Class": mainClassName
+	}
+	
+	doLast {
+		file(archiveFile).setExecutable(true, false)
+	}
+}

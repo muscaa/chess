@@ -2,7 +2,7 @@ plugins {
 	id "application"
 }
 
-ext.subName = "client-loader"
+ext.subName = "client-bootstrap"
 
 mainClassName = "muscaa.chess.client.loader.Lwjgl3Launcher"
 application.setMainClass(mainClassName)
