@@ -1,3 +1,7 @@
+plugins {
+	id "maven-publish"
+}
+
 allprojects {
 	apply plugin: "eclipse"
 	apply plugin: "idea"
@@ -77,9 +81,37 @@ subprojects {
 					groupId project.group
 					artifactId project.name
 					version project.version
+					
 					from components.java
+					
+					artifact(tasks.named("bundle")) {
+		                classifier = "bundle"
+		            }
 				}
 			}
 		}
     }
+}
+
+tasks.register("versionManager") {
+    def file = file("${buildDir}/libs/version-manager.txt")
+    outputs.file(file)
+    doLast {
+        file.parentFile.mkdirs()
+        file.text = "v1"
+    }
+}
+
+tasks.named("publish") {
+    dependsOn "versionManager"
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+            artifact(tasks.named("versionManager")) {
+                classifier = "version-manager"
+            }
+		}
+	}
 }
