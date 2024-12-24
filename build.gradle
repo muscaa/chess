@@ -62,8 +62,8 @@ subprojects {
 		    }
 		}
 		
-		tasks.register("installer") {
-		    def file = file("${buildDir}/libs/${subName}-installer.zip")
+		tasks.register("setup") {
+		    def file = file("${buildDir}/libs/${subName}-setup.zip")
 		    outputs.file(file)
 		    doLast {
 		        file.parentFile.mkdirs()
@@ -72,7 +72,7 @@ subprojects {
 		}
 		
 		tasks.named("jar") {
-		    finalizedBy("bundle", "installer")
+		    finalizedBy("bundle", "setup")
 		}
 		
 		java {
@@ -93,8 +93,8 @@ subprojects {
 		                classifier = "bundle"
 		            }
 		            
-		            artifact(tasks.named("installer")) {
-		                classifier = "installer"
+		            artifact(tasks.named("setup")) {
+		                classifier = "setup"
 		            }
 				}
 			}
