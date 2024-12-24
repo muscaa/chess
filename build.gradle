@@ -63,7 +63,7 @@ subprojects {
 		}
 		
 		tasks.register("versionManager") {
-		    def file = file("${buildDir}/libs/${subName}-vm.txt")
+		    def file = file("${buildDir}/libs/${subName}-version-manager.zip")
 		    outputs.file(file)
 		    doLast {
 		        file.parentFile.mkdirs()
@@ -94,7 +94,7 @@ subprojects {
 		            }
 		            
 		            artifact(tasks.named("versionManager")) {
-		                classifier = "vm"
+		                classifier = "version-manager"
 		            }
 				}
 			}
