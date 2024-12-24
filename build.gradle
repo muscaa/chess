@@ -63,7 +63,7 @@ subprojects {
 		}
 		
 		tasks.register("installer") {
-		    def file = file("${buildDir}/libs/${subName}-installer.txt")
+		    def file = file("${buildDir}/libs/${subName}-installer.zip")
 		    outputs.file(file)
 		    doLast {
 		        file.parentFile.mkdirs()
