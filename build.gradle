@@ -63,7 +63,7 @@ subprojects {
 		}
 		
 		tasks.register("versionManager") {
-		    def file = file("${buildDir}/libs/${subName}-version-manager.dat")
+		    def file = file("${buildDir}/libs/${subName}-version-manager.properties")
 		    outputs.file(file)
 		    doLast {
 		        file.parentFile.mkdirs()
