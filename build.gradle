@@ -24,12 +24,16 @@ subprojects {
     	
         repositories {
 			mavenCentral()
-			//maven { url "https://s01.oss.sonatype.org" }
-			// You may want to remove the following line if you have errors downloading dependencies.
-			//mavenLocal()
-			//maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-			//maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
 			maven { url "https://jitpack.io" }
+		}
+		
+		configurations {
+		    include {
+			    canBeResolved = true
+			    canBeConsumed = true
+		    }
+		    
+		    api.extendsFrom(include)
 		}
     }
     
@@ -45,9 +49,21 @@ subprojects {
 	        }
 		}
 		
-		tasks.register("copyDependencies", Copy) {
-		    from configurations.runtimeClasspath
-		    into "${buildDir}/libs"
+		tasks.register("bundle", Zip) {
+		    destinationDirectory.set(file("${buildDir}/libs"))
+		    archiveFileName.set("${subName}-bundle.zip")
+			
+		    from(tasks.named("jar")) {
+		        into("libs")
+		    }
+			
+		    from(configurations.include) {
+		        into("libs")
+		    }
+		}
+		
+		tasks.named("jar") {
+		    finalizedBy("bundle")
 		}
 		
 		java {

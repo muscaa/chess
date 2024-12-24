@@ -14,7 +14,7 @@
  */
 //Note, the above license and copyright applies to this file only.
 
-package muscaa.chess.client.loader;
+package muscaa.chess.client.lwjgl;
 
 import org.lwjgl.system.macosx.LibC;
 

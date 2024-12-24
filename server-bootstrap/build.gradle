@@ -4,11 +4,11 @@ plugins {
 
 ext.subName = "server-bootstrap"
 
-mainClassName = "muscaa.chess.server.ServerLauncher"
+mainClassName = "muscaa.chess.server.bootstrap.main.Main"
 application.setMainClass(mainClassName)
 
 dependencies {
-	implementation project(":shared")
+	include project(":server")
 }
 
 jar {

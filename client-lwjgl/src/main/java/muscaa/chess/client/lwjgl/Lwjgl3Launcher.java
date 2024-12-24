@@ -1,4 +1,4 @@
-package muscaa.chess.client.loader;
+package muscaa.chess.client.lwjgl;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
