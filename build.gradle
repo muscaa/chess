@@ -62,8 +62,8 @@ subprojects {
 		    }
 		}
 		
-		tasks.register("versionManager") {
-		    def file = file("${buildDir}/libs/${subName}-version-manager.zip")
+		tasks.register("installer") {
+		    def file = file("${buildDir}/libs/${subName}-installer.txt")
 		    outputs.file(file)
 		    doLast {
 		        file.parentFile.mkdirs()
@@ -72,7 +72,7 @@ subprojects {
 		}
 		
 		tasks.named("jar") {
-		    finalizedBy("bundle", "versionManager")
+		    finalizedBy("bundle", "installer")
 		}
 		
 		java {
@@ -93,8 +93,8 @@ subprojects {
 		                classifier = "bundle"
 		            }
 		            
-		            artifact(tasks.named("versionManager")) {
-		                classifier = "version-manager"
+		            artifact(tasks.named("installer")) {
+		                classifier = "installer"
 		            }
 				}
 			}
