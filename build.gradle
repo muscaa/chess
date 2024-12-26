@@ -127,6 +127,8 @@ subprojects {
 		
 		tasks.register("setup") {
 		    doLast {
+		    	if (!subName.equals("client")) return
+		    	
 		        def extensions = generateExtensions(3)
 				
 				println "--------------------"
