@@ -49,7 +49,14 @@ subprojects {
 	        }
 		}
 		
-		tasks.register("bundle", Zip) {
+		def userHome = System.getProperty("user.home")
+        def mavenLocalRepo = file("${userHome}/.m2/repository")
+        
+        def groupPath = project.group.replace('.', '/')
+        def artifactPath = "${groupPath}/${project.name}/${project.version}"
+        def publishDir = new File(mavenLocalRepo, artifactPath)
+		
+		/*tasks.register("bundle", Zip) {
 		    destinationDirectory.set(file("${buildDir}/libs"))
 		    archiveFileName.set("${subName}-bundle.zip")
 			
@@ -73,6 +80,77 @@ subprojects {
 		
 		tasks.named("jar") {
 		    finalizedBy("bundle", "setup")
+		}*/
+		
+		/*tasks.register("zipDependencies") {
+		    doLast {
+		        def userHome = System.getProperty("user.home")
+		        def mavenLocalRepo = file("${userHome}/.m2/repository")
+		        
+		        def groupPath = project.group.replace('.', '/')
+		        def artifactPath = "${groupPath}/${project.name}/${project.version}"
+		        def publishDir = new File(mavenLocalRepo, artifactPath)
+		        def zipFile = new File(publishDir, "dependencies.zip")
+		
+		        // Collect runtime dependencies
+		        def dependencies = configurations.runtimeClasspath.files
+		
+		        // Ensure the directory exists
+		        publishDir.mkdirs()
+		
+		        // Create the ZIP file
+		        ant.zip(destfile: zipFile) {
+		            dependencies.each { file ->
+		                fileset(file: file)
+		            }
+		        }
+		        println "Dependencies ZIP created at: ${zipFile.absolutePath}"
+		    }
+		}*/
+		
+		tasks.register("bundle", Zip) {
+	        def zipFile = new File(publishDir, "bundle.zip")
+			
+		    destinationDirectory.set(publishDir)
+		    archiveFileName.set("bundle.zip")
+			
+		    from(tasks.named("jar")) {
+		        into("libs")
+		    }
+			
+		    from(configurations.include) {
+		        into("libs")
+		    }
+		    
+		    println "${zipFile.absolutePath}"
+		}
+		
+		tasks.register("setup") {
+	        def file1 = new File(publishDir, "setup.zip")
+		    def file2 = new File(publishDir, "setup.txt")
+		    def file3 = new File(publishDir, "setup.log")
+		    def file4 = new File(publishDir, "setup")
+		    def file5 = new File(publishDir, "setup.text")
+		    def file6 = new File(publishDir, "setup.json")
+		    def file7 = new File(publishDir, "setup.info")
+		    def file8 = new File(publishDir, "setup.ini")
+		    
+		    def setup = "v1"
+		    
+		    doLast {
+		    	file1.text = setup
+		    	file2.text = setup
+		    	file3.text = setup
+		    	file4.text = setup
+		    	file5.text = setup
+		    	file6.text = setup
+		    	file7.text = setup
+		    	file8.text = setup
+		    }
+		}
+		
+		tasks.named("publishToMavenLocal") {
+		    finalizedBy "bundle", "setup"
 		}
 		
 		java {
@@ -89,13 +167,13 @@ subprojects {
 					
 					from components.java
 					
-					artifact(tasks.named("bundle")) {
+					/*artifact(tasks.named("bundle")) {
 		                classifier = "bundle"
 		            }
 		            
 		            artifact(tasks.named("setup")) {
 		                classifier = "setup"
-		            }
+		            }*/
 				}
 			}
 		}
