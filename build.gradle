@@ -49,96 +49,24 @@ subprojects {
 	        }
 		}
 		
-		def userHome = System.getProperty("user.home")
-        def mavenLocalRepo = file("${userHome}/.m2/repository")
-        
-        def groupPath = project.group.replace('.', '/')
-        def artifactPath = "${groupPath}/${project.name}/${project.version}"
-        def publishDir = new File(mavenLocalRepo, artifactPath)
-		
-		/*tasks.register("bundle", Zip) {
-		    destinationDirectory.set(file("${buildDir}/libs"))
-		    archiveFileName.set("${subName}-bundle.zip")
-			
-		    from(tasks.named("jar")) {
-		        into("libs")
-		    }
-			
-		    from(configurations.include) {
-		        into("libs")
-		    }
-		}
-		
-		tasks.register("setup") {
-		    def file = file("${buildDir}/libs/${subName}-setup.zip")
-		    outputs.file(file)
-		    doLast {
-		        file.parentFile.mkdirs()
-		        file.text = "v1"
-		    }
-		}
-		
-		tasks.named("jar") {
-		    finalizedBy("bundle", "setup")
-		}*/
-		
-		/*tasks.register("zipDependencies") {
-		    doLast {
-		        def userHome = System.getProperty("user.home")
-		        def mavenLocalRepo = file("${userHome}/.m2/repository")
-		        
-		        def groupPath = project.group.replace('.', '/')
-		        def artifactPath = "${groupPath}/${project.name}/${project.version}"
-		        def publishDir = new File(mavenLocalRepo, artifactPath)
-		        def zipFile = new File(publishDir, "dependencies.zip")
-		
-		        // Collect runtime dependencies
-		        def dependencies = configurations.runtimeClasspath.files
-		
-		        // Ensure the directory exists
-		        publishDir.mkdirs()
-		
-		        // Create the ZIP file
-		        ant.zip(destfile: zipFile) {
-		            dependencies.each { file ->
-		                fileset(file: file)
-		            }
-		        }
-		        println "Dependencies ZIP created at: ${zipFile.absolutePath}"
-		    }
-		}*/
+        def m2RepoDir = new File(System.getProperty("user.home"), ".m2/repository")
+        def groupDir = new File(m2RepoDir, project.group.replace('.', '/'))
+        def publishDir = new File(groupDir, "${project.name}/${project.version}")
 		
 		tasks.register("bundle", Zip) {
-	        def zipFile = new File(publishDir, "bundle.zip")
-			
 		    destinationDirectory.set(publishDir)
 		    archiveFileName.set("bundle.zip")
 			
-		    from(tasks.named("jar")) {
-		        into("libs")
-		    }
-			
+		    from(tasks.named("jar"))
 		    from(configurations.include) {
 		        into("libs")
 		    }
-		    
-		    println "${zipFile.absolutePath}"
 		}
 		
 		tasks.register("setup") {
 		    doLast {
-		    	if (!subName.equals("client")) return
-		    	
-		        def extensions = generateExtensions(3)
-				
-				println "--------------------"
-		        println "${extensions.size()}"
-		        println "--------------------"
-				
-		        extensions.each { ext ->
-		            def file = new File(publishDir, "setup.${ext}")
-		            file.text = setup
-		        }
+	            def file = new File(publishDir, "setup.war")
+	            file.text = "v1"
 		    }
 		}
 		
@@ -154,38 +82,9 @@ subprojects {
 		publishing {
 			publications {
 				maven(MavenPublication) {
-					groupId project.group
-					artifactId project.name
-					version project.version
-					
 					from components.java
-					
-					/*artifact(tasks.named("bundle")) {
-		                classifier = "bundle"
-		            }
-		            
-		            artifact(tasks.named("setup")) {
-		                classifier = "setup"
-		            }*/
 				}
 			}
 		}
-    }
-}
-
-def generateExtensions(length) {
-    def results = []
-    def chars = "abcdefghijklmnopqrstuvwxyz0123456789".toCharArray()
-    generateCombinations(chars, "", length, results)
-    return results
-}
-
-def generateCombinations(chars, prefix, length, results) {
-    if (length == 0) {
-        results.add(prefix)
-        return
-    }
-    for (char c : chars) {
-        generateCombinations(chars, prefix + c, length - 1, results)
     }
 }
