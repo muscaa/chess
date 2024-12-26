@@ -1,10 +1,12 @@
 package muscaa.chess.client.bootstrap.main;
 
-import muscaa.chess.client.lwjgl.Lwjgl3Launcher;
+import muscaa.chess.client.bootstrap.Bootstrap;
+import muscaa.chess.client.bootstrap.DefaultBootstrap;
 
 public class Main {
 	
 	public static void main(String[] args) throws Exception {
-		Lwjgl3Launcher.main(args);
+		Bootstrap.INSTANCE = new DefaultBootstrap();
+		Bootstrap.INSTANCE.launch(args);
 	}
 }

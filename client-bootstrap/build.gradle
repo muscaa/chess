@@ -9,9 +9,15 @@ application.setMainClass(mainClassName)
 
 dependencies {
 	include project(":client-lwjgl")
+	
+	shade "com.github.muscaa:fluff-loader:1.0.11"
 }
 
 jar {
+	dependencies {
+		exclude "fluff/core/**"
+	}
+	
 	manifest {
 		attributes "Main-Class": mainClassName
 	}

@@ -33,7 +33,13 @@ subprojects {
 			    canBeConsumed = true
 		    }
 		    
+		    shade {
+		    	canBeResolved = true
+			    canBeConsumed = true
+		    }
+		    
 		    api.extendsFrom(include)
+		    api.extendsFrom(shade)
 		}
     }
     
@@ -47,6 +53,14 @@ subprojects {
 	            from("${rootProject.projectDir}/LICENSE")
 	            from("${rootProject.projectDir}/NOTICE")
 	        }
+	        
+	        duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+			dependsOn configurations.shade
+			from {
+				configurations.shade.collect {
+					it.isDirectory() ? it : zipTree(it)
+				}
+			}
 		}
 		
         def m2RepoDir = new File(System.getProperty("user.home"), ".m2/repository")
