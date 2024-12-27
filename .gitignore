@@ -1,18 +1,25 @@
 ## Build:
 /bin/
 /build/
+/run/
 /shared/bin/
 /shared/build/
+/shared/run/
 /client/bin/
 /client/build/
+/client/run/
 /client-lwjgl/bin/
 /client-lwjgl/build/
+/client-lwjgl/run/
 /client-bootstrap/bin/
 /client-bootstrap/build/
+/client-bootstrap/run/
 /server/bin/
 /server/build/
+/server/run/
 /server-bootstrap/bin/
 /server-bootstrap/build/
+/server-bootstrap/run/
 
 ## Gradle:
 .gradle/

@@ -16,12 +16,43 @@ public class DefaultBootstrap extends Bootstrap {
 	
 	@Override
 	public void launch(String[] args) throws Exception {
-		File libs = new File(dir, "libs");
+		File libsDir = new File(dir, "libs");
 		
-		for (File lib : libs.listFiles()) {
-			if (lib.isDirectory() || !lib.getName().endsWith(".jar")) continue;
-			
-			loader.addJar(lib);
+		if (libsDir.exists()) {
+			for (File lib : libsDir.listFiles()) {
+				if (lib.isDirectory() || !lib.getName().endsWith(".jar")) continue;
+				
+				System.out.println("Loading " + lib.getName());
+				loader.addJar(lib);
+			}
+		}
+		
+		String libJars = System.getProperty("lib.jars");
+		if (libJars != null) {
+			for (String jar : libJars.split(";")) {
+				File file = new File(jar);
+				
+				if (file.isDirectory()) {
+					for (File lib : file.listFiles()) {
+						if (lib.isDirectory() || !lib.getName().endsWith(".jar")) continue;
+						
+						loader.addJar(lib);
+					}
+				} else {
+					loader.addJar(file);
+				}
+			}
+		}
+		
+		String libClasses = System.getProperty("lib.classes");
+		if (libClasses != null) {
+			for (String classes : libClasses.split(";")) {
+				File file = new File(classes);
+				
+				if (file.isDirectory()) {
+					loader.addFolder(file);
+				}
+			}
 		}
 		
 		Class<?> mainClass = loader.loadClass("muscaa.chess.client.lwjgl.Lwjgl3Launcher");

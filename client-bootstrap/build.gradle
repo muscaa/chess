@@ -10,19 +10,50 @@ application.setMainClass(mainClassName)
 dependencies {
 	include project(":client-lwjgl")
 	
-	shade "com.github.muscaa:fluff-loader:1.0.11"
+	shade("com.github.muscaa:fluff-loader:1.0.11") {
+		exclude group: "com.github.muscaa", module: "fluff-core"
+	}
 }
 
 jar {
-	dependencies {
-		exclude "fluff/core/**"
-	}
-	
 	manifest {
 		attributes "Main-Class": mainClassName
 	}
+}
+
+tasks.register("copyDependencies") {
+	def libs = file("run/versions/${version}/libs")
 	
-	doLast {
-		file(archiveFile).setExecutable(true, false)
-	}
+    inputs.files(configurations.include)
+    outputs.dir(libs)
+	
+    doLast {
+        copy {
+            from configurations.include
+            into libs
+        }
+    }
+}
+
+run {
+    dependsOn "copyDependencies"
+    
+    classpath = files(sourceSets.main.output, configurations.shade)
+    
+    workingDir = file("run")
+    workingDir.mkdirs()
+    
+    def libsDir = tasks.named("copyDependencies").get().outputs.files.singleFile
+    
+    def libJars = [libsDir]
+    def libClasses = []
+    def modJars = []
+    def modClasses = []
+    
+    jvmArgs = [
+    	"-Dlib.jars=${libJars.join(';')}",
+    	"-Dlib.classes=${libClasses.join(';')}",
+    	"-Dmod.jars=${modJars.join(';')}",
+    	"-Dmod.classes=${modClasses.join(';')}",
+    ]
 }

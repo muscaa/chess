@@ -39,7 +39,7 @@ subprojects {
 		    }
 		    
 		    api.extendsFrom(include)
-		    api.extendsFrom(shade)
+		    implementation.extendsFrom(shade)
 		}
     }
     
