@@ -37,7 +37,7 @@ public class KnightPiece extends AbstractPiece {
 		};
 		
 		for (Cell off : offsets) {
-			Cell cell = from.copy().add(off);
+			Cell cell = from.add(off);
 			
 			PieceUtils.basicCapture(this, moves, matrix, cell);
 		}

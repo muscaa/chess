@@ -49,28 +49,29 @@ public abstract class AbstractMatrix<P extends IPiece> implements Iterable<Cell>
 	
 	private class CellIterator implements Iterator<Cell> {
 		
-		public Cell cell = new Cell(-1, 0);
+		private int x = -1;
+		private int y = 0;
 		
 		@Override
 		public boolean hasNext() {
-			return cell.y + 1 < height || cell.x + 1 < width;
+			return y + 1 < height || x + 1 < width;
 		}
 		
 		@Override
 		public Cell next() {
-			if (cell.x + 1 >= width) {
-				if (cell.y + 1 >= height) {
+			if (x + 1 >= width) {
+				if (y + 1 >= height) {
 					return null;
 				} else {
-					cell.y += 1;
+					y += 1;
 				}
 				
-				cell.x = 0;
+				x = 0;
 			} else {
-				cell.x += 1;
+				x += 1;
 			}
 			
-			return cell.copy();
+			return new Cell(x, y);
 		}
 	}
 }

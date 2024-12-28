@@ -28,8 +28,8 @@ public class ServerBoard {
 	private final Map<ChessClientConnection, Team> teams = new HashMap<>();
 	
 	private Team turn;
-	private final Cell selectedCell = new Cell();
-	private final List<Cell> inCheckCells = new LinkedList<>();
+	private Cell selectedCell = Cell.INVALID;
+	private List<Cell> inCheckCells = new LinkedList<>();
 	
 	private Matrix matrix;
 	
@@ -105,7 +105,7 @@ public class ServerBoard {
 	}
 	
 	public void selectCell(ChessClientConnection player, ChessClientConnection opponent, Cell cell) {
-		selectedCell.set(cell);
+		selectedCell = cell;
 		
 		Map<Cell, Highlight> highlights = new HashMap<>();
 		Map<Cell, Highlight> opponentHighlights = new HashMap<>();
@@ -158,7 +158,7 @@ public class ServerBoard {
 		matrix.end();
 		
 		turn = TeamRegistry.WHITE;
-		selectedCell.set(Cell.INVALID);
+		selectedCell = Cell.INVALID;
 	}
 	
 	private void send(IPacketOutbound packet) {

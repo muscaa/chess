@@ -18,11 +18,11 @@ public class PieceUtils {
 		
 		if (toPiece.getTeam() == piece.getTeam()) return false;
 		if (toPiece.getTeam() == TeamRegistry.invert(piece.getTeam())) {
-			moves.put(to.copy(), MoveRegistry.CAPTURE);
+			moves.put(to, MoveRegistry.CAPTURE);
 			return false;
 		}
 		
-		moves.put(to.copy(), MoveRegistry.BASIC);
+		moves.put(to, MoveRegistry.BASIC);
 		return true;
 	}
 	
@@ -33,9 +33,9 @@ public class PieceUtils {
 		if (toPiece != NullPiece.INSTANCE) return;
 		
 		if (canPromote(piece, to)) {
-			moves.put(to.copy(), MoveRegistry.PROMOTE);
+			moves.put(to, MoveRegistry.PROMOTE);
 		} else {
-			moves.put(to.copy(), MoveRegistry.BASIC);
+			moves.put(to, MoveRegistry.BASIC);
 		}
 	}
 	
@@ -46,9 +46,9 @@ public class PieceUtils {
 		if (toPiece == NullPiece.INSTANCE || toPiece.getTeam() == piece.getTeam()) return;
 		
 		if (canPromote(piece, to)) {
-			moves.put(to.copy(), MoveRegistry.PROMOTE);
+			moves.put(to, MoveRegistry.PROMOTE);
 		} else {
-			moves.put(to.copy(), MoveRegistry.BASIC);
+			moves.put(to, MoveRegistry.BASIC);
 		}
 	}
 	

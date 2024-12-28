@@ -3,4 +3,5 @@ ext.subName = "shared"
 dependencies {
 	include "com.github.muscaa:fluff-network:1.0.4"
 	include "com.github.muscaa:fluff-vecmath:1.0.9"
+	include "org.yaml:snakeyaml:2.2"
 }

@@ -52,7 +52,11 @@ public class BoardLayer implements ILayer {
 		
 		// chess highlights under
 		for (Map.Entry<Cell, Highlight> highlightEntry : highlights.entrySet()) {
-			Cell niceCell = highlightEntry.getKey().copy(team == TeamRegistry.BLACK && Theme.INVERT_TABLE_IF_BLACK);
+			Cell niceCell = highlightEntry.getKey();
+			if (team == TeamRegistry.BLACK && Theme.INVERT_TABLE_IF_BLACK) {
+				niceCell = niceCell.invert(matrix);
+			}
+			
             float x = boardX + niceCell.x * tileSize;
             float y = boardY + (matrix.getHeight() - niceCell.y - 1) * tileSize;
             
@@ -76,7 +80,11 @@ public class BoardLayer implements ILayer {
             float y = boardY + (matrix.getHeight() - cell.y - 1) * tileSize;
             float off = tileSize / 32;
             
-            Cell niceCell = cell.copy(team == TeamRegistry.BLACK && Theme.INVERT_TABLE_IF_BLACK);
+            Cell niceCell = cell;
+            if (team == TeamRegistry.BLACK && Theme.INVERT_TABLE_IF_BLACK) {
+            	niceCell = cell.invert(matrix);
+            }
+            
     		TexturedPiece piece = matrix.get(niceCell);
         	TextureAsset texture = piece.getTexture();
         	
@@ -85,7 +93,11 @@ public class BoardLayer implements ILayer {
 		
 		// chess highlights above
 		for (Map.Entry<Cell, Highlight> highlightEntry : highlights.entrySet()) {
-			Cell niceCell = highlightEntry.getKey().copy(team == TeamRegistry.BLACK && Theme.INVERT_TABLE_IF_BLACK);
+			Cell niceCell = highlightEntry.getKey();
+			if (team == TeamRegistry.BLACK && Theme.INVERT_TABLE_IF_BLACK) {
+				niceCell = niceCell.invert(matrix);
+			}
+			
             float x = boardX + niceCell.x * tileSize;
             float y = boardY + (matrix.getHeight() - niceCell.y - 1) * tileSize;
             
@@ -125,7 +137,11 @@ public class BoardLayer implements ILayer {
             float x = boardX + cell.x * tileSize;
             float y = boardY + (matrix.getHeight() - cell.y - 1) * tileSize;
             
-            Cell niceCell = cell.copy(team == TeamRegistry.BLACK && Theme.INVERT_TABLE_IF_BLACK);
+            Cell niceCell = cell;
+            if (team == TeamRegistry.BLACK && Theme.INVERT_TABLE_IF_BLACK) {
+            	niceCell = cell.invert(matrix);
+            }
+            
             if (mouseX >= x && mouseY >= y && mouseX < x + tileSize && mouseY < y + tileSize) {
             	Core.INSTANCE.getNetwork().send(new CPacketClickCell(niceCell));
             	return true;

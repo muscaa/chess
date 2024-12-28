@@ -12,7 +12,7 @@ public class CPacketClickCell implements IPacketOutbound {
 	private Cell cell;
 	
 	public CPacketClickCell(Cell cell) {
-		this.cell = cell.copy();
+		this.cell = cell;
 	}
 	
 	@Override

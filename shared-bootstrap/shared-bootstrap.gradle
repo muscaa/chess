@@ -34,6 +34,8 @@ tasks.register("copyDependencies") {
 run {
     dependsOn "copyDependencies"
     
+    standardInput = System.in
+    
     classpath = files(sourceSets.main.output, configurations.shade)
     
     workingDir = file("run")

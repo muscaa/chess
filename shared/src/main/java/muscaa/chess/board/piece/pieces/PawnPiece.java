@@ -22,17 +22,18 @@ public class PawnPiece extends AbstractPiece {
 		Cell direction = team == TeamRegistry.WHITE ? new Cell(0, -1) : new Cell(0, 1);
 		
 		if (totalMoves == 0) {
-			Cell twoSteps = from.copy().add(direction.copy().multiply(2));
+			// TODO check if first step is blocked
+			Cell twoSteps = from.add(direction.multiply(2));
 			PieceUtils.basicPromote(this, moves, matrix, twoSteps);
 		}
 		
-		Cell oneStep = from.copy().add(direction);
+		Cell oneStep = from.add(direction);
 		PieceUtils.basicPromote(this, moves, matrix, oneStep);
 		
-		Cell left = from.copy().add(direction).add(new Cell(-1, 0));
+		Cell left = from.add(direction).add(Cell.ONE_ZERO.negate());
 		PieceUtils.capturePromote(this, moves, matrix, left);
 		
-		Cell right = from.copy().add(direction).add(new Cell(1, 0));
+		Cell right = from.add(direction).add(Cell.ONE_ZERO);
 		PieceUtils.capturePromote(this, moves, matrix, right);
 	}
 }

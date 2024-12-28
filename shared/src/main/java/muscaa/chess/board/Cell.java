@@ -1,8 +1,9 @@
 package muscaa.chess.board;
 
 import fluff.vecmath.gen._int.vector.AbstractIntVec2;
+import muscaa.chess.board.matrix.AbstractMatrix;
 
-public class Cell extends AbstractIntVec2<Cell> {
+public final class Cell extends AbstractIntVec2<Cell> {
 	
 	public static final Cell INVALID = new Cell(-1, -1);
 	
@@ -11,39 +12,16 @@ public class Cell extends AbstractIntVec2<Cell> {
 	public static final Cell ONE_ZERO = new Cell(1, 0);
 	public static final Cell ZERO_ONE = new Cell(0, 1);
 	
-	/*public static final Cell SIZE_ZERO = new Cell(ChessPieceMatrix.SIZE, 0);
-	public static final Cell ZERO_SIZE = new Cell(0, ChessPieceMatrix.SIZE);
-	public static final Cell SIZE_SIZE = new Cell(ChessPieceMatrix.SIZE, ChessPieceMatrix.SIZE);*/
-	
-	public int x;
-	public int y;
+	public final int x;
+	public final int y;
 	
 	public Cell(int x, int y) {
-		set(x, y);
+		this.x = x;
+        this.y = y;
 	}
 	
-	public Cell(Cell cell) {
-		set(cell);
-	}
-	
-	public Cell() {
-		set(INVALID);
-	}
-	
-	public void set(Cell cell) {
-		set(cell.x, cell.y);
-	}
-	
-	public Cell copyWithX(int x) {
-		Cell copy = copy();
-		copy.x = x;
-		return copy;
-	}
-	
-	public Cell copyWithY(int y) {
-		Cell copy = copy();
-		copy.y = y;
-		return copy;
+	public Cell invert(AbstractMatrix<?> matrix) {
+		return set(matrix.getWidth() - x - 1, matrix.getHeight() - y - 1);
 	}
 	
     @Override
@@ -57,20 +35,13 @@ public class Cell extends AbstractIntVec2<Cell> {
     }
     
     @Override
-    public Cell set(int proj_1, int proj_2) {
-        this.x = proj_1;
-        this.y = proj_2;
-        return this;
+    protected Cell set(int proj_1, int proj_2) {
+        return new Cell(proj_1, proj_2);
     }
 	
+    @Deprecated
 	@Override
 	public Cell copy() {
-		return new Cell(this);
-	}
-	
-	@Deprecated
-	public Cell copy(boolean invert) {
-		return invert ? new Cell(8 - x - 1, 8 - y - 1)
-				: new Cell(this);
+		throw new UnsupportedOperationException();
 	}
 }
