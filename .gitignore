@@ -5,6 +5,9 @@
 /shared/bin/
 /shared/build/
 /shared/run/
+/shared-bootstrap/bin/
+/shared-bootstrap/build/
+/shared-bootstrap/run/
 /client/bin/
 /client/build/
 /client/run/

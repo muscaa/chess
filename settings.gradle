@@ -1,5 +1,5 @@
 // subprojects
 
-include "shared"
+include "shared-bootstrap", "shared"
 include "client-bootstrap", "client-lwjgl", "client"
 include "server-bootstrap", "server"

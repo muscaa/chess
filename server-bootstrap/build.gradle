@@ -1,18 +1,10 @@
-plugins {
-	id "application"
-}
-
 ext.subName = "server-bootstrap"
-
-mainClassName = "muscaa.chess.server.bootstrap.main.Main"
-application.setMainClass(mainClassName)
 
 dependencies {
 	include project(":server")
 }
 
-jar {
-	manifest {
-		attributes "Main-Class": mainClassName
-	}
-}
+ext.mainClass = "muscaa.chess.bootstrap.main.Main"
+ext.libsDir = "libs"
+
+apply from: project(":shared-bootstrap").file("shared-bootstrap.gradle")

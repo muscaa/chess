@@ -1,59 +1,10 @@
-plugins {
-	id "application"
-}
-
 ext.subName = "client-bootstrap"
-
-mainClassName = "muscaa.chess.client.bootstrap.main.Main"
-application.setMainClass(mainClassName)
 
 dependencies {
 	include project(":client-lwjgl")
-	
-	shade("com.github.muscaa:fluff-loader:1.0.11") {
-		exclude group: "com.github.muscaa", module: "fluff-core"
-	}
 }
 
-jar {
-	manifest {
-		attributes "Main-Class": mainClassName
-	}
-}
+ext.mainClass = "muscaa.chess.bootstrap.main.Main"
+ext.libsDir = "versions/${version}/libs"
 
-tasks.register("copyDependencies") {
-	def libs = file("run/versions/${version}/libs")
-	
-    inputs.files(configurations.include)
-    outputs.dir(libs)
-	
-    doLast {
-        copy {
-            from configurations.include
-            into libs
-        }
-    }
-}
-
-run {
-    dependsOn "copyDependencies"
-    
-    classpath = files(sourceSets.main.output, configurations.shade)
-    
-    workingDir = file("run")
-    workingDir.mkdirs()
-    
-    def libsDir = tasks.named("copyDependencies").get().outputs.files.singleFile
-    
-    def libJars = [libsDir]
-    def libClasses = []
-    def modJars = []
-    def modClasses = []
-    
-    jvmArgs = [
-    	"-Dlib.jars=${libJars.join(';')}",
-    	"-Dlib.classes=${libClasses.join(';')}",
-    	"-Dmod.jars=${modJars.join(';')}",
-    	"-Dmod.classes=${modClasses.join(';')}",
-    ]
-}
+apply from: project(":shared-bootstrap").file("shared-bootstrap.gradle")

@@ -39,7 +39,8 @@ subprojects {
 		    }
 		    
 		    api.extendsFrom(include)
-		    implementation.extendsFrom(shade)
+		    compileClasspath.extendsFrom(shade)
+		    runtimeClasspath.extendsFrom(shade)
 		}
     }
     
