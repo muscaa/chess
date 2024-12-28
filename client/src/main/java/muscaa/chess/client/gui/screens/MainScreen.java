@@ -3,6 +3,8 @@ package muscaa.chess.client.gui.screens;
 import com.badlogic.gdx.graphics.Color;
 import com.kotcrab.vis.ui.widget.VisTable;
 
+import muscaa.chess.Chess;
+import muscaa.chess.client.assets.Fonts;
 import muscaa.chess.client.assets.Sounds;
 import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.Widgets;
@@ -37,5 +39,12 @@ public class MainScreen extends GuiScreen {
 		main.row();
 		
 		stage.addActor(main);
+	}
+	
+	@Override
+	public void render(int mouseX, int mouseY, float delta) {
+		super.render(mouseX, mouseY, delta);
+		
+		Fonts.draw(Fonts.VARELA_18, "Version " + Chess.VERSION, 5, Fonts.VARELA_18.getLineHeight(), Color.WHITE);
 	}
 }
