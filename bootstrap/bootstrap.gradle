@@ -1,0 +1,57 @@
+//required:
+//  bootstrapEntry
+//  libsDir
+
+apply plugin: "application"
+
+mainClassName = bootstrapMain
+application.setMainClass(mainClassName)
+
+dependencies {
+	bootstrap project(":bootstrap")
+}
+
+tasks.register("copyLibs") {
+	def libs = file("run/${libsDir}")
+	
+    inputs.files(configurations.internal, configurations.shade, configurations.include)
+    outputs.dir(libs)
+	
+    doLast {
+        copy {
+        	from(configurations.internal)
+        	from(configurations.shade)
+        	from(configurations.include)
+        	into(libs)
+        }
+    }
+}
+
+run {
+    dependsOn "copyLibs"
+    
+    standardInput = System.in
+    
+    classpath = files(configurations.bootstrap)
+    
+    workingDir = file("run")
+    workingDir.mkdirs()
+    
+    def libs = tasks.named("copyLibs").get().outputs.files.singleFile
+    
+    def libJars = [libs]
+    def libClasses = []
+    libClasses.addAll(files(sourceSets.main.output).files.collect { it.absolutePath })
+    def modJars = []
+    def modClasses = []
+    
+    jvmArgs = [
+    	"-Dmain.class=${bootstrapEntry}",
+    	"-Dlib.jars=${libJars.join(';')}",
+    	"-Dlib.classes=${libClasses.join(';')}",
+    	"-Dmod.jars=${modJars.join(';')}",
+    	"-Dmod.classes=${modClasses.join(';')}",
+    ]
+    
+    println jvmArgs
+}

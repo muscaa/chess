@@ -1,5 +1,6 @@
 // subprojects
 
-include "shared-bootstrap", "shared"
-include "client-bootstrap", "client-lwjgl", "client"
-include "server-bootstrap", "server"
+include "bootstrap"
+include "shared"
+include "client-lwjgl", "client"
+include "server"

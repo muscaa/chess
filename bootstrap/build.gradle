@@ -1,7 +1,13 @@
-ext.subName = "shared-bootstrap"
+ext.subName = "bootstrap"
 
 dependencies {
 	shade("com.github.muscaa:fluff-loader:1.0.11") {
 		exclude group: "com.github.muscaa", module: "fluff-core"
+	}
+}
+
+jar {
+	manifest {
+		attributes "Main-Class": bootstrapMain
 	}
 }

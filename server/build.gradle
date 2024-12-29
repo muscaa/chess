@@ -3,3 +3,8 @@ ext.subName = "server"
 dependencies {
 	include project(":shared")
 }
+
+ext.bootstrapEntry = "muscaa.chess.server.ServerLauncher"
+ext.libsDir = "libs"
+
+apply from: project(":bootstrap").file("bootstrap.gradle")

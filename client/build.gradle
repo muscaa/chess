@@ -5,4 +5,11 @@ dependencies {
 	include "com.badlogicgames.gdx:gdx:$gdxVersion"
 	include "com.kotcrab.vis:vis-ui:$visUiVersion"
 	include project(":shared")
+	
+	internal project(path: ":client-lwjgl", configuration: "internal")
 }
+
+ext.bootstrapEntry = "muscaa.chess.client.lwjgl.Lwjgl3Launcher"
+ext.libsDir = "versions/${version}/libs"
+
+apply from: project(":bootstrap").file("bootstrap.gradle")
