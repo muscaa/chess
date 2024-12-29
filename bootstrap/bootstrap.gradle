@@ -46,7 +46,7 @@ run {
     def modClasses = []
     
     jvmArgs = [
-    	"-Dmain.class=${bootstrapEntry}",
+    	"-Dbootstrap.entry=${bootstrapEntry}",
     	"-Dlib.jars=${libJars.join(';')}",
     	"-Dlib.classes=${libClasses.join(';')}",
     	"-Dmod.jars=${modJars.join(';')}",

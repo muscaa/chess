@@ -51,6 +51,11 @@ subprojects {
 			    canBeConsumed = true
 		    }
 		    
+		    compileClasspath.extendsFrom(bootstrap)
+		    runtimeClasspath.extendsFrom(bootstrap)
+		    testCompileClasspath.extendsFrom(bootstrap)
+		    testRuntimeClasspath.extendsFrom(bootstrap)
+		    
 		    compileClasspath.extendsFrom(shade)
 		    runtimeClasspath.extendsFrom(shade)
 		    testCompileClasspath.extendsFrom(shade)

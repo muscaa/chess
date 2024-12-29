@@ -9,7 +9,7 @@ dependencies {
 	internal project(path: ":client-lwjgl", configuration: "internal")
 }
 
-ext.bootstrapEntry = "muscaa.chess.client.lwjgl.Lwjgl3Launcher"
+ext.bootstrapEntry = "muscaa.chess.client.main.Main"
 ext.libsDir = "versions/${version}/libs"
 
 apply from: project(":bootstrap").file("bootstrap.gradle")
