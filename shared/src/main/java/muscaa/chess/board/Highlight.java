@@ -1,18 +1,20 @@
 package muscaa.chess.board;
 
-import muscaa.chess.registry.IRegistryEntry;
-import muscaa.chess.utils.NamespacePath;
-
-public class Highlight implements IRegistryEntry {
+public class Highlight {
 	
-	private final NamespacePath id;
+	private final Cell cell;
+	private final HighlightType type;
 	
-	public Highlight(NamespacePath id) {
-		this.id = id;
+	public Highlight(Cell cell, HighlightType type) {
+		this.cell = cell;
+        this.type = type;
 	}
 	
-	@Override
-	public NamespacePath getID() {
-		return id;
+	public Cell getCell() {
+		return cell;
+	}
+	
+	public HighlightType getType() {
+		return type;
 	}
 }

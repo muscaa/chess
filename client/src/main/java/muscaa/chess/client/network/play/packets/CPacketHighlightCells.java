@@ -1,19 +1,20 @@
 package muscaa.chess.client.network.play.packets;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 
 import fluff.bin.IBinaryInput;
 import fluff.network.packet.IPacketInbound;
 import muscaa.chess.board.Cell;
 import muscaa.chess.board.Highlight;
+import muscaa.chess.board.HighlightType;
 import muscaa.chess.network.PacketInputUtils;
 import muscaa.chess.registry.registries.HighlightRegistry;
 
 public class CPacketHighlightCells implements IPacketInbound {
 	
-	private Map<Cell, Highlight> highlights = new HashMap<>();
+	private List<Highlight> highlights = new LinkedList<>();
 	
 	public CPacketHighlightCells() {}
 	
@@ -22,13 +23,13 @@ public class CPacketHighlightCells implements IPacketInbound {
 		int len = in.Int();
 		for (int i = 0; i < len; i++) {
 			Cell cell = PacketInputUtils.cell(in);
-			Highlight highlight = PacketInputUtils.regEntry(in, HighlightRegistry.REG);
+			HighlightType highlight = PacketInputUtils.regEntry(in, HighlightRegistry.REG);
 			
-			highlights.put(cell, highlight);
+			highlights.add(new Highlight(cell, highlight));
 		}
 	}
 	
-	public Map<Cell, Highlight> getHighlights() {
+	public List<Highlight> getHighlights() {
 		return highlights;
 	}
 }

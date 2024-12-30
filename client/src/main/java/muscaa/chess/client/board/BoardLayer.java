@@ -1,13 +1,14 @@
 package muscaa.chess.client.board;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
 
 import muscaa.chess.board.Cell;
 import muscaa.chess.board.Highlight;
+import muscaa.chess.board.HighlightType;
 import muscaa.chess.board.Team;
 import muscaa.chess.client.Core;
 import muscaa.chess.client.assets.Sounds;
@@ -32,7 +33,7 @@ public class BoardLayer implements ILayer {
 	private boolean inGame;
     private ClientMatrix matrix;
     private Team team;
-    private Map<Cell, Highlight> highlights = new HashMap<>();
+    private List<Highlight> highlights = new LinkedList<>();
     
     private float tileSize;
     private float boardX, boardY;
@@ -51,8 +52,8 @@ public class BoardLayer implements ILayer {
 		}
 		
 		// chess highlights under
-		for (Map.Entry<Cell, Highlight> highlightEntry : highlights.entrySet()) {
-			Cell niceCell = highlightEntry.getKey();
+		for (Highlight highlight : highlights) {
+			Cell niceCell = highlight.getCell();
 			if (team == TeamRegistry.BLACK && Theme.INVERT_TABLE_IF_BLACK) {
 				niceCell = niceCell.invert(matrix);
 			}
@@ -60,13 +61,15 @@ public class BoardLayer implements ILayer {
             float x = boardX + niceCell.x * tileSize;
             float y = boardY + (matrix.getHeight() - niceCell.y - 1) * tileSize;
             
-            Highlight highlight = highlightEntry.getValue();
+            HighlightType type = highlight.getType();
             
             Color color = null;
-            if (highlight == HighlightRegistry.SELECTED) {
+            if (type == HighlightRegistry.SELECTED) {
             	color = Theme.BOARD_CELL_SELECTED;
-            } else if (highlight == HighlightRegistry.CHECK) {
+            } else if (type == HighlightRegistry.CHECK) {
             	color = Theme.BOARD_CELL_CHECK;
+            } else if (type == HighlightRegistry.LAST_MOVE) {
+            	color = Theme.BOARD_CELL_LAST_MOVE;
             }
             
             if (color != null) {
@@ -92,8 +95,8 @@ public class BoardLayer implements ILayer {
 		}
 		
 		// chess highlights above
-		for (Map.Entry<Cell, Highlight> highlightEntry : highlights.entrySet()) {
-			Cell niceCell = highlightEntry.getKey();
+		for (Highlight highlight : highlights) {
+			Cell niceCell = highlight.getCell();
 			if (team == TeamRegistry.BLACK && Theme.INVERT_TABLE_IF_BLACK) {
 				niceCell = niceCell.invert(matrix);
 			}
@@ -101,10 +104,10 @@ public class BoardLayer implements ILayer {
             float x = boardX + niceCell.x * tileSize;
             float y = boardY + (matrix.getHeight() - niceCell.y - 1) * tileSize;
             
-            Highlight highlight = highlightEntry.getValue();
+            HighlightType type = highlight.getType();
             
             Color color = null;
-            if (highlight == HighlightRegistry.MOVE_AVAILABLE) {
+            if (type == HighlightRegistry.MOVE_AVAILABLE) {
             	color = Theme.BOARD_CELL_MOVE_AVAILABLE;
             }
             
@@ -205,7 +208,7 @@ public class BoardLayer implements ILayer {
 		inGame = false;
 		matrix = null;
 		team = null;
-		highlights = new HashMap<>();
+		highlights = new LinkedList<>();
 	}
 	
 	public boolean isInGame() {

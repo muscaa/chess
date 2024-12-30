@@ -30,6 +30,7 @@ public class ServerBoard {
 	private Team turn;
 	private Cell selectedCell = Cell.INVALID;
 	private List<Cell> inCheckCells = new LinkedList<>();
+	private List<Cell> lastMoveCells = new LinkedList<>();
 	
 	private Matrix matrix;
 	
@@ -77,6 +78,10 @@ public class ServerBoard {
 		inCheckCells.clear();
 		inCheckCells.addAll(getInCheck(TeamRegistry.invert(turn)));
 		
+		lastMoveCells.clear();
+		lastMoveCells.add(selectedCell);
+		lastMoveCells.add(cell);
+		
 		selectCell(player, opponent, Cell.INVALID);
 		
 		Map<Cell, Map<Cell, AbstractMove>> remainingMoves = getMoves(TeamRegistry.invert(turn));
@@ -107,20 +112,29 @@ public class ServerBoard {
 	public void selectCell(ChessClientConnection player, ChessClientConnection opponent, Cell cell) {
 		selectedCell = cell;
 		
-		Map<Cell, Highlight> highlights = new HashMap<>();
-		Map<Cell, Highlight> opponentHighlights = new HashMap<>();
+		List<Highlight> highlights = new LinkedList<>();
+		List<Highlight> opponentHighlights = new LinkedList<>();
 		
 		for (Cell inCheckCell : inCheckCells) {
-			highlights.put(inCheckCell, HighlightRegistry.CHECK);
-			opponentHighlights.put(inCheckCell, HighlightRegistry.CHECK);
+			Highlight h = new Highlight(inCheckCell, HighlightRegistry.CHECK);
+			
+			highlights.add(h);
+			opponentHighlights.add(h);
+		}
+		
+		for (Cell lastMoveCell : lastMoveCells) {
+			Highlight h = new Highlight(lastMoveCell, HighlightRegistry.LAST_MOVE);
+			
+			highlights.add(h);
+			opponentHighlights.add(h);
 		}
 		
 		if (!selectedCell.equals(Cell.INVALID)) {
-			Map<Cell, AbstractMove> moves = allMoves.get(selectedCell);
+			highlights.add(new Highlight(selectedCell, HighlightRegistry.SELECTED));
 			
-			highlights.put(selectedCell, HighlightRegistry.SELECTED);
+			Map<Cell, AbstractMove> moves = allMoves.get(selectedCell);
 			for (Map.Entry<Cell, AbstractMove> e : moves.entrySet()) {
-				highlights.put(e.getKey(), HighlightRegistry.MOVE_AVAILABLE);
+				highlights.add(new Highlight(e.getKey(), HighlightRegistry.MOVE_AVAILABLE));
 			}
 		}
 		
@@ -246,6 +260,7 @@ public class ServerBoard {
 			send(new PacketBoard(matrix));
 			findAllMoves();
 			inCheckCells.clear();
+			lastMoveCells.clear();
 		}
 	}
 	

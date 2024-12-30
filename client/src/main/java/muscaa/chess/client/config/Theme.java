@@ -16,4 +16,5 @@ public class Theme {
 	public static final Color BOARD_CELL_SELECTED = RenderUtils.color(235, 236, 104);
 	public static final Color BOARD_CELL_CHECK = RenderUtils.color(235, 82, 82);
 	public static final Color BOARD_CELL_MOVE_AVAILABLE = RenderUtils.color(100, 103, 106, 200);
+	public static final Color BOARD_CELL_LAST_MOVE = RenderUtils.color(82, 82, 235);
 }
