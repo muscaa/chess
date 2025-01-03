@@ -28,6 +28,7 @@ tasks.register("copyLibs") {
 }
 
 run {
+	dependsOn "processResources"
     dependsOn "copyLibs"
     
     standardInput = System.in
@@ -52,6 +53,4 @@ run {
     	"-Dmod.jars=${modJars.join(';')}",
     	"-Dmod.classes=${modClasses.join(';')}",
     ]
-    
-    println jvmArgs
 }

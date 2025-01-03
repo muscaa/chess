@@ -2,32 +2,36 @@ package muscaa.chess.client;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import muscaa.chess.Chess;
 import muscaa.chess.client.assets.Fonts;
 import muscaa.chess.client.assets.Sounds;
 import muscaa.chess.client.board.BoardLayer;
-import muscaa.chess.client.config.Theme;
+import muscaa.chess.client.config.ServersConfig;
 import muscaa.chess.client.gui.GuiLayer;
-import muscaa.chess.client.gui.screens.MainScreen;
+import muscaa.chess.client.gui.screens.MainMenuScreen;
 import muscaa.chess.client.layer.LayerManager;
-import muscaa.chess.client.network.ClientNetwork;
+import muscaa.chess.client.network.ChessClient;
 import muscaa.chess.client.registries.TextureRegistry;
-import muscaa.chess.client.render.Screen;
-import muscaa.chess.client.render.Shapes;
-import muscaa.chess.client.task.TaskManager;
+import muscaa.chess.client.utils.Screen;
+import muscaa.chess.client.utils.Shapes;
+import muscaa.chess.client.utils.TaskManager;
 
-public class Core implements ApplicationListener {
+public class Client implements ApplicationListener {
 	
-	public static final Core INSTANCE = new Core();
+	public static final Client INSTANCE = new Client();
 	
 	private LayerManager layerManager;
 	
 	private BoardLayer boardLayer;
 	private GuiLayer guiLayer;
 	
-	private ClientNetwork network;
+	private ChessClient networkClient;
+	
+	private ServersConfig serversConfig;
 	
 	@Override
 	public void create() {
@@ -37,7 +41,9 @@ public class Core implements ApplicationListener {
 		Screen.init(width, height);
 		
     	layerManager = new LayerManager();
-    	Gdx.input.setInputProcessor(new CoreInputProcessor());
+    	Gdx.input.setInputProcessor(new ClientInputProcessor());
+    	
+    	Chess.init();
     	
     	Fonts.init();
     	TextureRegistry.init();
@@ -49,7 +55,10 @@ public class Core implements ApplicationListener {
     	guiLayer = new GuiLayer();
     	layerManager.register(guiLayer);
     	
-    	network = new ClientNetwork();
+    	networkClient = new ChessClient();
+    	
+    	serversConfig = new ServersConfig();
+    	serversConfig.load();
     	
     	returnToMainMenu();
 	}
@@ -62,7 +71,7 @@ public class Core implements ApplicationListener {
     	float delta = Gdx.graphics.getDeltaTime();
     	
     	Screen.beginScreen();
-    	Shapes.rect(0, 0, Screen.WIDTH, Screen.HEIGHT, Theme.BACKGROUND);
+    	Shapes.rect(0, 0, Screen.WIDTH, Screen.HEIGHT, Color.BLACK);
     	layerManager.render((int) mouse.x, (int) mouse.y, delta);
     	Screen.endScreen();
     	
@@ -94,9 +103,9 @@ public class Core implements ApplicationListener {
 	}
 	
 	public void returnToMainMenu() {
-		network.disconnect();
+		networkClient.disconnect();
 		boardLayer.disconnect();
-		guiLayer.setScreen(new MainScreen());
+		guiLayer.setScreen(new MainMenuScreen());
 	}
 	
 	public LayerManager getLayerManager() {
@@ -111,7 +120,11 @@ public class Core implements ApplicationListener {
 		return guiLayer;
 	}
 	
-	public ClientNetwork getNetwork() {
-		return network;
+	public ChessClient getNetworkClient() {
+		return networkClient;
+	}
+	
+	public ServersConfig getServersConfig() {
+		return serversConfig;
 	}
 }

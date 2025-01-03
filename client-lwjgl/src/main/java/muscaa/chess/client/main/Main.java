@@ -3,7 +3,7 @@ package muscaa.chess.client.main;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
-import muscaa.chess.client.Core;
+import muscaa.chess.client.Client;
 
 public class Main {
 	
@@ -14,7 +14,7 @@ public class Main {
 	}
 	
 	private static Lwjgl3Application createApplication() {
-		return new Lwjgl3Application(Core.INSTANCE, getDefaultConfiguration());
+		return new Lwjgl3Application(Client.INSTANCE, getDefaultConfiguration());
 	}
 	
 	private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {

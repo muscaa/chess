@@ -11,7 +11,7 @@ public class ServerLoginNetHandler extends ServerCommonNetHandler implements ISe
 	
 	@Override
 	public void onConnect() throws NetworkException {
-		//System.out.println("Logged in");
+		System.out.println("Logged in");
 		
 		connection.send(new PacketLoginSuccess());
 		connection.setContext(ServerContexts.PLAY_CONTEXT, new ServerPlayNetHandler());
@@ -19,7 +19,7 @@ public class ServerLoginNetHandler extends ServerCommonNetHandler implements ISe
 	
 	@Override
 	public void onPacketLogin(PacketLogin packet) {
-		//System.out.println("Received login");
+		System.out.println("Received login");
 		
 		connection.login(packet.getName());
 	}

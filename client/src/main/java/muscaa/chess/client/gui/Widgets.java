@@ -9,11 +9,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
 import com.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.widget.VisScrollPane;
 import com.kotcrab.vis.ui.widget.VisSlider;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
+
+import fluff.functions.gen.obj.VoidFunc1;
+import muscaa.chess.client.config.Theme;
 
 public class Widgets {
 	
@@ -23,6 +27,52 @@ public class Widgets {
 	public static final int WIDTH = 500;
 	public static final int HEIGHT = 50;
 	
+	public static VisTable table(VisTable table, boolean fillParent) {
+		table.setFillParent(fillParent);
+		return table;
+	}
+	
+	public static VisTable panel(VisTable table, boolean fillParent) {
+		table.setBackground(new ColorDrawable(Theme.PANEL));
+		return table(table, fillParent);
+	}
+	
+	public static VisScrollPane scrollPane(VisScrollPane scrollPane, boolean fillParent) {
+		scrollPane.setFadeScrollBars(false);
+		scrollPane.setFlickScroll(false);
+		scrollPane.setScrollbarsOnTop(true);
+		scrollPane.setFillParent(fillParent);
+		return scrollPane;
+	}
+	
+	public static VisLabel label(VisLabel label) {
+		return label;
+	}
+	
+	public static VisTextButton button(VisTextButton button, VoidFunc1<VisTextButton> action) {
+		button.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				if (action != null) action.invoke(button);
+			}
+		});
+		return button;
+	}
+	
+	
+	
+	
+	
+	
+	public static VisTable panel() {
+		VisTable table = new VisTable();
+		table.defaults()
+				.pad(4.0F)
+				;
+		table.setBackground(new ColorDrawable(Color.DARK_GRAY));
+		return table;
+	}
+	
 	public static VisTable table(boolean fillParent) {
 		VisTable table = new VisTable();
 		table.defaults()
@@ -30,6 +80,15 @@ public class Widgets {
 				;
 		table.setFillParent(fillParent);
 		return table;
+	}
+	
+	public static VisScrollPane scrollPane(VisTable table, boolean fillParent) {
+		VisScrollPane scrollPane = new VisScrollPane(table);
+		scrollPane.setFadeScrollBars(false);
+		scrollPane.setFlickScroll(false);
+		scrollPane.setScrollbarsOnTop(true);
+		scrollPane.setFillParent(fillParent);
+		return scrollPane;
 	}
 	
 	public static Cell<?> empty(Table table, int size) {

@@ -19,5 +19,9 @@ public class TeamRegistry {
 		return NULL;
 	}
 	
-	public static void init() {}
+	public static void init() {
+		// TODO call event
+		
+		REG.lock();
+	}
 }

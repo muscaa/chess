@@ -17,5 +17,9 @@ public class MoveRegistry {
 	public static final PromoteMove PROMOTE = REG.register(new PromoteMove(Chess.NAMESPACE.path("promote")));
 	// castle
 	
-	public static void init() {}
+	public static void init() {
+		// TODO call event
+		
+		REG.lock();
+	}
 }

@@ -11,7 +11,7 @@ public class ChessServer extends AbstractServer {
 	public ChessServer(int port) {
 		super(port);
 		
-		addModule(new TimeoutModule());
+		addModule(new TimeoutModule(30000));
 	}
 	
 	@Override

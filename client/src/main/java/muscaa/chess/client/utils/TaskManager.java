@@ -1,4 +1,4 @@
-package muscaa.chess.client.task;
+package muscaa.chess.client.utils;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;

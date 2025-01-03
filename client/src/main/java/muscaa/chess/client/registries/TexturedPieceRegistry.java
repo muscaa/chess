@@ -18,4 +18,8 @@ public class TexturedPieceRegistry {
 	public static final PieceEntry<TexturedPiece> BISHOP = REG.register(new PieceEntry<>(Chess.NAMESPACE.path("bishop"), TexturedPiece::new));
 	public static final PieceEntry<TexturedPiece> QUEEN = REG.register(new PieceEntry<>(Chess.NAMESPACE.path("queen"), TexturedPiece::new));
 	public static final PieceEntry<TexturedPiece> KING = REG.register(new PieceEntry<>(Chess.NAMESPACE.path("king"), TexturedPiece::new));
+	
+	public static void init() {
+		REG.lock();
+	}
 }

@@ -1,6 +1,7 @@
 package muscaa.chess.network.connection;
 
 import fluff.network.packet.channels.EncryptedPacketChannel;
+import muscaa.chess.Chess;
 import muscaa.chess.network.ServerContexts;
 import muscaa.chess.network.common.ServerCommonNetHandler;
 import muscaa.chess.network.connection.packets.PacketEncrypt;
@@ -11,7 +12,12 @@ public class ServerConnectionNetHandler extends ServerCommonNetHandler implement
 	
 	@Override
 	public void onPacketEncrypt(PacketEncrypt packet) {
-		//System.out.println("Received encrypt");
+		if (packet.getProtocolVersion() != Chess.PROTOCOL_VERSION) {
+			connection.disconnect("Invalid protocol version!");
+            return;
+		}
+		
+		System.out.println("Received encrypt");
 		
 		// TODO allow multiple people on the server using lobbies
 		if (server.getTotalPlayers() >= 2) {

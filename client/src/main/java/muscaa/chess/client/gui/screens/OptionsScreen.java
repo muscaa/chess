@@ -2,6 +2,7 @@ package muscaa.chess.client.gui.screens;
 
 import com.kotcrab.vis.ui.widget.VisTable;
 
+import muscaa.chess.client.Client;
 import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.Widgets;
 
@@ -25,7 +26,7 @@ public class OptionsScreen extends GuiScreen {
 		main.row();
 		Widgets.empty(main);
 		main.row();
-		Widgets.button(main, "Back", (button) -> setScreen(parent));
+		Widgets.button(main, "Back", (button) -> Client.INSTANCE.getGuiLayer().setScreen(parent));
 		main.row();
 		
 		stage.addActor(main);

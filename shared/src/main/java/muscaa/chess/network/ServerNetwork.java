@@ -2,7 +2,7 @@ package muscaa.chess.network;
 
 import fluff.network.NetworkException;
 import fluff.network.packet.channels.DefaultPacketChannel;
-import muscaa.chess.network.connection.ServerConnectionNetHandler;
+import muscaa.chess.network.intent.ServerIntentNetHandler;
 
 public class ServerNetwork {
 	
@@ -10,7 +10,7 @@ public class ServerNetwork {
 	
 	public ServerNetwork() {
 		server = new ChessServer(40755);
-		server.setDefaultContext(ServerContexts.CONNECTION_CONTEXT, ServerConnectionNetHandler::new);
+		server.setDefaultContext(ServerContexts.INTENT_CONTEXT, ServerIntentNetHandler::new);
 		server.setDefaultChannel(DefaultPacketChannel::new);
 	}
 	

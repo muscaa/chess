@@ -3,7 +3,7 @@ package muscaa.chess.client.layer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 
-import muscaa.chess.client.render.Screen;
+import muscaa.chess.client.utils.Screen;
 
 public abstract class LayerInputProcessor implements InputProcessor {
 	

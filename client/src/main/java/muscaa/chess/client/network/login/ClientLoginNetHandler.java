@@ -1,6 +1,5 @@
 package muscaa.chess.client.network.login;
 
-import muscaa.chess.client.Core;
 import muscaa.chess.client.network.ClientContexts;
 import muscaa.chess.client.network.NetworkStatus;
 import muscaa.chess.client.network.common.ClientCommonNetHandler;
@@ -13,6 +12,6 @@ public class ClientLoginNetHandler extends ClientCommonNetHandler implements ICl
 	public void onPacketLoginSuccess(CPacketLoginSuccess packet) {
 		client.setContext(ClientContexts.PLAY_CONTEXT, new ClientPlayNetHandler());
 		
-		Core.INSTANCE.getNetwork().update(NetworkStatus.DONE);
+		client.update(NetworkStatus.DONE);
 	}
 }

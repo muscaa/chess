@@ -10,7 +10,7 @@ import muscaa.chess.board.Cell;
 import muscaa.chess.board.Highlight;
 import muscaa.chess.board.HighlightType;
 import muscaa.chess.board.Team;
-import muscaa.chess.client.Core;
+import muscaa.chess.client.Client;
 import muscaa.chess.client.assets.Sounds;
 import muscaa.chess.client.assets.TextureAsset;
 import muscaa.chess.client.config.Theme;
@@ -22,9 +22,9 @@ import muscaa.chess.client.network.play.packets.CPacketEndGame;
 import muscaa.chess.client.network.play.packets.CPacketHighlightCells;
 import muscaa.chess.client.network.play.packets.CPacketStartGame;
 import muscaa.chess.client.network.play.packets.CPacketTeam;
-import muscaa.chess.client.render.Screen;
-import muscaa.chess.client.render.Shapes;
-import muscaa.chess.client.task.TaskManager;
+import muscaa.chess.client.utils.Screen;
+import muscaa.chess.client.utils.Shapes;
+import muscaa.chess.client.utils.TaskManager;
 import muscaa.chess.registry.registries.HighlightRegistry;
 import muscaa.chess.registry.registries.TeamRegistry;
 
@@ -146,7 +146,7 @@ public class BoardLayer implements ILayer {
             }
             
             if (mouseX >= x && mouseY >= y && mouseX < x + tileSize && mouseY < y + tileSize) {
-            	Core.INSTANCE.getNetwork().send(new CPacketClickCell(niceCell));
+            	Client.INSTANCE.getNetworkClient().send(new CPacketClickCell(niceCell));
             	return true;
             }
 		}
@@ -158,7 +158,7 @@ public class BoardLayer implements ILayer {
 		inGame = true;
 		
 		TaskManager.render(() -> {
-			Core.INSTANCE.getGuiLayer().setScreen(null);
+			Client.INSTANCE.getGuiLayer().setScreen(null);
 		});
 	}
 	
@@ -194,7 +194,7 @@ public class BoardLayer implements ILayer {
 		
 		TaskManager.render(() -> {
 			System.out.println("why this not getting called?");
-			Core.INSTANCE.getGuiLayer().setScreen(new DisconnectedScreen(packet.getWinner() == TeamRegistry.NULL ? "Stalemate"
+			Client.INSTANCE.getGuiLayer().setScreen(new DisconnectedScreen(packet.getWinner() == TeamRegistry.NULL ? "Stalemate"
 					: packet.getWinner() == team ? "You win"
 							: "Opponent wins"));
 		});
@@ -203,7 +203,7 @@ public class BoardLayer implements ILayer {
 	}
 	
 	public void disconnect() {
-		Core.INSTANCE.getNetwork().disconnect();
+		Client.INSTANCE.getNetworkClient().disconnect();
 		
 		inGame = false;
 		matrix = null;

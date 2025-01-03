@@ -1,4 +1,4 @@
-package muscaa.chess.client.render;
+package muscaa.chess.client.utils;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;

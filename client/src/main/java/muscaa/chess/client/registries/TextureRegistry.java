@@ -26,7 +26,12 @@ public class TextureRegistry {
 	public static final TextureAsset BLACK_ROOK = REG.register(new TextureAsset(Chess.NAMESPACE.path("black_rook"), "pieces/black_rook.png"));
 	public static final TextureAsset BLACK_PAWN = REG.register(new TextureAsset(Chess.NAMESPACE.path("black_pawn"), "pieces/black_pawn.png"));
 	
-	public static void init() {}
+	public static final TextureAsset WALLPAPER = REG.register(new TextureAsset(Chess.NAMESPACE.path("wallpaper"), "wallpaper.png"));
+	public static final TextureAsset WALLPAPER_BLUR = REG.register(new TextureAsset(Chess.NAMESPACE.path("wallpaper_blur"), "wallpaper_blur.png"));
+	
+	public static void init() {
+		REG.lock();
+	}
 	
 	public static void dispose() {
 		for (Map.Entry<NamespacePath, TextureAsset> assetEntry : REG.getContents().entrySet()) {

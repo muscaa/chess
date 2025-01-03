@@ -6,13 +6,13 @@ import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.screens.PauseScreen;
 import muscaa.chess.client.layer.ILayer;
 import muscaa.chess.client.layer.LayerInputProcessor;
-import muscaa.chess.client.render.WindowUtils;
+import muscaa.chess.client.utils.WindowUtils;
 
-public class CoreInputProcessor extends LayerInputProcessor {
+public class ClientInputProcessor extends LayerInputProcessor {
 	
 	@Override
 	protected ILayer getLayer() {
-		return Core.INSTANCE.getLayerManager();
+		return Client.INSTANCE.getLayerManager();
 	}
 	
 	@Override
@@ -23,12 +23,12 @@ public class CoreInputProcessor extends LayerInputProcessor {
 				return true;
 				
 			case Keys.ESCAPE:
-				if (!Core.INSTANCE.getBoardLayer().isInGame()) break;
+				if (!Client.INSTANCE.getBoardLayer().isInGame()) break;
 				
-				GuiScreen screen = Core.INSTANCE.getGuiLayer().getScreen();
+				GuiScreen screen = Client.INSTANCE.getGuiLayer().getScreen();
 				screen = screen == null ? new PauseScreen() : null;
 				
-				Core.INSTANCE.getGuiLayer().setScreen(screen);
+				Client.INSTANCE.getGuiLayer().setScreen(screen);
 				
 				return true;
 		}

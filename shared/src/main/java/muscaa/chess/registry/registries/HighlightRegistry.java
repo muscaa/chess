@@ -14,5 +14,9 @@ public class HighlightRegistry {
 	public static final HighlightType CHECK = REG.register(new HighlightType(Chess.NAMESPACE.path("check")));
 	public static final HighlightType LAST_MOVE = REG.register(new HighlightType(Chess.NAMESPACE.path("last_move")));
 	
-	public static void init() {}
+	public static void init() {
+		// TODO call event
+		
+		REG.lock();
+	}
 }

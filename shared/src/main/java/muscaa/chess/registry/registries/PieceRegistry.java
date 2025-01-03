@@ -26,5 +26,9 @@ public class PieceRegistry {
 	public static final PieceEntry<QueenPiece> QUEEN = REG.register(new PieceEntry<>(Chess.NAMESPACE.path("queen"), QueenPiece::new));
 	public static final PieceEntry<KingPiece> KING = REG.register(new PieceEntry<>(Chess.NAMESPACE.path("king"), KingPiece::new));
 	
-	public static void init() {}
+	public static void init() {
+		// TODO call event
+		
+		REG.lock();
+	}
 }

@@ -3,7 +3,7 @@ package muscaa.chess.client.assets;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
-import muscaa.chess.client.render.Screen;
+import muscaa.chess.client.utils.Screen;
 import muscaa.chess.registry.IRegistryEntry;
 import muscaa.chess.utils.NamespacePath;
 
