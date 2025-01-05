@@ -3,7 +3,8 @@ package muscaa.chess.client.config;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import fluff.bin.IBinaryInput;
@@ -13,11 +14,11 @@ import fluff.bin.stream.BinaryInputStream;
 import fluff.bin.stream.BinaryOutputStream;
 import fluff.functions.gen.obj.VoidFunc1;
 
-public class ServersConfig implements IBinaryData {
+public class ServersConfig implements IBinaryData, Iterable<ServersConfig.Server> {
 	
 	private static final int VERSION = 1;
 	
-	private final List<Server> list = new LinkedList<>();
+	private final List<Server> list = new ArrayList<>();
 	
 	public void load() {
 		try (BinaryInputStream in = new BinaryInputStream(new FileInputStream("servers.dat"))) {
@@ -40,8 +41,8 @@ public class ServersConfig implements IBinaryData {
         save();
 	}
 	
-	public List<Server> getList() {
-		return list;
+	public Server get(int index) {
+		return list.get(index);
 	}
 	
 	@Override
@@ -67,6 +68,11 @@ public class ServersConfig implements IBinaryData {
 		for (Server server : list) {
 			out.Data(server);
 		}
+	}
+	
+	@Override
+	public Iterator<Server> iterator() {
+		return list.iterator();
 	}
 	
 	public static class Server implements IBinaryData {

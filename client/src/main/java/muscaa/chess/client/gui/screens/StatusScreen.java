@@ -1,17 +1,17 @@
 package muscaa.chess.client.gui.screens;
 
-import com.badlogic.gdx.graphics.Color;
-import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisTable;
+import com.badlogic.gdx.utils.Align;
 
 import muscaa.chess.client.Client;
 import muscaa.chess.client.gui.GuiScreen;
-import muscaa.chess.client.gui.Widgets;
+import muscaa.chess.client.gui.widgets.WLabel;
+import muscaa.chess.client.gui.widgets.WTable;
+import muscaa.chess.client.gui.widgets.WTextButton;
 
 public class StatusScreen extends GuiScreen {
 	
 	private String text;
-	private VisLabel label;
+	private WLabel textLabel;
 	
 	public StatusScreen(String text) {
 		this.text = text;
@@ -19,21 +19,32 @@ public class StatusScreen extends GuiScreen {
 	
 	@Override
 	protected void init() {
-		VisTable main = Widgets.table(true);
+		WTable content = new WTable();
+		content.defaults().growX().pad(PAD_SMALL).minHeight(BUTTON_HEIGHT);
 		
-		label = Widgets.label(main, Widgets.FONT_DEFAULT, text, Color.WHITE).getActor();
-		main.row();
+		textLabel = new WLabel(text);
+		textLabel.setAlignment(Align.center);
+		content.add(textLabel);
+		content.row();
 		
-		Widgets.empty(main);
-		main.row();
-		Widgets.button(main, "Return to Main Menu", (button) -> Client.INSTANCE.returnToMainMenu());
-		main.row();
+		content.add();
+		content.row();
+		
+		WTextButton mainMenuButton = new WTextButton("Return to Main Menu");
+		mainMenuButton.addActionListener(w -> Client.INSTANCE.returnToMainMenu());
+		content.add(mainMenuButton);
+		content.row();
+		
+		WTable main = new WTable(true);
+		main.defaults().growX().pad(PAD_LARGE).maxWidth(PANEL_MEDIUM);
+		main.add(content);
 		
 		stage.addActor(main);
 	}
 	
 	public void setText(String text) {
 		this.text = text;
-		label.setText(text);
+		
+		textLabel.setText(text);
 	}
 }

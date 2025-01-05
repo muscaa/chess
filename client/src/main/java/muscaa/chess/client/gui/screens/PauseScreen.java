@@ -1,30 +1,47 @@
 package muscaa.chess.client.gui.screens;
 
-import com.kotcrab.vis.ui.widget.VisTable;
-
 import muscaa.chess.client.Client;
 import muscaa.chess.client.gui.GuiScreen;
-import muscaa.chess.client.gui.Widgets;
+import muscaa.chess.client.gui.widgets.WTable;
+import muscaa.chess.client.gui.widgets.WTextButton;
 
 public class PauseScreen extends GuiScreen {
 	
 	@Override
 	protected void init() {
-		VisTable main = Widgets.table(true);
+		WTable content = new WTable();
+		content.defaults().pad(PAD_SMALL).minHeight(BUTTON_HEIGHT);
 		
-		Widgets.button(main, "Resume", (button) -> Client.INSTANCE.getGuiLayer().setScreen(null));
-		main.row();
-		Widgets.button(main, "Options", (button) -> Client.INSTANCE.getGuiLayer().setScreen(new OptionsScreen(this)));
-		main.row();
+		WTextButton resumeButton = new WTextButton("Resume");
+		resumeButton.addActionListener(w -> Client.INSTANCE.getGuiLayer().setScreen(null));
+		content.add(resumeButton);
+		content.row();
+		
+		WTextButton optionsButton = new WTextButton("Options");
+		optionsButton.addActionListener(w -> Client.INSTANCE.getGuiLayer().setScreen(new OptionsScreen(this)));
+		content.add(optionsButton);
+		content.row();
 		
 		if (Client.INSTANCE.getBoardLayer().isInGame()) {
-			Widgets.button(main, "Surrender", null);
-			main.row();
+			WTextButton surrenderButton = new WTextButton("Surrender");
+			surrenderButton.addActionListener(w -> {
+				
+			});
+			content.add(surrenderButton);
+			content.row();
 		}
-		Widgets.empty(main);
-		main.row();
-		Widgets.button(main, "Return to Main Menu", (button) -> Client.INSTANCE.returnToMainMenu());
-		main.row();
+		
+		content.add();
+		content.row();
+		
+		WTextButton mainMenuButton = new WTextButton("Return to Main Menu");
+		mainMenuButton.addActionListener(w -> Client.INSTANCE.returnToMainMenu());
+		content.add(mainMenuButton);
+		content.row();
+		
+		WTable main = new WTable(true);
+		main.defaults().growX().pad(PAD_LARGE).maxWidth(PANEL_MEDIUM);
+		main.add(content);
 		
 		stage.addActor(main);
 	}

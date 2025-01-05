@@ -15,5 +15,6 @@ public class Theme {
 	public static final Color BOARD_CELL_MOVE_AVAILABLE = RenderUtils.color(100, 103, 106, 200);
 	public static final Color BOARD_CELL_LAST_MOVE = RenderUtils.color(82, 82, 235);
 	
+	public static final Color GUISCREEN_BACKGROUND = RenderUtils.color(20, 20, 20, 150);
 	public static final Color PANEL = RenderUtils.color(30, 30, 30, 100);
 }

@@ -2,7 +2,7 @@ package muscaa.chess.client.network.connection;
 
 import fluff.network.packet.channels.EncryptedPacketChannel;
 import muscaa.chess.client.Client;
-import muscaa.chess.client.gui.screens.LoginScreen;
+import muscaa.chess.client.gui.screens.LoginFormScreen;
 import muscaa.chess.client.network.ClientContexts;
 import muscaa.chess.client.network.common.ClientCommonNetHandler;
 import muscaa.chess.client.network.connection.packets.CPacketHandshake;
@@ -17,7 +17,7 @@ public class ClientConnectionNetHandler extends ClientCommonNetHandler implement
 		client.setContext(ClientContexts.LOGIN_CONTEXT, new ClientLoginNetHandler());
 		
 		TaskManager.render(() -> {
-			Client.INSTANCE.getGuiLayer().setScreen(new LoginScreen(client, Client.INSTANCE.getGuiLayer().getScreen()));
+			Client.INSTANCE.getGuiLayer().setScreen(new LoginFormScreen(client, Client.INSTANCE.getGuiLayer().getScreen()));
 		});
 	}
 }

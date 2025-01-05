@@ -31,6 +31,14 @@ public class TextureAsset implements IRegistryEntry {
 		texture.dispose();
 	}
 	
+	public int getWidth() {
+		return texture.getWidth();
+	}
+	
+	public int getHeight() {
+		return texture.getHeight();
+	}
+	
 	@Override
 	public NamespacePath getID() {
 		return id;

@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import muscaa.chess.client.Client;
+import muscaa.chess.client.assets.TextureAsset;
 import muscaa.chess.client.config.Theme;
 import muscaa.chess.client.layer.ILayer;
 import muscaa.chess.client.layer.ILayerWrapper;
@@ -24,7 +25,7 @@ public abstract class GuiScreen implements ILayerWrapper {
 	public static final int PANEL_SMALL = 200;
 	
 	public static final int PAD_LARGE = 50;
-	public static final int PAD_MEDIUM = 10;
+	public static final int PAD_MEDIUM = 20;
 	public static final int PAD_SMALL = 4;
 	
 	protected Viewport viewport;
@@ -48,10 +49,34 @@ public abstract class GuiScreen implements ILayerWrapper {
 	
 	protected void renderBackground(int mouseX, int mouseY, float delta) {
 		if (Client.INSTANCE.getBoardLayer().isInGame()) {
-			Shapes.rect(0, 0, viewport.getWorldWidth(), viewport.getWorldHeight(), Theme.PANEL);
+			Shapes.rect(0, 0, viewport.getWorldWidth(), viewport.getWorldHeight(), Theme.GUISCREEN_BACKGROUND);
 		} else {
-			TextureRegistry.WALLPAPER_BLUR.draw(0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
+			drawWallpaper(TextureRegistry.WALLPAPER_BLUR);
 		}
+	}
+	
+	protected void drawWallpaper(TextureAsset texture) {
+		float viewportWidth = viewport.getWorldWidth();
+		float viewportHeight = viewport.getWorldHeight();
+		
+		float viewportAspect = viewportWidth / viewportHeight;
+		float textureAspect = (float) texture.getWidth() / (float) texture.getHeight();
+		
+		int width;
+		int height;
+		
+		if (viewportAspect < textureAspect) {
+			height = (int) viewportHeight;
+			width = (int) (height * textureAspect);
+		} else {
+			width = (int) viewportWidth;
+			height = (int) (width / textureAspect);
+		}
+		
+		int x = (int) (viewportWidth - width);
+		int y = (int) (viewportHeight - height) / 2;
+		
+		texture.draw(x, y, width, height);
 	}
 	
 	void init(Viewport viewport) {

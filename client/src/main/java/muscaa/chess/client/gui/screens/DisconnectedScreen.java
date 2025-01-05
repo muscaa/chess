@@ -1,11 +1,12 @@
 package muscaa.chess.client.gui.screens;
 
-import com.badlogic.gdx.graphics.Color;
-import com.kotcrab.vis.ui.widget.VisTable;
+import com.badlogic.gdx.utils.Align;
 
 import muscaa.chess.client.Client;
 import muscaa.chess.client.gui.GuiScreen;
-import muscaa.chess.client.gui.Widgets;
+import muscaa.chess.client.gui.widgets.WLabel;
+import muscaa.chess.client.gui.widgets.WTable;
+import muscaa.chess.client.gui.widgets.WTextButton;
 
 public class DisconnectedScreen extends GuiScreen {
 	
@@ -17,14 +18,25 @@ public class DisconnectedScreen extends GuiScreen {
 	
 	@Override
 	protected void init() {
-		VisTable main = Widgets.table(true);
+		WTable content = new WTable();
+		content.defaults().growX().pad(PAD_SMALL).minHeight(BUTTON_HEIGHT);
 		
-		Widgets.label(main, Widgets.FONT_DEFAULT, message, Color.WHITE);
-		main.row();
-		Widgets.empty(main);
-		main.row();
-		Widgets.button(main, "Return to Main Menu", (button) -> Client.INSTANCE.returnToMainMenu());
-		main.row();
+		WLabel messageLabel = new WLabel(message);
+		messageLabel.setAlignment(Align.center);
+		content.add(messageLabel);
+		content.row();
+		
+		content.add();
+		content.row();
+		
+		WTextButton mainMenuButton = new WTextButton("Return to Main Menu");
+		mainMenuButton.addActionListener(w -> Client.INSTANCE.returnToMainMenu());
+		content.add(mainMenuButton);
+		content.row();
+		
+		WTable main = new WTable(true);
+		main.defaults().growX().pad(PAD_LARGE).maxWidth(PANEL_MEDIUM);
+		main.add(content);
 		
 		stage.addActor(main);
 	}

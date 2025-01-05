@@ -4,22 +4,23 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.kotcrab.vis.ui.VisUI;
-import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisScrollPane;
-import com.kotcrab.vis.ui.widget.VisTable;
-import com.kotcrab.vis.ui.widget.VisTextButton;
 
 import muscaa.chess.client.Client;
 import muscaa.chess.client.config.ServersConfig;
 import muscaa.chess.client.gui.ChildGuiScreen;
 import muscaa.chess.client.gui.GuiScreen;
-import muscaa.chess.client.gui.Widgets;
+import muscaa.chess.client.gui.widgets.WLabel;
+import muscaa.chess.client.gui.widgets.WPanel;
+import muscaa.chess.client.gui.widgets.WScrollPane;
+import muscaa.chess.client.gui.widgets.WTable;
+import muscaa.chess.client.gui.widgets.WTextButton;
 
 public class OnlineScreen extends ChildGuiScreen {
 	
 	private ButtonGroup<Button> group;
-	private VisTextButton delete;
-	private VisTextButton join;
+	private WTextButton joinButton;
+	private WTextButton editButton;
+	private WTextButton deleteButton;
 	
 	public OnlineScreen(GuiScreen parent) {
 		super(parent);
@@ -27,78 +28,123 @@ public class OnlineScreen extends ChildGuiScreen {
 	
 	@Override
 	protected void init() {
-		VisTable main = Widgets.table(new VisTable(), true);
+		WTable main = new WTable(true);
 		main.defaults().growX().pad(PAD_LARGE).maxWidth(PANEL_LARGE);
 		
-		VisScrollPane servers = Widgets.scrollPane(new VisScrollPane(servers()), false);
-		main.add(servers).growY().padBottom(PAD_MEDIUM);
+		WScrollPane serversScroll = new WScrollPane(servers());
+		main.add(serversScroll).growY().padBottom(PAD_SMALL);
 		main.row();
 		
-		VisTable footer = footer();
-		main.add(footer).padTop(PAD_MEDIUM);
+		WTable footer = footer();
+		main.add(footer).padTop(PAD_SMALL);
 		main.row();
 		
 		update();
 		
 		stage.addActor(main);
-		stage.setScrollFocus(servers);
+		stage.setScrollFocus(serversScroll);
 	}
 	
 	private void update() {
 		boolean disabled = group.getCheckedIndex() == -1;
-		delete.setDisabled(disabled);
-		join.setDisabled(disabled);
+		joinButton.setDisabled(disabled);
+		editButton.setDisabled(disabled);
+		deleteButton.setDisabled(disabled);
 	}
 	
-	private VisTable servers() {
-		VisTable main = Widgets.panel(new VisTable(), false);
-		main.defaults().growX().pad(PAD_SMALL);
-		main.top();
+	private WPanel servers() {
+		WTable content = new WTable();
+		content.defaults().growX().pad(PAD_SMALL);
+		content.top();
 		
 		group = new ButtonGroup<>();
-		for (ServersConfig.Server server : Client.INSTANCE.getServersConfig().getList()) {
+		for (ServersConfig.Server server : Client.INSTANCE.getServersConfig()) {
             Button button = serverEntry(server);
             group.add(button);
-            main.add(button);
-            main.row();
+            content.add(button);
+            content.row();
 		}
-		return main;
+		
+		WPanel servers = new WPanel();
+		servers.defaults().growX().pad(PAD_MEDIUM);
+		servers.top();
+		servers.add(content);
+		
+		return servers;
 	}
 	
 	private Button serverEntry(ServersConfig.Server server) {
-		Button main = new Button(VisUI.getSkin(), "toggle");
-		main.defaults().growX();
+		Button button = new Button(VisUI.getSkin(), "toggle");
+		button.defaults().growX();
 		
-		main.add(Widgets.label(new VisLabel(server.name, FONT_DEFAULT, Color.WHITE)));
-		main.row();
+		button.add(new WLabel(server.name));
+		button.row();
 		
-		main.add(Widgets.label(new VisLabel(server.address + ":" + server.port, FONT_SMALL, Color.GRAY)));
-		main.row();
+		button.add(new WLabel(server.address + ":" + server.port, FONT_SMALL, Color.GRAY));
+		button.row();
 		
-		return main;
+		return button;
 	}
 	
-	private VisTable footer() {
-		VisTable main = Widgets.table(new VisTable(), false);
-		main.defaults().growX().pad(PAD_SMALL).height(BUTTON_HEIGHT);
+	private WTable footer() {
+		WTable row1 = new WTable();
+		row1.defaults().growX().pad(PAD_SMALL).minHeight(BUTTON_HEIGHT).colspan(2);
 		
-		VisTextButton add = Widgets.button(new VisTextButton("Add"), b -> Client.INSTANCE.getGuiLayer().setScreen(new AddServerScreen(this)));
-        main.add(add);
+        joinButton = new WTextButton("Join");
+        joinButton.addActionListener(w -> {
+        	ServersConfig.Server server = Client.INSTANCE.getServersConfig().get(group.getCheckedIndex());
+        	Client.INSTANCE.getNetworkClient().connect(server);
+        });
+        row1.add(joinButton);
         
-        delete = Widgets.button(new VisTextButton("Delete"), b -> {
+		WTextButton add = new WTextButton("Add");
+		add.addActionListener(w -> {
+			Client.INSTANCE.getGuiLayer().setScreen(new ServerFormScreen(this, "Add", (name, address, port) -> {
+				Client.INSTANCE.getServersConfig().modify(list -> {
+					list.add(new ServersConfig.Server(name, address, port));
+				});
+			}));
+		});
+        row1.add(add);
+        
+		WTable row2 = new WTable();
+		row2.defaults().growX().pad(PAD_SMALL).minHeight(BUTTON_HEIGHT).colspan(2);
+		
+		editButton = new WTextButton("Edit");
+		editButton.addActionListener(w -> {
+			ServersConfig.Server server = Client.INSTANCE.getServersConfig().get(group.getCheckedIndex());
+			Client.INSTANCE.getGuiLayer().setScreen(new ServerFormScreen(this, "Edit", server.name, server.address, server.port, (name, address, port) -> {
+				Client.INSTANCE.getServersConfig().modify(list -> {
+					server.name = name;
+					server.address = address;
+					server.port = port;
+				});
+			}));
+		});
+        row2.add(editButton);
+        
+        deleteButton = new WTextButton("Delete");
+        deleteButton.addActionListener(w -> {
         	Client.INSTANCE.getServersConfig().modify(list -> {
             	list.remove(group.getCheckedIndex());
             });
-        	Client.INSTANCE.getGuiLayer().setScreen(this); // reload
+        	Client.INSTANCE.getGuiLayer().setScreen(this);
         });
-        main.add(delete);
+        row2.add(deleteButton);
         
-        join = Widgets.button(new VisTextButton("Join"), b -> {
-        	ServersConfig.Server server = Client.INSTANCE.getServersConfig().getList().get(group.getCheckedIndex());
-        	Client.INSTANCE.getNetworkClient().connect(server);
-        });
-        main.add(join);
+		WTextButton cancelButton = new WTextButton("Cancel");
+		cancelButton.addActionListener(w -> Client.INSTANCE.getGuiLayer().setScreen(parent));
+        row2.add(cancelButton);
         
-        return main;
+        WTable footer = new WTable();
+		footer.defaults().growX();
+		
+		footer.add(row1);
+		footer.row();
+		
+		footer.add(row2);
+		footer.row();
+        
+        return footer;
 	}
 }
