@@ -10,32 +10,25 @@ import muscaa.chess.network.common.packets.PacketDisconnect;
 
 public class ClientCommonNetHandler extends AbstractClientNetHandler<ChessClient> implements IClientCommonNetHandler {
 	
-	private boolean connected;
+	private String disconnectMessage;
 	
 	@Override
 	public void onConnect() throws NetworkException {
 		super.onConnect();
 		
-		connected = true;
+		disconnectMessage = null;
 	}
 	
 	@Override
 	public void onDisconnect() {
-		if (!connected) return;
-		connected = false;
-		
-		onPacketDisconnect(new PacketDisconnect("Disconnected!"));
+		TaskManager.render(() -> {
+			Client.INSTANCE.getGuiLayer().setScreen(new DisconnectedScreen(disconnectMessage));
+		});
 	}
 	
 	@Override
 	public void onPacketDisconnect(PacketDisconnect packet) {
-		/*if (!connected) return;
-		connected = false;*/
-		// TODO fix this
-		
-		TaskManager.render(() -> {
-			Client.INSTANCE.getGuiLayer().setScreen(new DisconnectedScreen(packet.getMessage()));
-		});
+		disconnectMessage = packet.getMessage();
 		
 		client.disconnect();
 	}

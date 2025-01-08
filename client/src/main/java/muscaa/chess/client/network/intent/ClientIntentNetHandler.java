@@ -22,6 +22,8 @@ public class ClientIntentNetHandler extends ClientCommonNetHandler implements IC
 	
 	@Override
 	public void onConnect() throws NetworkException {
+		super.onConnect();
+		
 		client.send(new CPacketIntent(intent));
 	}
 	

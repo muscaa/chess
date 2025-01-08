@@ -154,17 +154,19 @@ public class ServerBoard {
 			if (cell.y == 0 || cell.y == matrix.getHeight() - 1) {
 				if (cell.x == 0 || cell.x == matrix.getWidth() - 1) {
 					matrix.set(cell, PieceRegistry.ROOK.create(team));
-				} else if (cell.x == 1 || cell.x == matrix.getWidth() - 2) {
+				/*} else if (cell.x == 1 || cell.x == matrix.getWidth() - 2) {
 					matrix.set(cell, PieceRegistry.KNIGHT.create(team));
 				} else if (cell.x == 2 || cell.x == matrix.getWidth() - 3) {
 					matrix.set(cell, PieceRegistry.BISHOP.create(team));
 				} else if (cell.x == 3) {
-					matrix.set(cell, PieceRegistry.QUEEN.create(team));
+					matrix.set(cell, PieceRegistry.QUEEN.create(team));*/
 				} else if (cell.x == matrix.getWidth() - 4) {
 					matrix.set(cell, PieceRegistry.KING.create(team));
+				} else {
+					matrix.set(cell, NullPiece.INSTANCE);
 				}
-			} else if (cell.y == 1 || cell.y == matrix.getHeight() - 2) {
-				matrix.set(cell, PieceRegistry.PAWN.create(team));
+			/*} else if (cell.y == 1 || cell.y == matrix.getHeight() - 2) {
+				matrix.set(cell, PieceRegistry.PAWN.create(team));*/
 			} else {
 				matrix.set(cell, NullPiece.INSTANCE);
 			}

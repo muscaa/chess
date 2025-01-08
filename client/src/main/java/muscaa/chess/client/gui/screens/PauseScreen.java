@@ -10,7 +10,7 @@ public class PauseScreen extends GuiScreen {
 	@Override
 	protected void init() {
 		WTable content = new WTable();
-		content.defaults().pad(PAD_SMALL).minHeight(BUTTON_HEIGHT);
+		content.defaults().growX().pad(PAD_SMALL).minHeight(BUTTON_HEIGHT);
 		
 		WTextButton resumeButton = new WTextButton("Resume");
 		resumeButton.addActionListener(w -> Client.INSTANCE.getGuiLayer().setScreen(null));

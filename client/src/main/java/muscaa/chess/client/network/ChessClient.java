@@ -2,6 +2,7 @@ package muscaa.chess.client.network;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 import fluff.network.NetworkException;
 import fluff.network.client.AbstractClient;
@@ -9,6 +10,7 @@ import fluff.network.packet.IPacketOutbound;
 import fluff.network.packet.channels.DefaultPacketChannel;
 import muscaa.chess.client.Client;
 import muscaa.chess.client.config.ServersConfig;
+import muscaa.chess.client.gui.screens.DisconnectedScreen;
 import muscaa.chess.client.gui.screens.StatusScreen;
 import muscaa.chess.client.network.intent.ClientIntentNetHandler;
 import muscaa.chess.network.common.packets.PacketDisconnect;
@@ -20,19 +22,14 @@ public class ChessClient extends AbstractClient {
 	private StatusScreen statusScreen;
 	
     @SuppressWarnings("resource")
-	protected boolean connect(String host, int port) {
+	protected boolean connect(String host, int port) throws UnknownHostException, IOException, NetworkException {
     	if (isConnected()) return false;
     	
-        try {
-        	setContext(ClientContexts.INTENT_CONTEXT, new ClientIntentNetHandler(IntentRegistry.CONNECT));
-    		setChannel(new DefaultPacketChannel());
-			openConnection(new Socket(host, port));
-			
-			return isConnected();
-		} catch (IOException | NetworkException e) {
-			e.printStackTrace();
-		}
-        return false;
+    	setContext(ClientContexts.INTENT_CONTEXT, new ClientIntentNetHandler(IntentRegistry.CONNECT));
+		setChannel(new DefaultPacketChannel());
+		openConnection(new Socket(host, port));
+		
+		return isConnected();
     }
     
 	public void connect(ServersConfig.Server server) {
@@ -41,8 +38,14 @@ public class ChessClient extends AbstractClient {
 		
 		if (isConnected()) disconnect();
 		
-		if (!connect(server.address, server.port)) {
-			disconnect();
+		try {
+			if (!connect(server.address, server.port)) {
+				disconnect();
+			}
+		} catch (IOException | NetworkException e) {
+			e.printStackTrace();
+			
+			Client.INSTANCE.getGuiLayer().setScreen(new DisconnectedScreen(e.toString()));
 		}
 	}
 	

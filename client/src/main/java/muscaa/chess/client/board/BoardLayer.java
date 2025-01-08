@@ -156,6 +156,7 @@ public class BoardLayer implements ILayer {
 	
 	public void onPacketStartGame(CPacketStartGame packet) {
 		inGame = true;
+		highlights.clear();
 		
 		TaskManager.render(() -> {
 			Client.INSTANCE.getGuiLayer().setScreen(null);

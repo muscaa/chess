@@ -12,7 +12,6 @@ import fluff.bin.IBinaryOutput;
 import fluff.bin.data.IBinaryData;
 import fluff.bin.stream.BinaryInputStream;
 import fluff.bin.stream.BinaryOutputStream;
-import fluff.functions.gen.obj.VoidFunc1;
 
 public class ServersConfig implements IBinaryData, Iterable<ServersConfig.Server> {
 	
@@ -36,9 +35,14 @@ public class ServersConfig implements IBinaryData, Iterable<ServersConfig.Server
 		}
 	}
 	
-	public void modify(VoidFunc1<List<Server>> func) {
-        func.invoke(list);
-        save();
+	public void add(String name, String address, int port) {
+		list.add(new Server(name, address, port));
+		save();
+	}
+	
+	public void remove(int index) {
+		list.remove(index);
+		save();
 	}
 	
 	public Server get(int index) {

@@ -22,27 +22,33 @@ public class MainMenuScreen extends GuiScreen {
 		
 		WLabel titleLabel = new WLabel("Chess", FONT_TITLE, Color.WHITE);
 		titleLabel.setAlignment(Align.top);
-		content.add(titleLabel).padBottom(PAD_LARGE * 3);
+		content.add(titleLabel);
 		content.row();
+		
+		WTable rows = new WTable();
+		rows.defaults().growX().pad(PAD_SMALL).minHeight(BUTTON_HEIGHT);
 		
 		WTable row1 = createRow();
 		row1(row1);
-		content.add(row1);
-		content.row();
+		rows.add(row1);
+		rows.row();
 		
 		WTable row2 = createRow();
 		row2(row2);
-		content.add(row2);
-		content.row();
+		rows.add(row2);
+		rows.row();
 		
 		WTable row3 = createRow();
 		row3(row3);
-		content.add(row3);
-		content.row();
+		rows.add(row3);
+		rows.row();
 		
 		WTable row4 = createRow();
 		row4(row4);
-		content.add(row4).padTop(PAD_MEDIUM * 2).padBottom(PAD_LARGE * 3);
+		rows.add(row4).padTop(PAD_MEDIUM * 2);
+		rows.row();
+		
+		content.add(rows).padTop(PAD_LARGE * 5).padBottom(PAD_LARGE * 5);
 		content.row();
 		
 		WTable main = new WTable(true);
@@ -88,14 +94,9 @@ public class MainMenuScreen extends GuiScreen {
 	}
 	
 	@Override
-	public void render(int mouseX, int mouseY, float delta) {
-		super.render(mouseX, mouseY, delta);
-		
-		Fonts.draw(Fonts.VARELA_18, "Version " + Chess.VERSION, 5, Fonts.VARELA_18.getLineHeight(), Color.WHITE);
-	}
-	
-	@Override
 	protected void renderBackground(int mouseX, int mouseY, float delta) {
 		drawWallpaper(TextureRegistry.WALLPAPER);
+		
+		Fonts.draw(Fonts.VARELA_18, "Version " + Chess.VERSION, 5, Fonts.VARELA_18.getLineHeight(), Color.WHITE);
 	}
 }

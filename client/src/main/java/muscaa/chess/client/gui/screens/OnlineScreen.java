@@ -97,12 +97,16 @@ public class OnlineScreen extends ChildGuiScreen {
         });
         row1.add(joinButton);
         
+        WTextButton lanGameButton = new WTextButton("LAN Game");
+        lanGameButton.addActionListener(w -> {
+        	Client.INSTANCE.getGuiLayer().setScreen(new LanGameScreen(this));
+        });
+        row1.add(lanGameButton);
+        
 		WTextButton add = new WTextButton("Add");
 		add.addActionListener(w -> {
 			Client.INSTANCE.getGuiLayer().setScreen(new ServerFormScreen(this, "Add", (name, address, port) -> {
-				Client.INSTANCE.getServersConfig().modify(list -> {
-					list.add(new ServersConfig.Server(name, address, port));
-				});
+				Client.INSTANCE.getServersConfig().add(name, address, port);
 			}));
 		});
         row1.add(add);
@@ -114,23 +118,26 @@ public class OnlineScreen extends ChildGuiScreen {
 		editButton.addActionListener(w -> {
 			ServersConfig.Server server = Client.INSTANCE.getServersConfig().get(group.getCheckedIndex());
 			Client.INSTANCE.getGuiLayer().setScreen(new ServerFormScreen(this, "Edit", server.name, server.address, server.port, (name, address, port) -> {
-				Client.INSTANCE.getServersConfig().modify(list -> {
-					server.name = name;
-					server.address = address;
-					server.port = port;
-				});
+				server.name = name;
+				server.address = address;
+				server.port = port;
+				Client.INSTANCE.getServersConfig().save();
 			}));
 		});
         row2.add(editButton);
         
         deleteButton = new WTextButton("Delete");
         deleteButton.addActionListener(w -> {
-        	Client.INSTANCE.getServersConfig().modify(list -> {
-            	list.remove(group.getCheckedIndex());
-            });
+        	Client.INSTANCE.getServersConfig().remove(group.getCheckedIndex());
         	Client.INSTANCE.getGuiLayer().setScreen(this);
         });
         row2.add(deleteButton);
+        
+        WTextButton refreshButton = new WTextButton("Refresh");
+        refreshButton.addActionListener(w -> {
+        	
+        });
+        row2.add(refreshButton);
         
 		WTextButton cancelButton = new WTextButton("Cancel");
 		cancelButton.addActionListener(w -> Client.INSTANCE.getGuiLayer().setScreen(parent));

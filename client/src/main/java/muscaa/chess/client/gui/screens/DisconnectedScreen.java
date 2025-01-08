@@ -13,7 +13,7 @@ public class DisconnectedScreen extends GuiScreen {
 	private final String message;
 	
 	public DisconnectedScreen(String message) {
-		this.message = message;
+		this.message = message == null ? "Disconnected" : message;
 	}
 	
 	@Override
@@ -23,6 +23,7 @@ public class DisconnectedScreen extends GuiScreen {
 		
 		WLabel messageLabel = new WLabel(message);
 		messageLabel.setAlignment(Align.center);
+		messageLabel.setWrap(true);
 		content.add(messageLabel);
 		content.row();
 		
