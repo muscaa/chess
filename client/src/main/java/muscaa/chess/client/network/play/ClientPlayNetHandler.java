@@ -12,26 +12,26 @@ public class ClientPlayNetHandler extends ClientCommonNetHandler implements ICli
 	
 	@Override
 	public void onPacketStartGame(CPacketGameStart packet) {
-		Client.INSTANCE.getBoardLayer().onPacketStartGame(packet);
+		Client.INSTANCE.boardLayer.onPacketStartGame(packet);
 	}
 	
 	@Override
 	public void onPacketBoard(CPacketBoard packet) {
-		Client.INSTANCE.getBoardLayer().onPacketBoard(packet);
+		Client.INSTANCE.boardLayer.onPacketBoard(packet);
 	}
 	
 	@Override
 	public void onPacketTeam(CPacketTeam packet) {
-		Client.INSTANCE.getBoardLayer().onPacketTeam(packet);
+		Client.INSTANCE.boardLayer.onPacketTeam(packet);
 	}
 	
 	@Override
 	public void onPacketHighlightCells(CPacketHighlightCells packet) {
-		Client.INSTANCE.getBoardLayer().onPacketHighlightCells(packet);
+		Client.INSTANCE.boardLayer.onPacketHighlightCells(packet);
 	}
 	
 	@Override
 	public void onPacketEndGame(CPacketGameEnd packet) {
-		Client.INSTANCE.getBoardLayer().onPacketEndGame(packet);
+		Client.INSTANCE.boardLayer.onPacketEndGame(packet);
 	}
 }

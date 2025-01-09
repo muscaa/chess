@@ -48,7 +48,7 @@ public abstract class GuiScreen implements ILayerWrapper {
 	}
 	
 	protected void renderBackground(int mouseX, int mouseY, float delta) {
-		if (Client.INSTANCE.getBoardLayer().isInGame()) {
+		if (Client.INSTANCE.boardLayer.isInGame()) {
 			Shapes.rect(0, 0, viewport.getWorldWidth(), viewport.getWorldHeight(), Theme.GUISCREEN_BACKGROUND);
 		} else {
 			drawWallpaper(TextureRegistry.WALLPAPER_BLUR);

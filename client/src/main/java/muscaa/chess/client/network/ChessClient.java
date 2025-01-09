@@ -34,7 +34,7 @@ public class ChessClient extends AbstractClient {
     
 	public void connect(ServersConfig.Server server) throws UnknownHostException, IOException, NetworkException {
 		status = NetworkStatus.CONNECT;
-		Client.INSTANCE.getGuiLayer().setScreen(statusScreen = new StatusScreen(status.getText()));
+		Client.INSTANCE.guiLayer.setScreen(statusScreen = new StatusScreen(status.getText()));
 		
 		if (isConnected()) disconnect();
 		

@@ -22,7 +22,7 @@ public class ClientCommonNetHandler extends AbstractClientNetHandler<ChessClient
 	@Override
 	public void onDisconnect() {
 		TaskManager.render(() -> {
-			Client.INSTANCE.getGuiLayer().setScreen(new DisconnectedScreen(disconnectMessage));
+			Client.INSTANCE.guiLayer.setScreen(new DisconnectedScreen(disconnectMessage));
 		});
 	}
 	

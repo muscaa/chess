@@ -13,16 +13,16 @@ public class PauseScreen extends GuiScreen {
 		content.defaults().growX().pad(PAD_SMALL).minHeight(BUTTON_HEIGHT);
 		
 		WTextButton resumeButton = new WTextButton("Resume");
-		resumeButton.addActionListener(w -> Client.INSTANCE.getGuiLayer().setScreen(null));
+		resumeButton.addActionListener(w -> Client.INSTANCE.guiLayer.setScreen(null));
 		content.add(resumeButton);
 		content.row();
 		
 		WTextButton optionsButton = new WTextButton("Options");
-		optionsButton.addActionListener(w -> Client.INSTANCE.getGuiLayer().setScreen(new OptionsScreen(this)));
+		optionsButton.addActionListener(w -> Client.INSTANCE.guiLayer.setScreen(new OptionsScreen(this)));
 		content.add(optionsButton);
 		content.row();
 		
-		if (Client.INSTANCE.getBoardLayer().isInGame()) {
+		if (Client.INSTANCE.boardLayer.isInGame()) {
 			WTextButton surrenderButton = new WTextButton("Surrender");
 			surrenderButton.addActionListener(w -> {
 				

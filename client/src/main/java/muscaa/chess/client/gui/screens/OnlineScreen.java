@@ -62,7 +62,7 @@ public class OnlineScreen extends ChildGuiScreen {
 		content.top();
 		
 		group = new ButtonGroup<>();
-		for (ServersConfig.Server server : Client.INSTANCE.getServersConfig()) {
+		for (ServersConfig.Server server : Client.INSTANCE.serversConfig) {
             Button button = serverEntry(server);
             group.add(button);
             content.add(button);
@@ -96,20 +96,20 @@ public class OnlineScreen extends ChildGuiScreen {
 		
         joinButton = new WTextButton("Join");
         joinButton.addActionListener(w -> {
-        	ServersConfig.Server server = Client.INSTANCE.getServersConfig().get(group.getCheckedIndex());
+        	ServersConfig.Server server = Client.INSTANCE.serversConfig.get(group.getCheckedIndex());
         	try {
-				Client.INSTANCE.getNetworkClient().connect(server);
+				Client.INSTANCE.networkClient.connect(server);
 			} catch (IOException | NetworkException e) {
 				e.printStackTrace();
 				
-				Client.INSTANCE.getGuiLayer().setScreen(new DisconnectedScreen(e.toString()));
+				Client.INSTANCE.guiLayer.setScreen(new DisconnectedScreen(e.toString()));
 			}
         });
         row1.add(joinButton);
         
         WTextButton lanGameButton = new WTextButton("LAN Game");
         lanGameButton.addActionListener(w -> {
-        	Client.INSTANCE.getGuiLayer().setScreen(new LanGameFormScreen(this, port -> {
+        	Client.INSTANCE.guiLayer.setScreen(new LanGameFormScreen(this, port -> {
         		try {
         			if (Server.INSTANCE.getNetwork() != null && Server.INSTANCE.getNetwork().getServer().isRunning()) {
         				Server.INSTANCE.stop();
@@ -119,7 +119,7 @@ public class OnlineScreen extends ChildGuiScreen {
 				} catch (NetworkException e) {
 					e.printStackTrace();
 					
-					Client.INSTANCE.getGuiLayer().setScreen(new DisconnectedScreen(e.toString()));
+					Client.INSTANCE.guiLayer.setScreen(new DisconnectedScreen(e.toString()));
 				}
         	}));
         });
@@ -127,8 +127,8 @@ public class OnlineScreen extends ChildGuiScreen {
         
 		WTextButton add = new WTextButton("Add");
 		add.addActionListener(w -> {
-			Client.INSTANCE.getGuiLayer().setScreen(new ServerFormScreen(this, "Add", (name, address, port) -> {
-				Client.INSTANCE.getServersConfig().add(name, address, port);
+			Client.INSTANCE.guiLayer.setScreen(new ServerFormScreen(this, "Add", (name, address, port) -> {
+				Client.INSTANCE.serversConfig.add(name, address, port);
 			}));
 		});
         row1.add(add);
@@ -138,20 +138,20 @@ public class OnlineScreen extends ChildGuiScreen {
 		
 		editButton = new WTextButton("Edit");
 		editButton.addActionListener(w -> {
-			ServersConfig.Server server = Client.INSTANCE.getServersConfig().get(group.getCheckedIndex());
-			Client.INSTANCE.getGuiLayer().setScreen(new ServerFormScreen(this, "Edit", server.name, server.address, server.port, (name, address, port) -> {
+			ServersConfig.Server server = Client.INSTANCE.serversConfig.get(group.getCheckedIndex());
+			Client.INSTANCE.guiLayer.setScreen(new ServerFormScreen(this, "Edit", server.name, server.address, server.port, (name, address, port) -> {
 				server.name = name;
 				server.address = address;
 				server.port = port;
-				Client.INSTANCE.getServersConfig().save();
+				Client.INSTANCE.serversConfig.save();
 			}));
 		});
         row2.add(editButton);
         
         deleteButton = new WTextButton("Delete");
         deleteButton.addActionListener(w -> {
-        	Client.INSTANCE.getServersConfig().remove(group.getCheckedIndex());
-        	Client.INSTANCE.getGuiLayer().setScreen(this);
+        	Client.INSTANCE.serversConfig.remove(group.getCheckedIndex());
+        	Client.INSTANCE.guiLayer.setScreen(this);
         });
         row2.add(deleteButton);
         
@@ -162,7 +162,7 @@ public class OnlineScreen extends ChildGuiScreen {
         row2.add(refreshButton);
         
 		WTextButton cancelButton = new WTextButton("Cancel");
-		cancelButton.addActionListener(w -> Client.INSTANCE.getGuiLayer().setScreen(parent));
+		cancelButton.addActionListener(w -> Client.INSTANCE.guiLayer.setScreen(parent));
         row2.add(cancelButton);
         
         WTable footer = new WTable();

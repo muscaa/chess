@@ -93,13 +93,13 @@ public class ServerFormScreen extends ChildGuiScreen {
 		addButton = new WTextButton(submitText);
 		addButton.addActionListener(w -> {
 			onSubmit.invoke(nameField.getText(), addressField.getText(), Integer.parseInt(portField.getText()));
-			Client.INSTANCE.getGuiLayer().setScreen(parent);
+			Client.INSTANCE.guiLayer.setScreen(parent);
 		});
 		content.add(addButton);
 		content.row();
 		
 		WTextButton cancelButton = new WTextButton("Cancel");
-		cancelButton.addActionListener(w -> Client.INSTANCE.getGuiLayer().setScreen(parent));
+		cancelButton.addActionListener(w -> Client.INSTANCE.guiLayer.setScreen(parent));
 		content.add(cancelButton);
 		content.row();
 		

@@ -70,7 +70,7 @@ public class LanGameFormScreen extends ChildGuiScreen {
 		content.row();
 		
 		WTextButton cancelButton = new WTextButton("Cancel");
-		cancelButton.addActionListener(w -> Client.INSTANCE.getGuiLayer().setScreen(parent));
+		cancelButton.addActionListener(w -> Client.INSTANCE.guiLayer.setScreen(parent));
 		content.add(cancelButton);
 		content.row();
 		

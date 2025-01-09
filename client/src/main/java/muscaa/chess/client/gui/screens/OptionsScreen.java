@@ -1,8 +1,10 @@
 package muscaa.chess.client.gui.screens;
 
+import muscaa.chess.client.Client;
 import muscaa.chess.client.gui.ChildGuiScreen;
 import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.widgets.WTable;
+import muscaa.chess.client.gui.widgets.WTextButton;
 
 public class OptionsScreen extends ChildGuiScreen {
 	
@@ -12,7 +14,35 @@ public class OptionsScreen extends ChildGuiScreen {
 	
 	@Override
 	protected void init() {
+		WTable content = new WTable();
+		content.defaults().growX().pad(PAD_SMALL).minHeight(BUTTON_HEIGHT);
+		
+		WTextButton videoButton = new WTextButton("Video");
+		videoButton.addActionListener(w -> Client.INSTANCE.guiLayer.setScreen(parent));
+		content.add(videoButton);
+		content.row();
+		
+		WTextButton soundButton = new WTextButton("Sound");
+		soundButton.addActionListener(w -> Client.INSTANCE.guiLayer.setScreen(parent));
+		content.add(soundButton);
+		content.row();
+		
+		WTextButton themeButton = new WTextButton("Theme");
+		themeButton.addActionListener(w -> Client.INSTANCE.guiLayer.setScreen(parent));
+		content.add(themeButton);
+		content.row();
+		
+		content.add();
+		content.row();
+		
+		WTextButton backButton = new WTextButton("Back");
+		backButton.addActionListener(w -> Client.INSTANCE.guiLayer.setScreen(parent));
+		content.add(backButton);
+		content.row();
+		
 		WTable main = new WTable(true);
+		main.defaults().growX().pad(PAD_LARGE).maxWidth(PANEL_MEDIUM);
+		main.add(content);
 		
 		stage.addActor(main);
 	}

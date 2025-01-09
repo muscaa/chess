@@ -146,7 +146,7 @@ public class BoardLayer implements ILayer {
             }
             
             if (mouseX >= x && mouseY >= y && mouseX < x + tileSize && mouseY < y + tileSize) {
-            	Client.INSTANCE.getNetworkClient().send(new CPacketClickCell(niceCell));
+            	Client.INSTANCE.networkClient.send(new CPacketClickCell(niceCell));
             	return true;
             }
 		}
@@ -159,7 +159,7 @@ public class BoardLayer implements ILayer {
 		highlights.clear();
 		
 		TaskManager.render(() -> {
-			Client.INSTANCE.getGuiLayer().setScreen(null);
+			Client.INSTANCE.guiLayer.setScreen(null);
 		});
 	}
 	
@@ -192,7 +192,7 @@ public class BoardLayer implements ILayer {
 	
 	public void onPacketEndGame(CPacketGameEnd packet) {
 		TaskManager.render(() -> {
-			Client.INSTANCE.getGuiLayer().setScreen(new DisconnectedScreen(
+			Client.INSTANCE.guiLayer.setScreen(new DisconnectedScreen(
 					packet.getWinner() == TeamRegistry.NULL ? "Stalemate"
 					: packet.getWinner() == team ? "You win"
 							: "Opponent wins"));
@@ -202,7 +202,7 @@ public class BoardLayer implements ILayer {
 	}
 	
 	public void disconnect() {
-		Client.INSTANCE.getNetworkClient().disconnect();
+		Client.INSTANCE.networkClient.disconnect();
 		
 		inGame = false;
 		matrix = null;

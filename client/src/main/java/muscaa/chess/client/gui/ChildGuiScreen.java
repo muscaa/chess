@@ -18,7 +18,7 @@ public abstract class ChildGuiScreen extends GuiScreen {
 		if (handled) return true;
 		
 		if (keycode == Keys.ESCAPE) {
-			Client.INSTANCE.getGuiLayer().setScreen(parent);
+			Client.INSTANCE.guiLayer.setScreen(parent);
 			return true;
 		}
 		

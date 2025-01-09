@@ -60,24 +60,24 @@ public class MainMenuScreen extends GuiScreen {
 	
 	private void row1(WTable row) {
 		WTextButton offlineButton = new WTextButton("Offline");
-		offlineButton.addActionListener(w -> Client.INSTANCE.getGuiLayer().setScreen(null));
+		offlineButton.addActionListener(w -> Client.INSTANCE.guiLayer.setScreen(null));
 		offlineButton.setDisabled(true);
 		row.add(offlineButton);
 	}
 	
 	private void row2(WTable row) {
 		WTextButton onlineButton = new WTextButton("Online");
-		onlineButton.addActionListener(w -> Client.INSTANCE.getGuiLayer().setScreen(new OnlineScreen(this)));
+		onlineButton.addActionListener(w -> Client.INSTANCE.guiLayer.setScreen(new OnlineScreen(this)));
 		row.add(onlineButton);
 	}
 	
 	private void row3(WTable row) {
 		WTextButton modsButton = new WTextButton("Mods");
-		modsButton.addActionListener(w -> Client.INSTANCE.getGuiLayer().setScreen(new OptionsScreen(this)));
+		modsButton.addActionListener(w -> Client.INSTANCE.guiLayer.setScreen(new OptionsScreen(this)));
 		row.add(modsButton);
 		
 		WTextButton optionsButton = new WTextButton("Options");
-		optionsButton.addActionListener(w -> Client.INSTANCE.getGuiLayer().setScreen(new OptionsScreen(this)));
+		optionsButton.addActionListener(w -> Client.INSTANCE.guiLayer.setScreen(new OptionsScreen(this)));
 		row.add(optionsButton);
 	}
 	

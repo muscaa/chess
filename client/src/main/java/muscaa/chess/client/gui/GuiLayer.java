@@ -53,7 +53,7 @@ public class GuiLayer implements ILayerWrapper {
 		
 		screen = newScreen;
 		if (screen == null) {
-			if (Client.INSTANCE.getBoardLayer().isInGame()) return;
+			if (Client.INSTANCE.boardLayer.isInGame()) return;
 			
 			screen = new MainMenuScreen();
 		}

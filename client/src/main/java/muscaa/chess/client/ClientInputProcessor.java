@@ -12,7 +12,7 @@ public class ClientInputProcessor extends LayerInputProcessor {
 	
 	@Override
 	protected ILayer getLayer() {
-		return Client.INSTANCE.getLayerManager();
+		return Client.INSTANCE.layerManager;
 	}
 	
 	@Override
@@ -23,12 +23,12 @@ public class ClientInputProcessor extends LayerInputProcessor {
 				return true;
 				
 			case Keys.ESCAPE:
-				if (!Client.INSTANCE.getBoardLayer().isInGame()) break;
+				if (!Client.INSTANCE.boardLayer.isInGame()) break;
 				
-				GuiScreen screen = Client.INSTANCE.getGuiLayer().getScreen();
+				GuiScreen screen = Client.INSTANCE.guiLayer.getScreen();
 				screen = screen == null ? new PauseScreen() : null;
 				
-				Client.INSTANCE.getGuiLayer().setScreen(screen);
+				Client.INSTANCE.guiLayer.setScreen(screen);
 				
 				return true;
 		}

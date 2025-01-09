@@ -1,6 +1,5 @@
 package muscaa.chess.client;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
@@ -20,21 +19,20 @@ import muscaa.chess.client.utils.Screen;
 import muscaa.chess.client.utils.Shapes;
 import muscaa.chess.client.utils.TaskManager;
 
-public class Client implements ApplicationListener {
+public class Client {
 	
 	public static final Client INSTANCE = new Client();
 	
-	private LayerManager layerManager;
+	public final LayerManager layerManager;
 	
-	private BoardLayer boardLayer;
-	private GuiLayer guiLayer;
+	public final BoardLayer boardLayer;
+	public final GuiLayer guiLayer;
 	
-	private ChessClient networkClient;
+	public final ChessClient networkClient;
 	
-	private ServersConfig serversConfig;
+	public final ServersConfig serversConfig;
 	
-	@Override
-	public void create() {
+	public Client() {
 		int width = Gdx.graphics.getWidth();
 		int height = Gdx.graphics.getHeight();
 		
@@ -59,11 +57,8 @@ public class Client implements ApplicationListener {
     	
     	serversConfig = new ServersConfig();
     	serversConfig.load();
-    	
-    	returnToMainMenu();
 	}
 	
-	@Override
 	public void render() {
     	ScreenUtils.clear(0.0F, 0.0F, 0.0F, 1.0F);
     	
@@ -78,20 +73,12 @@ public class Client implements ApplicationListener {
     	TaskManager.executeRender();
 	}
 	
-	@Override
 	public void resize(int width, int height) {
 		Screen.init(width, height);
 		
 		layerManager.resize(width, height);
 	}
 	
-	@Override
-	public void pause() {}
-	
-	@Override
-	public void resume() {}
-	
-	@Override
 	public void dispose() {
 		layerManager.dispose();
 		
@@ -106,25 +93,5 @@ public class Client implements ApplicationListener {
 		networkClient.disconnect();
 		boardLayer.disconnect();
 		guiLayer.setScreen(new MainMenuScreen());
-	}
-	
-	public LayerManager getLayerManager() {
-		return layerManager;
-	}
-	
-	public BoardLayer getBoardLayer() {
-		return boardLayer;
-	}
-	
-	public GuiLayer getGuiLayer() {
-		return guiLayer;
-	}
-	
-	public ChessClient getNetworkClient() {
-		return networkClient;
-	}
-	
-	public ServersConfig getServersConfig() {
-		return serversConfig;
 	}
 }
