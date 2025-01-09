@@ -48,7 +48,7 @@ public class PieceUtils {
 		if (canPromote(piece, to)) {
 			moves.put(to, MoveRegistry.PROMOTE);
 		} else {
-			moves.put(to, MoveRegistry.BASIC);
+			moves.put(to, MoveRegistry.CAPTURE);
 		}
 	}
 	
