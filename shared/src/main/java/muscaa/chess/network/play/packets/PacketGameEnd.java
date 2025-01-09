@@ -7,11 +7,11 @@ import fluff.network.packet.IPacketOutbound;
 import muscaa.chess.board.Team;
 import muscaa.chess.network.PacketOutputUtils;
 
-public class PacketEndGame implements IPacketOutbound {
+public class PacketGameEnd implements IPacketOutbound {
 	
 	private Team winner;
 	
-	public PacketEndGame(Team winner) {
+	public PacketGameEnd(Team winner) {
 		this.winner = winner;
 	}
 	

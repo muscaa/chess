@@ -3,15 +3,15 @@ package muscaa.chess.client.network.play;
 import muscaa.chess.client.Client;
 import muscaa.chess.client.network.common.ClientCommonNetHandler;
 import muscaa.chess.client.network.play.packets.CPacketBoard;
-import muscaa.chess.client.network.play.packets.CPacketEndGame;
+import muscaa.chess.client.network.play.packets.CPacketGameEnd;
 import muscaa.chess.client.network.play.packets.CPacketHighlightCells;
-import muscaa.chess.client.network.play.packets.CPacketStartGame;
+import muscaa.chess.client.network.play.packets.CPacketGameStart;
 import muscaa.chess.client.network.play.packets.CPacketTeam;
 
 public class ClientPlayNetHandler extends ClientCommonNetHandler implements IClientPlayNetHandler {
 	
 	@Override
-	public void onPacketStartGame(CPacketStartGame packet) {
+	public void onPacketStartGame(CPacketGameStart packet) {
 		Client.INSTANCE.getBoardLayer().onPacketStartGame(packet);
 	}
 	
@@ -31,7 +31,7 @@ public class ClientPlayNetHandler extends ClientCommonNetHandler implements ICli
 	}
 	
 	@Override
-	public void onPacketEndGame(CPacketEndGame packet) {
+	public void onPacketEndGame(CPacketGameEnd packet) {
 		Client.INSTANCE.getBoardLayer().onPacketEndGame(packet);
 	}
 }

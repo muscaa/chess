@@ -6,11 +6,11 @@ import java.net.UnknownHostException;
 
 import fluff.network.NetworkException;
 import fluff.network.client.AbstractClient;
+import fluff.network.client.ClientErrorType;
 import fluff.network.packet.IPacketOutbound;
 import fluff.network.packet.channels.DefaultPacketChannel;
 import muscaa.chess.client.Client;
 import muscaa.chess.client.config.ServersConfig;
-import muscaa.chess.client.gui.screens.DisconnectedScreen;
 import muscaa.chess.client.gui.screens.StatusScreen;
 import muscaa.chess.client.network.intent.ClientIntentNetHandler;
 import muscaa.chess.network.common.packets.PacketDisconnect;
@@ -32,20 +32,14 @@ public class ChessClient extends AbstractClient {
 		return isConnected();
     }
     
-	public void connect(ServersConfig.Server server) {
+	public void connect(ServersConfig.Server server) throws UnknownHostException, IOException, NetworkException {
 		status = NetworkStatus.CONNECT;
 		Client.INSTANCE.getGuiLayer().setScreen(statusScreen = new StatusScreen(status.getText()));
 		
 		if (isConnected()) disconnect();
 		
-		try {
-			if (!connect(server.address, server.port)) {
-				disconnect();
-			}
-		} catch (IOException | NetworkException e) {
-			e.printStackTrace();
-			
-			Client.INSTANCE.getGuiLayer().setScreen(new DisconnectedScreen(e.toString()));
+		if (!connect(server.address, server.port)) {
+			disconnect();
 		}
 	}
 	
@@ -68,5 +62,20 @@ public class ChessClient extends AbstractClient {
 		
 		super.send(new PacketDisconnect("disconnected"));
 		super.disconnect();
+	}
+	
+	@Override
+	protected void onError(ClientErrorType type, Exception e) {
+        switch (type) {
+	        case CONNECTION:
+	            super.disconnect();
+	            break;
+	        case READ:
+	            disconnect();
+	            break;
+	        case WRITE:
+	            // nothing
+	            break;
+	    }
 	}
 }

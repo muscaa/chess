@@ -1,15 +1,15 @@
 package muscaa.chess.client.network.play;
 
 import muscaa.chess.client.network.play.packets.CPacketBoard;
-import muscaa.chess.client.network.play.packets.CPacketEndGame;
+import muscaa.chess.client.network.play.packets.CPacketGameEnd;
 import muscaa.chess.client.network.play.packets.CPacketHighlightCells;
-import muscaa.chess.client.network.play.packets.CPacketStartGame;
+import muscaa.chess.client.network.play.packets.CPacketGameStart;
 import muscaa.chess.client.network.play.packets.CPacketTeam;
 import muscaa.chess.network.play.IPlayNetHandler;
 
 public interface IClientPlayNetHandler extends IPlayNetHandler {
 	
-	void onPacketStartGame(CPacketStartGame packet);
+	void onPacketStartGame(CPacketGameStart packet);
 	
 	void onPacketBoard(CPacketBoard packet);
 	
@@ -17,5 +17,5 @@ public interface IClientPlayNetHandler extends IPlayNetHandler {
 	
 	void onPacketHighlightCells(CPacketHighlightCells packet);
 	
-	void onPacketEndGame(CPacketEndGame packet);
+	void onPacketEndGame(CPacketGameEnd packet);
 }

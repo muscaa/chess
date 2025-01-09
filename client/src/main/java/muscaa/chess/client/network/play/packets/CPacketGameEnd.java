@@ -8,11 +8,11 @@ import muscaa.chess.board.Team;
 import muscaa.chess.network.PacketInputUtils;
 import muscaa.chess.registry.registries.TeamRegistry;
 
-public class CPacketEndGame implements IPacketInbound {
+public class CPacketGameEnd implements IPacketInbound {
 	
 	private Team winner;
 	
-	public CPacketEndGame() {}
+	public CPacketGameEnd() {}
 	
 	@Override
 	public void readData(IBinaryInput in) throws IOException {

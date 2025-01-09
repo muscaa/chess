@@ -13,9 +13,9 @@ import muscaa.chess.network.login.packets.PacketLoginSuccess;
 import muscaa.chess.network.play.IServerPlayNetHandler;
 import muscaa.chess.network.play.packets.PacketBoard;
 import muscaa.chess.network.play.packets.PacketClickCell;
-import muscaa.chess.network.play.packets.PacketEndGame;
+import muscaa.chess.network.play.packets.PacketGameEnd;
 import muscaa.chess.network.play.packets.PacketHighlightCells;
-import muscaa.chess.network.play.packets.PacketStartGame;
+import muscaa.chess.network.play.packets.PacketGameStart;
 import muscaa.chess.network.play.packets.PacketTeam;
 
 public class ServerContexts {
@@ -40,11 +40,11 @@ public class ServerContexts {
 	
 	public static final PacketContext<IServerPlayNetHandler> PLAY_CONTEXT =
 			new PacketContext<IServerPlayNetHandler>(SharedContexts.PLAY_CONTEXT)
-			.registerOutbound(400, PacketStartGame.class)
+			.registerOutbound(400, PacketGameStart.class)
 			.registerOutbound(401, PacketBoard.class)
 			.registerOutbound(402, PacketTeam.class)
 			.registerInbound(403, PacketClickCell::new, IServerPlayNetHandler::onPacketClickCell)
 			.registerOutbound(404, PacketHighlightCells.class)
-			.registerOutbound(405, PacketEndGame.class)
+			.registerOutbound(405, PacketGameEnd.class)
 			;
 }

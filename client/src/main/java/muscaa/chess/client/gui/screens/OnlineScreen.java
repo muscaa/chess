@@ -1,10 +1,14 @@
 package muscaa.chess.client.gui.screens;
 
+import java.io.IOException;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.kotcrab.vis.ui.VisUI;
 
+import fluff.network.NetworkException;
+import muscaa.chess.Server;
 import muscaa.chess.client.Client;
 import muscaa.chess.client.config.ServersConfig;
 import muscaa.chess.client.gui.ChildGuiScreen;
@@ -93,13 +97,31 @@ public class OnlineScreen extends ChildGuiScreen {
         joinButton = new WTextButton("Join");
         joinButton.addActionListener(w -> {
         	ServersConfig.Server server = Client.INSTANCE.getServersConfig().get(group.getCheckedIndex());
-        	Client.INSTANCE.getNetworkClient().connect(server);
+        	try {
+				Client.INSTANCE.getNetworkClient().connect(server);
+			} catch (IOException | NetworkException e) {
+				e.printStackTrace();
+				
+				Client.INSTANCE.getGuiLayer().setScreen(new DisconnectedScreen(e.toString()));
+			}
         });
         row1.add(joinButton);
         
         WTextButton lanGameButton = new WTextButton("LAN Game");
         lanGameButton.addActionListener(w -> {
-        	Client.INSTANCE.getGuiLayer().setScreen(new LanGameScreen(this));
+        	Client.INSTANCE.getGuiLayer().setScreen(new LanGameFormScreen(this, port -> {
+        		try {
+        			if (Server.INSTANCE.getNetwork() != null && Server.INSTANCE.getNetwork().getServer().isRunning()) {
+        				Server.INSTANCE.stop();
+        			} else {
+        				Server.INSTANCE.start();
+        			}
+				} catch (NetworkException e) {
+					e.printStackTrace();
+					
+					Client.INSTANCE.getGuiLayer().setScreen(new DisconnectedScreen(e.toString()));
+				}
+        	}));
         });
         row1.add(lanGameButton);
         

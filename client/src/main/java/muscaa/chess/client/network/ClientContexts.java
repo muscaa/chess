@@ -13,9 +13,9 @@ import muscaa.chess.client.network.login.packets.CPacketLoginSuccess;
 import muscaa.chess.client.network.play.IClientPlayNetHandler;
 import muscaa.chess.client.network.play.packets.CPacketBoard;
 import muscaa.chess.client.network.play.packets.CPacketClickCell;
-import muscaa.chess.client.network.play.packets.CPacketEndGame;
+import muscaa.chess.client.network.play.packets.CPacketGameEnd;
 import muscaa.chess.client.network.play.packets.CPacketHighlightCells;
-import muscaa.chess.client.network.play.packets.CPacketStartGame;
+import muscaa.chess.client.network.play.packets.CPacketGameStart;
 import muscaa.chess.client.network.play.packets.CPacketTeam;
 import muscaa.chess.network.SharedContexts;
 
@@ -41,11 +41,11 @@ public class ClientContexts {
 	
 	public static final PacketContext<IClientPlayNetHandler> PLAY_CONTEXT =
 			new PacketContext<IClientPlayNetHandler>(SharedContexts.PLAY_CONTEXT)
-			.registerInbound(400, CPacketStartGame::new, IClientPlayNetHandler::onPacketStartGame)
+			.registerInbound(400, CPacketGameStart::new, IClientPlayNetHandler::onPacketStartGame)
 			.registerInbound(401, CPacketBoard::new, IClientPlayNetHandler::onPacketBoard)
 			.registerInbound(402, CPacketTeam::new, IClientPlayNetHandler::onPacketTeam)
 			.registerOutbound(403, CPacketClickCell.class)
 			.registerInbound(404, CPacketHighlightCells::new, IClientPlayNetHandler::onPacketHighlightCells)
-			.registerInbound(405, CPacketEndGame::new, IClientPlayNetHandler::onPacketEndGame)
+			.registerInbound(405, CPacketGameEnd::new, IClientPlayNetHandler::onPacketEndGame)
 			;
 }

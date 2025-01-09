@@ -18,9 +18,9 @@ import muscaa.chess.client.gui.screens.DisconnectedScreen;
 import muscaa.chess.client.layer.ILayer;
 import muscaa.chess.client.network.play.packets.CPacketBoard;
 import muscaa.chess.client.network.play.packets.CPacketClickCell;
-import muscaa.chess.client.network.play.packets.CPacketEndGame;
+import muscaa.chess.client.network.play.packets.CPacketGameEnd;
 import muscaa.chess.client.network.play.packets.CPacketHighlightCells;
-import muscaa.chess.client.network.play.packets.CPacketStartGame;
+import muscaa.chess.client.network.play.packets.CPacketGameStart;
 import muscaa.chess.client.network.play.packets.CPacketTeam;
 import muscaa.chess.client.utils.Screen;
 import muscaa.chess.client.utils.Shapes;
@@ -154,7 +154,7 @@ public class BoardLayer implements ILayer {
 		return false;
 	}
 	
-	public void onPacketStartGame(CPacketStartGame packet) {
+	public void onPacketStartGame(CPacketGameStart packet) {
 		inGame = true;
 		highlights.clear();
 		
@@ -190,12 +190,10 @@ public class BoardLayer implements ILayer {
 		highlights = packet.getHighlights();
 	}
 	
-	public void onPacketEndGame(CPacketEndGame packet) {
-		System.out.println(packet.getWinner().getID());
-		
+	public void onPacketEndGame(CPacketGameEnd packet) {
 		TaskManager.render(() -> {
-			System.out.println("why this not getting called?");
-			Client.INSTANCE.getGuiLayer().setScreen(new DisconnectedScreen(packet.getWinner() == TeamRegistry.NULL ? "Stalemate"
+			Client.INSTANCE.getGuiLayer().setScreen(new DisconnectedScreen(
+					packet.getWinner() == TeamRegistry.NULL ? "Stalemate"
 					: packet.getWinner() == team ? "You win"
 							: "Opponent wins"));
 		});

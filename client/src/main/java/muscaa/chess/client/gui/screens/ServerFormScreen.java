@@ -78,8 +78,11 @@ public class ServerFormScreen extends ChildGuiScreen {
 		portField.addValidator(text -> {
 			if (text.isBlank()) return false;
 			
-			int i = Integer.parseInt(text);
-			return i > 0 && i <= 65535;
+			try {
+				int i = Integer.parseInt(text);
+				return i > 0 && i <= 65535;
+			} catch (NumberFormatException e) {}
+			return false;
 		});
 		content.add(portField);
 		content.row();
