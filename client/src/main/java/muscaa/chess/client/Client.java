@@ -6,14 +6,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import muscaa.chess.Chess;
-import muscaa.chess.client.assets.Fonts;
-import muscaa.chess.client.assets.Sounds;
 import muscaa.chess.client.board.BoardLayer;
 import muscaa.chess.client.config.ServersConfig;
 import muscaa.chess.client.gui.GuiLayer;
 import muscaa.chess.client.gui.screens.MainMenuScreen;
 import muscaa.chess.client.layer.LayerManager;
 import muscaa.chess.client.network.ChessClient;
+import muscaa.chess.client.registries.FontRegistry;
+import muscaa.chess.client.registries.SoundRegistry;
 import muscaa.chess.client.registries.TextureRegistry;
 import muscaa.chess.client.utils.Screen;
 import muscaa.chess.client.utils.Shapes;
@@ -43,9 +43,9 @@ public class Client {
     	
     	Chess.init();
     	
-    	Fonts.init();
+    	FontRegistry.init();
     	TextureRegistry.init();
-    	Sounds.init();
+    	SoundRegistry.init();
     	
     	boardLayer = new BoardLayer();
     	layerManager.register(boardLayer);
@@ -82,14 +82,16 @@ public class Client {
 	public void dispose() {
 		layerManager.dispose();
 		
-		Sounds.dispose();
-		Fonts.dispose();
+		FontRegistry.dispose();
 		TextureRegistry.dispose();
+		SoundRegistry.dispose();
 		
 		Screen.dispose();
 	}
 	
 	public void returnToMainMenu() {
+		//SoundRegistry.AMBIENT.play();
+		
 		networkClient.disconnect();
 		boardLayer.disconnect();
 		guiLayer.setScreen(new MainMenuScreen());

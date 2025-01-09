@@ -3,6 +3,7 @@ package muscaa.chess.registry;
 import java.util.HashMap;
 import java.util.Map;
 
+import fluff.functions.gen.obj.VoidFunc1;
 import muscaa.chess.utils.NamespacePath;
 
 public class Registries {
@@ -13,14 +14,18 @@ public class Registries {
 		return REGISTRIES.containsKey(id);
 	}
 	
-	public static <V extends IRegistryEntry> Registry<V> get(NamespacePath id) {
-		return exists(id) ? (Registry<V>) REGISTRIES.get(id) : null;
+	public static <E extends IRegistryEntry> Registry<E> get(NamespacePath id) {
+		return exists(id) ? (Registry<E>) REGISTRIES.get(id) : null;
 	}
 	
-	public static <V extends IRegistryEntry> Registry<V> create(NamespacePath id) {
+	public static <E extends IRegistryEntry> Registry<E> create(NamespacePath id) {
+		return create(id, null);
+	}
+	
+	public static <E extends IRegistryEntry> Registry<E> create(NamespacePath id, VoidFunc1<E> onDispose) {
 		if (exists(id)) throw new RegistryException("Registry already exists!");
 		
-		Registry<V> reg = new Registry<>(id);
+		Registry<E> reg = new Registry<>(id, onDispose);
 		REGISTRIES.put(id, reg);
 		return reg;
 	}

@@ -5,11 +5,11 @@ import com.badlogic.gdx.utils.Align;
 
 import muscaa.chess.Chess;
 import muscaa.chess.client.Client;
-import muscaa.chess.client.assets.Fonts;
 import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.widgets.WLabel;
 import muscaa.chess.client.gui.widgets.WTable;
 import muscaa.chess.client.gui.widgets.WTextButton;
+import muscaa.chess.client.registries.FontRegistry;
 import muscaa.chess.client.registries.TextureRegistry;
 import muscaa.chess.client.utils.WindowUtils;
 
@@ -97,6 +97,6 @@ public class MainMenuScreen extends GuiScreen {
 	protected void renderBackground(int mouseX, int mouseY, float delta) {
 		drawWallpaper(TextureRegistry.WALLPAPER);
 		
-		Fonts.draw(Fonts.VARELA_18, "Version " + Chess.VERSION, 5, Fonts.VARELA_18.getLineHeight(), Color.WHITE);
+		FontRegistry.VARELA_18.draw("Version " + Chess.VERSION, 5, FontRegistry.VARELA_18.getHeight(), Color.WHITE);
 	}
 }

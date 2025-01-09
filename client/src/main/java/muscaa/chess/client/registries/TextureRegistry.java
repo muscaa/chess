@@ -1,17 +1,14 @@
 package muscaa.chess.client.registries;
 
-import java.util.Map;
-
 import muscaa.chess.Chess;
 import muscaa.chess.client.assets.TextureAsset;
 import muscaa.chess.client.events.IRegisterTexturesEventListener;
 import muscaa.chess.registry.Registries;
 import muscaa.chess.registry.Registry;
-import muscaa.chess.utils.NamespacePath;
 
 public class TextureRegistry {
 	
-	public static final Registry<TextureAsset> REG = Registries.create(Chess.NAMESPACE.path("textures"));
+	public static final Registry<TextureAsset> REG = Registries.create(Chess.NAMESPACE.path("textures"), TextureAsset::dispose);
 	
 	public static final TextureAsset NULL = REG.register(new TextureAsset(Chess.NAMESPACE.path("null"), null));
 	public static final TextureAsset WHITE_KING = REG.register(new TextureAsset(Chess.NAMESPACE.path("white_king"), "pieces/white_king.png"));
@@ -43,8 +40,6 @@ public class TextureRegistry {
 	}
 	
 	public static void dispose() {
-		for (Map.Entry<NamespacePath, TextureAsset> assetEntry : REG.getContents().entrySet()) {
-			assetEntry.getValue().dispose();
-		}
+		REG.dispose();
 	}
 }

@@ -11,7 +11,6 @@ import muscaa.chess.board.Highlight;
 import muscaa.chess.board.HighlightType;
 import muscaa.chess.board.Team;
 import muscaa.chess.client.Client;
-import muscaa.chess.client.assets.Sounds;
 import muscaa.chess.client.assets.TextureAsset;
 import muscaa.chess.client.config.Theme;
 import muscaa.chess.client.gui.screens.DisconnectedScreen;
@@ -19,9 +18,10 @@ import muscaa.chess.client.layer.ILayer;
 import muscaa.chess.client.network.play.packets.CPacketBoard;
 import muscaa.chess.client.network.play.packets.CPacketClickCell;
 import muscaa.chess.client.network.play.packets.CPacketGameEnd;
-import muscaa.chess.client.network.play.packets.CPacketHighlightCells;
 import muscaa.chess.client.network.play.packets.CPacketGameStart;
+import muscaa.chess.client.network.play.packets.CPacketHighlightCells;
 import muscaa.chess.client.network.play.packets.CPacketTeam;
+import muscaa.chess.client.registries.SoundRegistry;
 import muscaa.chess.client.utils.Screen;
 import muscaa.chess.client.utils.Shapes;
 import muscaa.chess.client.utils.TaskManager;
@@ -179,7 +179,7 @@ public class BoardLayer implements ILayer {
 		
 		resize(Screen.WIDTH, Screen.HEIGHT);
 		
-		Sounds.MOVE.play();
+		SoundRegistry.MOVE.play();
 	}
 	
 	public void onPacketTeam(CPacketTeam packet) {

@@ -7,11 +7,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.kotcrab.vis.ui.VisUI;
 
 import muscaa.chess.client.Client;
-import muscaa.chess.client.assets.Fonts;
 import muscaa.chess.client.gui.screens.MainMenuScreen;
 import muscaa.chess.client.layer.ILayer;
 import muscaa.chess.client.layer.ILayerWrapper;
 import muscaa.chess.client.layer.LayerUtils;
+import muscaa.chess.client.registries.FontRegistry;
 import muscaa.chess.client.utils.Screen;
 
 public class GuiLayer implements ILayerWrapper {
@@ -24,9 +24,9 @@ public class GuiLayer implements ILayerWrapper {
         skin = new Skin();
         VisUI.load(skin);
         
-        skin.add(GuiScreen.FONT_DEFAULT, Fonts.VARELA_24, BitmapFont.class);
-        skin.add(GuiScreen.FONT_SMALL, Fonts.VARELA_18, BitmapFont.class);
-        skin.add(GuiScreen.FONT_TITLE, Fonts.MONTEZ_128, BitmapFont.class);
+        skin.add(GuiScreen.FONT_DEFAULT, FontRegistry.VARELA_24.getBitmapFont(), BitmapFont.class);
+        skin.add(GuiScreen.FONT_SMALL, FontRegistry.VARELA_18.getBitmapFont(), BitmapFont.class);
+        skin.add(GuiScreen.FONT_TITLE, FontRegistry.MONTEZ_128.getBitmapFont(), BitmapFont.class);
         
         skin.addRegions(new TextureAtlas(Gdx.files.internal("ui/uiskin.atlas")));
         skin.load(Gdx.files.internal("ui/uiskin.json"));

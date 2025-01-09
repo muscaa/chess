@@ -3,17 +3,20 @@ package muscaa.chess.registry;
 import java.util.HashMap;
 import java.util.Map;
 
+import fluff.functions.gen.obj.VoidFunc1;
 import muscaa.chess.utils.NamespacePath;
 
 public class Registry<E extends IRegistryEntry> {
 	
 	private final Map<NamespacePath, E> reg = new HashMap<>();
 	private final NamespacePath id;
+	private final VoidFunc1<E> onDispose;
 	
 	private boolean locked = false;
 	
-	Registry(NamespacePath id) {
+	Registry(NamespacePath id, VoidFunc1<E> onDispose) {
 		this.id = id;
+		this.onDispose = onDispose;
 	}
 	
 	public Map<NamespacePath, E> getContents() {
@@ -40,6 +43,14 @@ public class Registry<E extends IRegistryEntry> {
 	
 	public void lock() {
 		locked = true;
+	}
+	
+	public void dispose() {
+		if (onDispose == null) return;
+		
+        for (Map.Entry<NamespacePath, E> entry : reg.entrySet()) {
+            onDispose.invoke(entry.getValue());
+        }
 	}
 	
 	public NamespacePath getID() {
