@@ -10,6 +10,7 @@ import muscaa.chess.board.piece.pieces.NullPiece;
 import muscaa.chess.board.piece.pieces.PawnPiece;
 import muscaa.chess.board.piece.pieces.QueenPiece;
 import muscaa.chess.board.piece.pieces.RookPiece;
+import muscaa.chess.events.IRegisterPiecesEventListener;
 import muscaa.chess.registry.Registries;
 import muscaa.chess.registry.Registry;
 
@@ -27,7 +28,13 @@ public class PieceRegistry {
 	public static final PieceEntry<KingPiece> KING = REG.register(new PieceEntry<>(Chess.NAMESPACE.path("king"), KingPiece::new));
 	
 	public static void init() {
-		// TODO call event
+		Chess.EVENTS.call(
+				IRegisterPiecesEventListener.class,
+				IRegisterPiecesEventListener::onRegisterPiecesEvent,
+				new IRegisterPiecesEventListener.RegisterPiecesEvent(
+						REG
+						)
+				);
 		
 		REG.lock();
 	}

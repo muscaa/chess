@@ -6,6 +6,7 @@ import muscaa.chess.board.piece.move.moves.BasicMove;
 import muscaa.chess.board.piece.move.moves.CaptureMove;
 import muscaa.chess.board.piece.move.moves.CastleMove;
 import muscaa.chess.board.piece.move.moves.PromoteMove;
+import muscaa.chess.events.IRegisterMovesEventListener;
 import muscaa.chess.registry.Registries;
 import muscaa.chess.registry.Registry;
 
@@ -19,7 +20,13 @@ public class MoveRegistry {
 	public static final CastleMove CASTLE = REG.register(new CastleMove(Chess.NAMESPACE.path("castle")));
 	
 	public static void init() {
-		// TODO call event
+		Chess.EVENTS.call(
+				IRegisterMovesEventListener.class,
+				IRegisterMovesEventListener::onRegisterMovesEvent,
+				new IRegisterMovesEventListener.RegisterMovesEvent(
+						REG
+						)
+				);
 		
 		REG.lock();
 	}

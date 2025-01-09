@@ -4,6 +4,7 @@ import java.util.Map;
 
 import muscaa.chess.Chess;
 import muscaa.chess.client.assets.TextureAsset;
+import muscaa.chess.client.events.IRegisterTexturesEventListener;
 import muscaa.chess.registry.Registries;
 import muscaa.chess.registry.Registry;
 import muscaa.chess.utils.NamespacePath;
@@ -30,6 +31,14 @@ public class TextureRegistry {
 	public static final TextureAsset WALLPAPER_BLUR = REG.register(new TextureAsset(Chess.NAMESPACE.path("wallpaper_blur"), "wallpaper_blur.png"));
 	
 	public static void init() {
+		Chess.EVENTS.call(
+				IRegisterTexturesEventListener.class,
+				IRegisterTexturesEventListener::onRegisterTexturesEvent,
+				new IRegisterTexturesEventListener.RegisterTexturesEvent(
+						REG
+						)
+				);
+		
 		REG.lock();
 	}
 	

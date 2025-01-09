@@ -3,6 +3,7 @@ package muscaa.chess.client.registries;
 import muscaa.chess.Chess;
 import muscaa.chess.board.piece.PieceEntry;
 import muscaa.chess.client.board.TexturedPiece;
+import muscaa.chess.client.events.IRegisterTexturedPiecesEventListener;
 import muscaa.chess.registry.Registries;
 import muscaa.chess.registry.Registry;
 
@@ -20,6 +21,14 @@ public class TexturedPieceRegistry {
 	public static final PieceEntry<TexturedPiece> KING = REG.register(new PieceEntry<>(Chess.NAMESPACE.path("king"), TexturedPiece::new));
 	
 	public static void init() {
+		Chess.EVENTS.call(
+				IRegisterTexturedPiecesEventListener.class,
+				IRegisterTexturedPiecesEventListener::onRegisterTexturedPiecesEvent,
+				new IRegisterTexturedPiecesEventListener.RegisterTexturedPiecesEvent(
+						REG
+						)
+				);
+		
 		REG.lock();
 	}
 }

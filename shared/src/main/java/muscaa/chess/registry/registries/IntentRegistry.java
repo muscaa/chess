@@ -1,6 +1,7 @@
 package muscaa.chess.registry.registries;
 
 import muscaa.chess.Chess;
+import muscaa.chess.events.IRegisterIntentsEventListener;
 import muscaa.chess.network.Intent;
 import muscaa.chess.registry.Registries;
 import muscaa.chess.registry.Registry;
@@ -13,7 +14,13 @@ public class IntentRegistry {
 	public static final Intent CONNECT = REG.register(new Intent(Chess.NAMESPACE.path("connect")));
 	
 	public static void init() {
-		// TODO call event
+		Chess.EVENTS.call(
+				IRegisterIntentsEventListener.class,
+				IRegisterIntentsEventListener::onRegisterIntentsEvent,
+				new IRegisterIntentsEventListener.RegisterIntentsEvent(
+						REG
+						)
+				);
 		
 		REG.lock();
 	}

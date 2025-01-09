@@ -1,7 +1,10 @@
-package muscaa.chess.registry.registries;
+package muscaa.chess.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+
+import muscaa.chess.Chess;
+import muscaa.chess.events.IRegisterCommandsEventListener;
 
 public class CommandRegistry {
 	
@@ -15,9 +18,13 @@ public class CommandRegistry {
 					return 0;
 				})
 				);
-	}
-	
-	public static interface ICommandSource {
 		
+		Chess.EVENTS.call(
+				IRegisterCommandsEventListener.class,
+				IRegisterCommandsEventListener::onRegisterCommandsEvent,
+				new IRegisterCommandsEventListener.RegisterCommandsEvent(
+						DISPATCHER
+						)
+				);
 	}
 }

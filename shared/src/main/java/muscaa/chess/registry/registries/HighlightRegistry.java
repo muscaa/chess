@@ -2,6 +2,7 @@ package muscaa.chess.registry.registries;
 
 import muscaa.chess.Chess;
 import muscaa.chess.board.HighlightType;
+import muscaa.chess.events.IRegisterHighlightsEventListener;
 import muscaa.chess.registry.Registries;
 import muscaa.chess.registry.Registry;
 
@@ -15,7 +16,13 @@ public class HighlightRegistry {
 	public static final HighlightType LAST_MOVE = REG.register(new HighlightType(Chess.NAMESPACE.path("last_move")));
 	
 	public static void init() {
-		// TODO call event
+		Chess.EVENTS.call(
+				IRegisterHighlightsEventListener.class,
+				IRegisterHighlightsEventListener::onRegisterHighlightsEvent,
+				new IRegisterHighlightsEventListener.RegisterHighlightsEvent(
+						REG
+						)
+				);
 		
 		REG.lock();
 	}

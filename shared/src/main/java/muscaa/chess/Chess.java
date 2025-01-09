@@ -3,7 +3,8 @@ package muscaa.chess;
 import java.io.IOException;
 import java.io.InputStream;
 
-import muscaa.chess.registry.registries.CommandRegistry;
+import fluff.events.EventManager;
+import muscaa.chess.command.CommandRegistry;
 import muscaa.chess.registry.registries.HighlightRegistry;
 import muscaa.chess.registry.registries.IntentRegistry;
 import muscaa.chess.registry.registries.MoveRegistry;
@@ -16,6 +17,8 @@ public class Chess {
 	public static final Namespace NAMESPACE = Namespace.of("chess");
 	public static final String VERSION = getVersion();
 	public static final int PROTOCOL_VERSION = 1;
+	
+	public static final EventManager EVENTS = new EventManager();
 	
 	public static void init() {
 		IntentRegistry.init();

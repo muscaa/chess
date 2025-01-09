@@ -2,6 +2,7 @@ package muscaa.chess.registry.registries;
 
 import muscaa.chess.Chess;
 import muscaa.chess.board.Team;
+import muscaa.chess.events.IRegisterTeamsEventListener;
 import muscaa.chess.registry.Registries;
 import muscaa.chess.registry.Registry;
 
@@ -20,7 +21,13 @@ public class TeamRegistry {
 	}
 	
 	public static void init() {
-		// TODO call event
+		Chess.EVENTS.call(
+				IRegisterTeamsEventListener.class,
+				IRegisterTeamsEventListener::onRegisterTeamsEvent,
+				new IRegisterTeamsEventListener.RegisterTeamsEvent(
+						REG
+						)
+				);
 		
 		REG.lock();
 	}

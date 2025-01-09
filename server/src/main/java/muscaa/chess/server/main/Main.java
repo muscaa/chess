@@ -6,7 +6,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import muscaa.chess.Chess;
 import muscaa.chess.Server;
-import muscaa.chess.registry.registries.CommandRegistry;
+import muscaa.chess.command.CommandRegistry;
+import muscaa.chess.command.ICommandSource;
 
 public class Main {
 	
@@ -22,7 +23,7 @@ public class Main {
 			if (line.equals("stop")) break;
 			
 			try {
-				CommandRegistry.DISPATCHER.execute(line, new CommandRegistry.ICommandSource() {});
+				CommandRegistry.DISPATCHER.execute(line, new ICommandSource() {});
 			} catch (CommandSyntaxException e) {
 				e.printStackTrace();
 			}
