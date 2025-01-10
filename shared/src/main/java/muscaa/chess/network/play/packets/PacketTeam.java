@@ -4,14 +4,14 @@ import java.io.IOException;
 
 import fluff.bin.IBinaryOutput;
 import fluff.network.packet.IPacketOutbound;
-import muscaa.chess.board.Team;
+import muscaa.chess.board.TeamValue;
 import muscaa.chess.network.PacketOutputUtils;
 
 public class PacketTeam implements IPacketOutbound {
 	
-	private Team team;
+	private TeamValue team;
 	
-	public PacketTeam(Team team) {
+	public PacketTeam(TeamValue team) {
 		this.team = team;
 	}
 	

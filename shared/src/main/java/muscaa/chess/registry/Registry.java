@@ -3,57 +3,95 @@ package muscaa.chess.registry;
 import java.util.HashMap;
 import java.util.Map;
 
+import fluff.functions.gen.obj.Func1;
 import fluff.functions.gen.obj.VoidFunc1;
+import muscaa.chess.Chess;
+import muscaa.chess.events.IRegistryInitEventListener;
 import muscaa.chess.utils.NamespacePath;
 
-public class Registry<E extends IRegistryEntry> {
+public class Registry<V extends IRegistryValue> {
 	
-	private final Map<NamespacePath, E> reg = new HashMap<>();
+	private final Map<NamespacePath, RegistryEntry<V>> entries = new HashMap<>();
+	private final Map<NamespacePath, RegistryKey<V>> lookup = new HashMap<>();
+	private final Map<V, RegistryKey<V>> reverseLookup = new HashMap<>();
 	private final NamespacePath id;
-	private final VoidFunc1<E> onDispose;
 	
-	private boolean locked = false;
+	RegistryState state = RegistryState.UNLOCKED;
 	
-	Registry(NamespacePath id, VoidFunc1<E> onDispose) {
+	Registry(NamespacePath id) {
 		this.id = id;
-		this.onDispose = onDispose;
 	}
 	
-	public void forEach(VoidFunc1<E> consumer) {
-		reg.forEach((id, entry) -> consumer.invoke(entry));
+	public void init() {
+		if (state != RegistryState.UNLOCKED) throw new RegistryException("Registry already initialized!");
+		state = RegistryState.REGISTER;
+		
+		Chess.EVENTS.call(
+				IRegistryInitEventListener.class,
+				IRegistryInitEventListener::onRegistryInitEvent,
+				new IRegistryInitEventListener.RegistryInitEvent(
+						this
+						)
+				);
+		state = RegistryState.INIT;
+		
+		for (Map.Entry<NamespacePath, RegistryEntry<V>> e : entries.entrySet()) {
+			RegistryEntry<V> entry = e.getValue();
+			RegistryKey<V> key = entry.key;
+			
+			key.id = entry.id;
+			key.value = entry.func.invoke(key);
+			
+			lookup.put(key.id, key);
+			reverseLookup.put(key.value, key);
+		}
+		entries.clear();
+		state = RegistryState.LOCKED;
 	}
 	
 	public boolean contains(NamespacePath id) {
-		return reg.containsKey(id);
+		return lookup.containsKey(id);
 	}
 	
-	public E get(NamespacePath id) {
-		return reg.get(id);
+	public RegistryKey<V> get(NamespacePath id) {
+		return lookup.get(id);
 	}
 	
-	public <V extends E> V register(V entry) {
-		if (locked) throw new RegistryException("Registry locked!");
+	public RegistryKey<V> register(NamespacePath id, Func1<V, RegistryKey<V>> func) {
+		if (state.isLocked()) throw new RegistryException("Registry locked!");
+		if (entries.containsKey(id)) throw new RegistryException("Entry already exists!");
 		
-		NamespacePath id = entry.getID();
-		if (contains(id)) throw new RegistryException("Entry already exists!");
-		
-		reg.put(id, entry);
-		return entry;
+		RegistryEntry<V> entry = new RegistryEntry<>(id, func, new RegistryKey<>(this));
+		entries.put(id, entry);
+		return entry.key;
 	}
 	
-	public void lock() {
-		locked = true;
-	}
-	
-	public void dispose() {
-		if (onDispose == null) return;
+	public void forEach(VoidFunc1<V> func) {
+		if (func == null) return;
 		
-        for (Map.Entry<NamespacePath, E> entry : reg.entrySet()) {
-            onDispose.invoke(entry.getValue());
+        for (Map.Entry<NamespacePath, RegistryKey<V>> e : lookup.entrySet()) {
+            func.invoke(e.getValue().get());
         }
 	}
 	
 	public NamespacePath getID() {
 		return id;
+	}
+	
+	@Override
+	public String toString() {
+		return "Registry[" + id + "]";
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Registry reg)) return false;
+		
+		return id.equals(reg.id);
+	}
+	
+	@Override
+	public int hashCode() {
+		return id.hashCode();
 	}
 }

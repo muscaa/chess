@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import fluff.events.EventManager;
+import muscaa.chess.board.HighlightRegistry;
+import muscaa.chess.board.TeamRegistry;
+import muscaa.chess.board.piece.ServerPieceRegistry;
+import muscaa.chess.board.piece.move.MoveRegistry;
 import muscaa.chess.command.CommandRegistry;
-import muscaa.chess.registry.registries.HighlightRegistry;
-import muscaa.chess.registry.registries.IntentRegistry;
-import muscaa.chess.registry.registries.MoveRegistry;
-import muscaa.chess.registry.registries.PieceRegistry;
-import muscaa.chess.registry.registries.TeamRegistry;
+import muscaa.chess.network.IntentRegistry;
 import muscaa.chess.utils.Namespace;
 
 public class Chess {
@@ -24,7 +24,7 @@ public class Chess {
 		IntentRegistry.init();
 		HighlightRegistry.init();
 		TeamRegistry.init();
-		PieceRegistry.init();
+		ServerPieceRegistry.init();
 		MoveRegistry.init();
 		CommandRegistry.init();
 	}

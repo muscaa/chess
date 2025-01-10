@@ -8,10 +8,13 @@ import com.badlogic.gdx.graphics.Color;
 
 import muscaa.chess.board.Cell;
 import muscaa.chess.board.Highlight;
-import muscaa.chess.board.HighlightType;
-import muscaa.chess.board.Team;
+import muscaa.chess.board.HighlightRegistry;
+import muscaa.chess.board.HighlightValue;
+import muscaa.chess.board.TeamRegistry;
+import muscaa.chess.board.TeamValue;
 import muscaa.chess.client.Client;
-import muscaa.chess.client.assets.TextureAsset;
+import muscaa.chess.client.assets.SoundRegistry;
+import muscaa.chess.client.assets.TextureValue;
 import muscaa.chess.client.config.Theme;
 import muscaa.chess.client.gui.screens.DisconnectedScreen;
 import muscaa.chess.client.layer.ILayer;
@@ -21,12 +24,9 @@ import muscaa.chess.client.network.play.packets.CPacketGameEnd;
 import muscaa.chess.client.network.play.packets.CPacketGameStart;
 import muscaa.chess.client.network.play.packets.CPacketHighlightCells;
 import muscaa.chess.client.network.play.packets.CPacketTeam;
-import muscaa.chess.client.registries.SoundRegistry;
 import muscaa.chess.client.utils.Screen;
 import muscaa.chess.client.utils.Shapes;
 import muscaa.chess.client.utils.TaskManager;
-import muscaa.chess.registry.registries.HighlightRegistry;
-import muscaa.chess.registry.registries.TeamRegistry;
 
 public class BoardLayer implements ILayer {
     
@@ -34,7 +34,7 @@ public class BoardLayer implements ILayer {
 	
 	private boolean inGame;
     private ClientMatrix matrix;
-    private Team team;
+    private TeamValue team;
     private List<Highlight> highlights = new LinkedList<>();
     
     private float tileSize;
@@ -60,21 +60,21 @@ public class BoardLayer implements ILayer {
 		// chess highlights under
 		for (Highlight highlight : highlights) {
 			Cell niceCell = highlight.getCell();
-			if (team == TeamRegistry.BLACK && Theme.INVERT_TABLE_IF_BLACK) {
+			if (team == TeamRegistry.BLACK.get() && Theme.INVERT_TABLE_IF_BLACK) {
 				niceCell = niceCell.invert(matrix);
 			}
 			
             float x = boardX + niceCell.x * tileSize;
             float y = boardY + (matrix.getHeight() - niceCell.y - 1) * tileSize;
             
-            HighlightType type = highlight.getType();
+            HighlightValue type = highlight.getType();
             
             Color color = null;
-            if (type == HighlightRegistry.SELECTED) {
+            if (type == HighlightRegistry.SELECTED.get()) {
             	color = Theme.BOARD_CELL_SELECTED;
-            } else if (type == HighlightRegistry.CHECK) {
+            } else if (type == HighlightRegistry.CHECK.get()) {
             	color = Theme.BOARD_CELL_CHECK;
-            } else if (type == HighlightRegistry.LAST_MOVE) {
+            } else if (type == HighlightRegistry.LAST_MOVE.get()) {
             	color = Theme.BOARD_CELL_LAST_MOVE;
             }
             
@@ -90,12 +90,12 @@ public class BoardLayer implements ILayer {
             float off = tileSize / 32;
             
             Cell niceCell = cell;
-            if (team == TeamRegistry.BLACK && Theme.INVERT_TABLE_IF_BLACK) {
+            if (team == TeamRegistry.BLACK.get() && Theme.INVERT_TABLE_IF_BLACK) {
             	niceCell = cell.invert(matrix);
             }
             
-    		TexturedPiece piece = matrix.get(niceCell);
-        	TextureAsset texture = piece.getTexture();
+    		ClientPiece piece = matrix.get(niceCell);
+        	TextureValue texture = piece.getTexture();
         	
         	texture.draw(x + off, y + off, tileSize - off * 2, tileSize - off * 2);
 		}
@@ -103,17 +103,17 @@ public class BoardLayer implements ILayer {
 		// chess highlights above
 		for (Highlight highlight : highlights) {
 			Cell niceCell = highlight.getCell();
-			if (team == TeamRegistry.BLACK && Theme.INVERT_TABLE_IF_BLACK) {
+			if (team == TeamRegistry.BLACK.get() && Theme.INVERT_TABLE_IF_BLACK) {
 				niceCell = niceCell.invert(matrix);
 			}
 			
             float x = boardX + niceCell.x * tileSize;
             float y = boardY + (matrix.getHeight() - niceCell.y - 1) * tileSize;
             
-            HighlightType type = highlight.getType();
+            HighlightValue type = highlight.getType();
             
             Color color = null;
-            if (type == HighlightRegistry.MOVE_AVAILABLE) {
+            if (type == HighlightRegistry.MOVE_AVAILABLE.get()) {
             	color = Theme.BOARD_CELL_MOVE_AVAILABLE;
             }
             
@@ -147,7 +147,7 @@ public class BoardLayer implements ILayer {
             float y = boardY + (matrix.getHeight() - cell.y - 1) * tileSize;
             
             Cell niceCell = cell;
-            if (team == TeamRegistry.BLACK && Theme.INVERT_TABLE_IF_BLACK) {
+            if (team == TeamRegistry.BLACK.get() && Theme.INVERT_TABLE_IF_BLACK) {
             	niceCell = cell.invert(matrix);
             }
             
@@ -176,16 +176,16 @@ public class BoardLayer implements ILayer {
 			matrix.reset(packet.getWidth(), packet.getHeight());
 		}
 		
-		Iterator<TexturedPiece> it = packet.getPieces().iterator();
+		Iterator<ClientPiece> it = packet.getPieces().iterator();
 		for (Cell cell : matrix) {
-			TexturedPiece piece = it.next();
+			ClientPiece piece = it.next();
 			
 			matrix.set(cell, piece);
 		}
 		
 		resize(Screen.WIDTH, Screen.HEIGHT);
 		
-		SoundRegistry.MOVE.play();
+		SoundRegistry.MOVE.get().play();
 	}
 	
 	public void onPacketTeam(CPacketTeam packet) {
@@ -199,7 +199,7 @@ public class BoardLayer implements ILayer {
 	public void onPacketEndGame(CPacketGameEnd packet) {
 		TaskManager.render(() -> {
 			chess.setScreen(new DisconnectedScreen(
-					packet.getWinner() == TeamRegistry.NULL ? "Stalemate"
+					packet.getWinner() == TeamRegistry.NULL.get() ? "Stalemate"
 					: packet.getWinner() == team ? "You win"
 							: "Opponent wins"));
 		});

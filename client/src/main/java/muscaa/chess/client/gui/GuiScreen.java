@@ -4,12 +4,12 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import muscaa.chess.client.Client;
-import muscaa.chess.client.assets.TextureAsset;
+import muscaa.chess.client.assets.TextureRegistry;
+import muscaa.chess.client.assets.TextureValue;
 import muscaa.chess.client.config.Theme;
 import muscaa.chess.client.layer.ILayer;
 import muscaa.chess.client.layer.ILayerWrapper;
 import muscaa.chess.client.layer.LayerUtils;
-import muscaa.chess.client.registries.TextureRegistry;
 import muscaa.chess.client.utils.Shapes;
 
 public abstract class GuiScreen implements ILayerWrapper {
@@ -52,11 +52,11 @@ public abstract class GuiScreen implements ILayerWrapper {
 		if (chess.isInGame()) {
 			Shapes.rect(0, 0, viewport.getWorldWidth(), viewport.getWorldHeight(), Theme.GUISCREEN_BACKGROUND);
 		} else {
-			drawWallpaper(TextureRegistry.WALLPAPER_BLUR);
+			drawWallpaper(TextureRegistry.WALLPAPER_BLUR.get());
 		}
 	}
 	
-	protected void drawWallpaper(TextureAsset texture) {
+	protected void drawWallpaper(TextureValue texture) {
 		float viewportWidth = viewport.getWorldWidth();
 		float viewportHeight = viewport.getWorldHeight();
 		

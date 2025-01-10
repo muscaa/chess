@@ -6,6 +6,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import muscaa.chess.Chess;
+import muscaa.chess.client.assets.FontRegistry;
+import muscaa.chess.client.assets.SoundCategoryRegistry;
+import muscaa.chess.client.assets.SoundRegistry;
+import muscaa.chess.client.assets.TextureRegistry;
 import muscaa.chess.client.board.BoardLayer;
 import muscaa.chess.client.config.ServersConfig;
 import muscaa.chess.client.config.Settings;
@@ -14,10 +18,6 @@ import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.screens.MainMenuScreen;
 import muscaa.chess.client.layer.LayerManager;
 import muscaa.chess.client.network.ChessClient;
-import muscaa.chess.client.registries.FontRegistry;
-import muscaa.chess.client.registries.SoundCategoryRegistry;
-import muscaa.chess.client.registries.SoundRegistry;
-import muscaa.chess.client.registries.TextureRegistry;
 import muscaa.chess.client.utils.Screen;
 import muscaa.chess.client.utils.Shapes;
 import muscaa.chess.client.utils.TaskManager;
@@ -29,19 +29,19 @@ public class Client {
     private int lastWidth;
     private int lastHeight;
 	
-	public final LayerManager layerManager;
+	public LayerManager layerManager;
 	
-	public final BoardLayer boardLayer;
-	private final GuiLayer guiLayer;
+	public BoardLayer boardLayer;
+	private GuiLayer guiLayer;
 	
-	public final ChessClient networkClient;
+	public ChessClient networkClient;
 	
-	public final ServersConfig serversConfig;
-	private final Settings settings;
+	public ServersConfig serversConfig;
+	private Settings settings;
 	
 	private GuiScreen screen;
 	
-	private Client() {
+	public void init() {
 		int width = Gdx.graphics.getWidth();
 		int height = Gdx.graphics.getHeight();
 		
@@ -55,6 +55,11 @@ public class Client {
     	settings = new Settings(this);
     	settings.load();
     	
+    	FontRegistry.init();
+    	TextureRegistry.init();
+    	SoundCategoryRegistry.init();
+    	SoundRegistry.init();
+    	
     	boardLayer = new BoardLayer(this);
     	layerManager.register(boardLayer);
     	
@@ -65,14 +70,7 @@ public class Client {
     	
     	serversConfig = new ServersConfig();
     	serversConfig.load();
-	}
-	
-	public void init() {
-    	FontRegistry.init();
-    	TextureRegistry.init();
-    	SoundCategoryRegistry.init();
-    	SoundRegistry.init();
-    	
+		
     	returnToMainMenu();
 	}
 	
@@ -128,7 +126,7 @@ public class Client {
 	}
 	
 	public void returnToMainMenu() {
-		SoundRegistry.AMBIENT.loopSingle();
+		SoundRegistry.AMBIENT.get().loopSingle();
 		
 		networkClient.disconnect();
 		boardLayer.disconnect();

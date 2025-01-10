@@ -4,14 +4,14 @@ import java.io.IOException;
 
 import fluff.bin.IBinaryOutput;
 import fluff.network.packet.IPacketOutbound;
-import muscaa.chess.network.Intent;
+import muscaa.chess.network.IntentValue;
 import muscaa.chess.network.PacketOutputUtils;
 
 public class CPacketIntent implements IPacketOutbound {
 	
-	private Intent intent;
+	private IntentValue intent;
 	
-	public CPacketIntent(Intent intent) {
+	public CPacketIntent(IntentValue intent) {
 		this.intent = intent;
 	}
 	

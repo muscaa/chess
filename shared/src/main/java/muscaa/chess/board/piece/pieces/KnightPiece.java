@@ -3,21 +3,21 @@ package muscaa.chess.board.piece.pieces;
 import java.util.Map;
 
 import muscaa.chess.board.Cell;
-import muscaa.chess.board.Team;
+import muscaa.chess.board.TeamValue;
 import muscaa.chess.board.matrix.Matrix;
-import muscaa.chess.board.piece.AbstractPiece;
-import muscaa.chess.board.piece.PieceEntry;
+import muscaa.chess.board.piece.AbstractServerPiece;
+import muscaa.chess.board.piece.ServerPieceRegistry;
 import muscaa.chess.board.piece.PieceUtils;
-import muscaa.chess.board.piece.move.AbstractMove;
+import muscaa.chess.board.piece.move.AbstractMoveValue;
 
-public class KnightPiece extends AbstractPiece {
+public class KnightPiece extends AbstractServerPiece {
 	
-	public KnightPiece(PieceEntry<KnightPiece> regEntry, Team team) {
-		super(regEntry, team);
+	public KnightPiece(TeamValue team) {
+		super(ServerPieceRegistry.KNIGHT.get(), team);
 	}
 	
 	@Override
-	public void findMoves(Map<Cell, AbstractMove> moves, Matrix matrix, Cell from) {
+	public void findMoves(Map<Cell, AbstractMoveValue> moves, Matrix matrix, Cell from) {
 		Cell[] offsets = {
 				// left top
 				new Cell(-1, -2),

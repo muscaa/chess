@@ -9,14 +9,14 @@ import muscaa.chess.client.network.connection.ClientConnectionNetHandler;
 import muscaa.chess.client.network.connection.packets.CPacketEncrypt;
 import muscaa.chess.client.network.intent.packets.CPacketIntent;
 import muscaa.chess.client.network.intent.packets.CPacketIntentResponse;
-import muscaa.chess.network.Intent;
-import muscaa.chess.registry.registries.IntentRegistry;
+import muscaa.chess.network.IntentRegistry;
+import muscaa.chess.network.IntentValue;
 
 public class ClientIntentNetHandler extends ClientCommonNetHandler implements IClientIntentNetHandler {
 	
-	private final Intent intent;
+	private final IntentValue intent;
 	
-	public ClientIntentNetHandler(Intent intent) {
+	public ClientIntentNetHandler(IntentValue intent) {
 		this.intent = intent;
 	}
 	
@@ -34,7 +34,7 @@ public class ClientIntentNetHandler extends ClientCommonNetHandler implements IC
 			return;
 		}
 		
-		if (intent == IntentRegistry.CONNECT) {
+		if (intent == IntentRegistry.CONNECT.get()) {
 			client.setContext(ClientContexts.CONNECTION_CONTEXT, new ClientConnectionNetHandler());
 			
 			client.send(new CPacketEncrypt(Chess.PROTOCOL_VERSION, CPacketEncrypt.generate()));

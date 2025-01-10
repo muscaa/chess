@@ -4,7 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 
 import muscaa.chess.Chess;
-import muscaa.chess.events.IRegisterCommandsEventListener;
+import muscaa.chess.events.ICommandsInitEventListener;
 
 public class CommandRegistry {
 	
@@ -20,9 +20,9 @@ public class CommandRegistry {
 				);
 		
 		Chess.EVENTS.call(
-				IRegisterCommandsEventListener.class,
-				IRegisterCommandsEventListener::onRegisterCommandsEvent,
-				new IRegisterCommandsEventListener.RegisterCommandsEvent(
+				ICommandsInitEventListener.class,
+				ICommandsInitEventListener::onCommandsInitEvent,
+				new ICommandsInitEventListener.CommandsInitEvent(
 						DISPATCHER
 						)
 				);

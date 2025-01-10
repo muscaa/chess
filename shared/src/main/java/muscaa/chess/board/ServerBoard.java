@@ -7,8 +7,9 @@ import java.util.Map;
 
 import fluff.network.packet.IPacketOutbound;
 import muscaa.chess.board.matrix.Matrix;
-import muscaa.chess.board.piece.AbstractPiece;
-import muscaa.chess.board.piece.move.AbstractMove;
+import muscaa.chess.board.piece.AbstractServerPiece;
+import muscaa.chess.board.piece.ServerPieceRegistry;
+import muscaa.chess.board.piece.move.AbstractMoveValue;
 import muscaa.chess.board.piece.move.moves.CaptureMove;
 import muscaa.chess.board.piece.pieces.NullPiece;
 import muscaa.chess.network.ChessClientConnection;
@@ -18,23 +19,20 @@ import muscaa.chess.network.play.packets.PacketGameEnd;
 import muscaa.chess.network.play.packets.PacketHighlightCells;
 import muscaa.chess.network.play.packets.PacketGameStart;
 import muscaa.chess.network.play.packets.PacketTeam;
-import muscaa.chess.registry.registries.HighlightRegistry;
-import muscaa.chess.registry.registries.PieceRegistry;
-import muscaa.chess.registry.registries.TeamRegistry;
 
 public class ServerBoard {
 	
-	private final Map<Team, ChessClientConnection> players = new HashMap<>();
-	private final Map<ChessClientConnection, Team> teams = new HashMap<>();
+	private final Map<TeamValue, ChessClientConnection> players = new HashMap<>();
+	private final Map<ChessClientConnection, TeamValue> teams = new HashMap<>();
 	
-	private Team turn;
+	private TeamValue turn;
 	private Cell selectedCell = Cell.INVALID;
 	private List<Cell> inCheckCells = new LinkedList<>();
 	private List<Cell> lastMoveCells = new LinkedList<>();
 	
 	private Matrix matrix;
 	
-	private Map<Cell, Map<Cell, AbstractMove>> allMoves = new HashMap<>();
+	private Map<Cell, Map<Cell, AbstractMoveValue>> allMoves = new HashMap<>();
 	
 	public ServerBoard() {
 		reset();
@@ -42,8 +40,8 @@ public class ServerBoard {
 	
 	public void click(Cell cell) {
 		ChessClientConnection player = players.get(turn);
-		ChessClientConnection opponent = players.get(TeamRegistry.invert(turn));
-		AbstractPiece piece = matrix.get(cell);
+		ChessClientConnection opponent = players.get(turn.invert());
+		AbstractServerPiece piece = matrix.get(cell);
 		
 		if (selectedCell.equals(Cell.INVALID)) {
 			if (!piece.equals(NullPiece.INSTANCE) && piece.getTeam() == turn) {
@@ -57,10 +55,10 @@ public class ServerBoard {
 			return;
 		}
 		
-		AbstractPiece selectedPiece = matrix.get(selectedCell);
-		Map<Cell, AbstractMove> moves = allMoves.get(selectedCell);
+		AbstractServerPiece selectedPiece = matrix.get(selectedCell);
+		Map<Cell, AbstractMoveValue> moves = allMoves.get(selectedCell);
 		
-		AbstractMove move = moves.get(cell);
+		AbstractMoveValue move = moves.get(cell);
 		if (move == null) {
 			selectCell(player, null, Cell.INVALID);
 			return;
@@ -76,7 +74,7 @@ public class ServerBoard {
 		findAllMoves();
 		
 		inCheckCells.clear();
-		inCheckCells.addAll(getInCheck(TeamRegistry.invert(turn)));
+		inCheckCells.addAll(getInCheck(turn.invert()));
 		
 		lastMoveCells.clear();
 		lastMoveCells.add(selectedCell);
@@ -84,9 +82,9 @@ public class ServerBoard {
 		
 		selectCell(player, opponent, Cell.INVALID);
 		
-		Map<Cell, Map<Cell, AbstractMove>> remainingMoves = getMoves(TeamRegistry.invert(turn));
+		Map<Cell, Map<Cell, AbstractMoveValue>> remainingMoves = getMoves(turn.invert());
 		int remainingMovesCount = 0;
-		for (Map.Entry<Cell, Map<Cell, AbstractMove>> e : remainingMoves.entrySet()) {
+		for (Map.Entry<Cell, Map<Cell, AbstractMoveValue>> e : remainingMoves.entrySet()) {
 			remainingMovesCount += e.getValue().size();
 		}
 		
@@ -94,19 +92,19 @@ public class ServerBoard {
 			if (!inCheckCells.isEmpty()) {
 				endGame(turn);
 			} else {
-				endGame(TeamRegistry.NULL);
+				endGame(TeamRegistry.NULL.get());
 			}
 			return;
 		}
 		
-		turn = TeamRegistry.invert(turn);
+		turn = turn.invert();
 	}
 	
-	public void endGame(Team winner) {
+	public void endGame(TeamValue winner) {
 		send(new PacketGameEnd(winner));
 		
-		players.get(TeamRegistry.WHITE).disconnect("Game ended!");
-		players.get(TeamRegistry.BLACK).disconnect("Game ended!");
+		players.get(TeamRegistry.WHITE.get()).disconnect("Game ended!");
+		players.get(TeamRegistry.BLACK.get()).disconnect("Game ended!");
 	}
 	
 	public void selectCell(ChessClientConnection player, ChessClientConnection opponent, Cell cell) {
@@ -116,25 +114,25 @@ public class ServerBoard {
 		List<Highlight> opponentHighlights = new LinkedList<>();
 		
 		for (Cell inCheckCell : inCheckCells) {
-			Highlight h = new Highlight(inCheckCell, HighlightRegistry.CHECK);
+			Highlight h = new Highlight(inCheckCell, HighlightRegistry.CHECK.get());
 			
 			highlights.add(h);
 			opponentHighlights.add(h);
 		}
 		
 		for (Cell lastMoveCell : lastMoveCells) {
-			Highlight h = new Highlight(lastMoveCell, HighlightRegistry.LAST_MOVE);
+			Highlight h = new Highlight(lastMoveCell, HighlightRegistry.LAST_MOVE.get());
 			
 			highlights.add(h);
 			opponentHighlights.add(h);
 		}
 		
 		if (!selectedCell.equals(Cell.INVALID)) {
-			highlights.add(new Highlight(selectedCell, HighlightRegistry.SELECTED));
+			highlights.add(new Highlight(selectedCell, HighlightRegistry.SELECTED.get()));
 			
-			Map<Cell, AbstractMove> moves = allMoves.get(selectedCell);
-			for (Map.Entry<Cell, AbstractMove> e : moves.entrySet()) {
-				highlights.add(new Highlight(e.getKey(), HighlightRegistry.MOVE_AVAILABLE));
+			Map<Cell, AbstractMoveValue> moves = allMoves.get(selectedCell);
+			for (Map.Entry<Cell, AbstractMoveValue> e : moves.entrySet()) {
+				highlights.add(new Highlight(e.getKey(), HighlightRegistry.MOVE_AVAILABLE.get()));
 			}
 		}
 		
@@ -149,36 +147,36 @@ public class ServerBoard {
 		
 		matrix.begin();
 		for (Cell cell : matrix) {
-			Team team = cell.y >= matrix.getHeight() / 2 ? TeamRegistry.WHITE : TeamRegistry.BLACK;
+			TeamValue team = cell.y >= matrix.getHeight() / 2 ? TeamRegistry.WHITE.get() : TeamRegistry.BLACK.get();
 			
 			if (cell.y == 0 || cell.y == matrix.getHeight() - 1) {
 				if (cell.x == 0 || cell.x == matrix.getWidth() - 1) {
-					matrix.set(cell, PieceRegistry.ROOK.create(team));
+					matrix.set(cell, ServerPieceRegistry.ROOK.get().create(team));
 				} else if (cell.x == 1 || cell.x == matrix.getWidth() - 2) {
-					matrix.set(cell, PieceRegistry.KNIGHT.create(team));
+					matrix.set(cell, ServerPieceRegistry.KNIGHT.get().create(team));
 				} else if (cell.x == 2 || cell.x == matrix.getWidth() - 3) {
-					matrix.set(cell, PieceRegistry.BISHOP.create(team));
+					matrix.set(cell, ServerPieceRegistry.BISHOP.get().create(team));
 				} else if (cell.x == 3) {
-					matrix.set(cell, PieceRegistry.QUEEN.create(team));
+					matrix.set(cell, ServerPieceRegistry.QUEEN.get().create(team));
 				} else if (cell.x == matrix.getWidth() - 4) {
-					matrix.set(cell, PieceRegistry.KING.create(team));
+					matrix.set(cell, ServerPieceRegistry.KING.get().create(team));
 				} else {
 					matrix.set(cell, NullPiece.INSTANCE);
 				}
 			} else if (cell.y == 1 || cell.y == matrix.getHeight() - 2) {
-				matrix.set(cell, PieceRegistry.PAWN.create(team));
+				matrix.set(cell, ServerPieceRegistry.PAWN.get().create(team));
 			} else {
 				matrix.set(cell, NullPiece.INSTANCE);
 			}
 		}
 		matrix.end();
 		
-		turn = TeamRegistry.WHITE;
+		turn = TeamRegistry.WHITE.get();
 		selectedCell = Cell.INVALID;
 	}
 	
 	private void send(IPacketOutbound packet) {
-		for (Map.Entry<Team, ChessClientConnection> e : players.entrySet()) {
+		for (Map.Entry<TeamValue, ChessClientConnection> e : players.entrySet()) {
 			e.getValue().send(packet);
 		}
 	}
@@ -187,15 +185,15 @@ public class ServerBoard {
 		allMoves.clear();
 		
 		for (Cell from : matrix) {
-			AbstractPiece piece = matrix.get(from);
+			AbstractServerPiece piece = matrix.get(from);
 			
-			Map<Cell, AbstractMove> moves = new HashMap<>();
+			Map<Cell, AbstractMoveValue> moves = new HashMap<>();
 			piece.findMoves(moves, matrix, from);
 			
-			Map<Cell, AbstractMove> validMoves = new HashMap<>();
-			for (Map.Entry<Cell, AbstractMove> moveEntry : moves.entrySet()) {
+			Map<Cell, AbstractMoveValue> validMoves = new HashMap<>();
+			for (Map.Entry<Cell, AbstractMoveValue> moveEntry : moves.entrySet()) {
 				Cell to = moveEntry.getKey();
-				AbstractMove move = moveEntry.getValue();
+				AbstractMoveValue move = moveEntry.getValue();
 				
 				matrix.begin();
 				move.doMove(matrix, from, to);
@@ -213,21 +211,21 @@ public class ServerBoard {
 		}
 	}
 	
-	private List<Cell> getInCheck(Team team) {
+	private List<Cell> getInCheck(TeamValue team) {
 		List<Cell> inCheck = new LinkedList<>();
 		for (Cell opponentFrom : matrix) {
-			AbstractPiece opponentPiece = matrix.get(opponentFrom);
+			AbstractServerPiece opponentPiece = matrix.get(opponentFrom);
 			if (opponentPiece.getTeam() == team) continue;
 			
-			Map<Cell, AbstractMove> opponentMoves = new HashMap<>();
+			Map<Cell, AbstractMoveValue> opponentMoves = new HashMap<>();
 			opponentPiece.findMoves(opponentMoves, matrix, opponentFrom);
 			
 			for (Cell checkable : matrix) {
-				AbstractPiece checkablePiece = matrix.get(checkable);
+				AbstractServerPiece checkablePiece = matrix.get(checkable);
 				if (!checkablePiece.isCheckable()) continue;
 				if (checkablePiece.getTeam() != team) continue;
 				
-				AbstractMove opponentMove = opponentMoves.get(checkable);
+				AbstractMoveValue opponentMove = opponentMoves.get(checkable);
 				if (opponentMove instanceof CaptureMove) {
 					inCheck.add(checkable);
 				}
@@ -236,11 +234,11 @@ public class ServerBoard {
 		return inCheck;
 	}
 	
-	private Map<Cell, Map<Cell, AbstractMove>> getMoves(Team team) {
-		Map<Cell, Map<Cell, AbstractMove>> moves = new HashMap<>();
-		for (Map.Entry<Cell, Map<Cell, AbstractMove>> e : allMoves.entrySet()) {
+	private Map<Cell, Map<Cell, AbstractMoveValue>> getMoves(TeamValue team) {
+		Map<Cell, Map<Cell, AbstractMoveValue>> moves = new HashMap<>();
+		for (Map.Entry<Cell, Map<Cell, AbstractMoveValue>> e : allMoves.entrySet()) {
 			Cell from = e.getKey();
-			AbstractPiece piece = matrix.get(from);
+			AbstractServerPiece piece = matrix.get(from);
 			if (piece.getTeam() != team) continue;
 			
 			moves.put(from, e.getValue());
@@ -249,15 +247,15 @@ public class ServerBoard {
 	}
 	
 	public synchronized void onConnect(ChessClientConnection connection) {
-		Team team = players.isEmpty() || !players.containsKey(turn) ? turn : TeamRegistry.invert(turn);
+		TeamValue team = players.isEmpty() || !players.containsKey(turn) ? turn : turn.invert();
 		players.put(team, connection);
 		teams.put(connection, team);
 		
 		if (players.size() == 2) {
 			send(new PacketGameStart());
 			
-			players.get(TeamRegistry.WHITE).send(new PacketTeam(TeamRegistry.WHITE));
-			players.get(TeamRegistry.BLACK).send(new PacketTeam(TeamRegistry.BLACK));
+			players.get(TeamRegistry.WHITE.get()).send(new PacketTeam(TeamRegistry.WHITE.get()));
+			players.get(TeamRegistry.BLACK.get()).send(new PacketTeam(TeamRegistry.BLACK.get()));
 			
 			send(new PacketBoard(matrix));
 			findAllMoves();
@@ -267,7 +265,7 @@ public class ServerBoard {
 	}
 	
 	public synchronized void onDisconnect(ChessClientConnection connection) {
-		Team team = teams.remove(connection);
+		TeamValue team = teams.remove(connection);
 		players.remove(team);
 		
 		reset();
@@ -276,7 +274,7 @@ public class ServerBoard {
 	public synchronized void onPacketClickCell(ChessClientConnection connection, PacketClickCell packet) {
 		if (players.size() != 2) return;
 		
-		Team clientTeam = teams.get(connection);
+		TeamValue clientTeam = teams.get(connection);
 		if (clientTeam != turn) return;
 		
 		Cell cell = packet.getCell();

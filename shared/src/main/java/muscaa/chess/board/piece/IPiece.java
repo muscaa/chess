@@ -1,10 +1,10 @@
 package muscaa.chess.board.piece;
 
-import muscaa.chess.board.Team;
+import muscaa.chess.board.TeamValue;
 
-public interface IPiece {
+public interface IPiece<V extends AbstractPieceValue> {
 	
-	PieceEntry<?> getRegistryEntry();
+	V getRegistryValue();
 	
-	Team getTeam();
+	TeamValue getTeam();
 }

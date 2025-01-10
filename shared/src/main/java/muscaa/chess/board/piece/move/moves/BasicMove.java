@@ -2,20 +2,20 @@ package muscaa.chess.board.piece.move.moves;
 
 import muscaa.chess.board.Cell;
 import muscaa.chess.board.matrix.Matrix;
-import muscaa.chess.board.piece.AbstractPiece;
-import muscaa.chess.board.piece.move.AbstractMove;
+import muscaa.chess.board.piece.AbstractServerPiece;
+import muscaa.chess.board.piece.move.AbstractMoveValue;
 import muscaa.chess.board.piece.pieces.NullPiece;
-import muscaa.chess.utils.NamespacePath;
+import muscaa.chess.registry.RegistryKey;
 
-public class BasicMove extends AbstractMove {
+public class BasicMove extends AbstractMoveValue {
 	
-	public BasicMove(NamespacePath id) {
-		super(id);
+	public BasicMove(RegistryKey<AbstractMoveValue> key) {
+		super(key);
 	}
 	
 	@Override
 	public void doMove(Matrix matrix, Cell from, Cell to) {
-		AbstractPiece fromPiece = matrix.get(from);
+		AbstractServerPiece fromPiece = matrix.get(from);
 		
 		matrix.set(to, fromPiece);
 		matrix.set(from, NullPiece.INSTANCE);

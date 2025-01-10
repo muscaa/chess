@@ -6,7 +6,7 @@ import fluff.bin.IBinaryOutput;
 import fluff.network.packet.IPacketOutbound;
 import muscaa.chess.board.Cell;
 import muscaa.chess.board.matrix.Matrix;
-import muscaa.chess.board.piece.AbstractPiece;
+import muscaa.chess.board.piece.AbstractServerPiece;
 import muscaa.chess.network.PacketOutputUtils;
 
 public class PacketBoard implements IPacketOutbound {
@@ -23,7 +23,7 @@ public class PacketBoard implements IPacketOutbound {
 		out.Int(matrix.getHeight());
 		
 		for (Cell cell : matrix) {
-			AbstractPiece piece = matrix.get(cell);
+			AbstractServerPiece piece = matrix.get(cell);
 			
 			PacketOutputUtils.piece(out, piece);
 		}

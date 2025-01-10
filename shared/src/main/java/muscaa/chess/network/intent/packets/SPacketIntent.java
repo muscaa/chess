@@ -4,13 +4,13 @@ import java.io.IOException;
 
 import fluff.bin.IBinaryInput;
 import fluff.network.packet.IPacketInbound;
-import muscaa.chess.network.Intent;
+import muscaa.chess.network.IntentRegistry;
+import muscaa.chess.network.IntentValue;
 import muscaa.chess.network.PacketInputUtils;
-import muscaa.chess.registry.registries.IntentRegistry;
 
 public class SPacketIntent implements IPacketInbound {
 	
-	private Intent intent;
+	private IntentValue intent;
 	
 	public SPacketIntent() {}
 	
@@ -19,7 +19,7 @@ public class SPacketIntent implements IPacketInbound {
 		intent = PacketInputUtils.regEntry(in, IntentRegistry.REG);
 	}
 	
-	public Intent getIntent() {
+	public IntentValue getIntent() {
 		return intent;
 	}
 }

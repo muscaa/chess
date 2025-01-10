@@ -5,27 +5,27 @@ import java.util.List;
 import java.util.Map;
 
 import muscaa.chess.board.Cell;
-import muscaa.chess.board.Team;
+import muscaa.chess.board.TeamValue;
 import muscaa.chess.board.matrix.Matrix;
-import muscaa.chess.board.piece.move.AbstractMove;
+import muscaa.chess.board.piece.move.AbstractMoveValue;
 
-public abstract class MultiPiece extends AbstractPiece {
+public abstract class MultiPiece extends AbstractServerPiece {
 	
-	protected final List<AbstractPiece> pieces = new LinkedList<>();
+	protected final List<AbstractServerPiece> pieces = new LinkedList<>();
 	
-	public MultiPiece(PieceEntry<? extends AbstractPiece> regEntry, Team team) {
-		super(regEntry, team);
+	public MultiPiece(ServerPieceValue registryValue, TeamValue team) {
+		super(registryValue, team);
 		
-		for (PieceEntry<? extends AbstractPiece> entry : getPieceEntries()) {
-			pieces.add(entry.create(team));
+		for (ServerPieceValue p : getPieces()) {
+			pieces.add(p.create(team));
 		}
 	}
 	
-	protected abstract List<PieceEntry<? extends AbstractPiece>> getPieceEntries();
+	protected abstract List<ServerPieceValue> getPieces();
 	
 	@Override
-	public void findMoves(Map<Cell, AbstractMove> moves, Matrix matrix, Cell from) {
-		for (AbstractPiece piece : pieces) {
+	public void findMoves(Map<Cell, AbstractMoveValue> moves, Matrix matrix, Cell from) {
+		for (AbstractServerPiece piece : pieces) {
 			piece.findMoves(moves, matrix, from);
 		}
 	}
@@ -34,7 +34,7 @@ public abstract class MultiPiece extends AbstractPiece {
 	public void onPreMove(Matrix matrix, Cell from, Cell to) {
 		super.onPreMove(matrix, from, to);
 		
-		for (AbstractPiece piece : pieces) {
+		for (AbstractServerPiece piece : pieces) {
 			piece.onPreMove(matrix, from, to);
 		}
 	}
@@ -43,7 +43,7 @@ public abstract class MultiPiece extends AbstractPiece {
 	public void onPostMove(Matrix matrix, Cell from, Cell to) {
 		super.onPostMove(matrix, from, to);
 		
-		for (AbstractPiece piece : pieces) {
+		for (AbstractServerPiece piece : pieces) {
 			piece.onPostMove(matrix, from, to);
 		}
 	}

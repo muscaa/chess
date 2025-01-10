@@ -8,9 +8,9 @@ import fluff.bin.IBinaryInput;
 import fluff.network.packet.IPacketInbound;
 import muscaa.chess.board.Cell;
 import muscaa.chess.board.Highlight;
-import muscaa.chess.board.HighlightType;
+import muscaa.chess.board.HighlightRegistry;
+import muscaa.chess.board.HighlightValue;
 import muscaa.chess.network.PacketInputUtils;
-import muscaa.chess.registry.registries.HighlightRegistry;
 
 public class CPacketHighlightCells implements IPacketInbound {
 	
@@ -23,7 +23,7 @@ public class CPacketHighlightCells implements IPacketInbound {
 		int len = in.Int();
 		for (int i = 0; i < len; i++) {
 			Cell cell = PacketInputUtils.cell(in);
-			HighlightType highlight = PacketInputUtils.regEntry(in, HighlightRegistry.REG);
+			HighlightValue highlight = PacketInputUtils.regEntry(in, HighlightRegistry.REG);
 			
 			highlights.add(new Highlight(cell, highlight));
 		}

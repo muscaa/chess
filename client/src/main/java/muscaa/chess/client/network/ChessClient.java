@@ -13,8 +13,8 @@ import muscaa.chess.client.Client;
 import muscaa.chess.client.config.ServersConfig;
 import muscaa.chess.client.gui.screens.StatusScreen;
 import muscaa.chess.client.network.intent.ClientIntentNetHandler;
+import muscaa.chess.network.IntentRegistry;
 import muscaa.chess.network.common.packets.PacketDisconnect;
-import muscaa.chess.registry.registries.IntentRegistry;
 
 public class ChessClient extends AbstractClient {
 	
@@ -25,7 +25,7 @@ public class ChessClient extends AbstractClient {
 	protected boolean connect(String host, int port) throws UnknownHostException, IOException, NetworkException {
     	if (isConnected()) return false;
     	
-    	setContext(ClientContexts.INTENT_CONTEXT, new ClientIntentNetHandler(IntentRegistry.CONNECT));
+    	setContext(ClientContexts.INTENT_CONTEXT, new ClientIntentNetHandler(IntentRegistry.CONNECT.get()));
 		setChannel(new DefaultPacketChannel());
 		openConnection(new Socket(host, port));
 		

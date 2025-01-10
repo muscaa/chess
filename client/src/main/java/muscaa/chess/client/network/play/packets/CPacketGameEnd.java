@@ -4,13 +4,13 @@ import java.io.IOException;
 
 import fluff.bin.IBinaryInput;
 import fluff.network.packet.IPacketInbound;
-import muscaa.chess.board.Team;
+import muscaa.chess.board.TeamRegistry;
+import muscaa.chess.board.TeamValue;
 import muscaa.chess.network.PacketInputUtils;
-import muscaa.chess.registry.registries.TeamRegistry;
 
 public class CPacketGameEnd implements IPacketInbound {
 	
-	private Team winner;
+	private TeamValue winner;
 	
 	public CPacketGameEnd() {}
 	
@@ -19,7 +19,7 @@ public class CPacketGameEnd implements IPacketInbound {
 		winner = PacketInputUtils.regEntry(in, TeamRegistry.REG);
 	}
 	
-	public Team getWinner() {
+	public TeamValue getWinner() {
 		return winner;
 	}
 }

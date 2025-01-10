@@ -2,22 +2,23 @@ package muscaa.chess.board.piece.move.moves;
 
 import muscaa.chess.board.Cell;
 import muscaa.chess.board.matrix.Matrix;
-import muscaa.chess.board.piece.AbstractPiece;
+import muscaa.chess.board.piece.AbstractServerPiece;
+import muscaa.chess.board.piece.ServerPieceRegistry;
+import muscaa.chess.board.piece.move.AbstractMoveValue;
 import muscaa.chess.board.piece.pieces.NullPiece;
-import muscaa.chess.registry.registries.PieceRegistry;
-import muscaa.chess.utils.NamespacePath;
+import muscaa.chess.registry.RegistryKey;
 
 public class PromoteMove extends CaptureMove {
 	
-	public PromoteMove(NamespacePath id) {
-		super(id);
+	public PromoteMove(RegistryKey<AbstractMoveValue> key) {
+		super(key);
 	}
 	
 	@Override
 	public void doMove(Matrix matrix, Cell from, Cell to) {
-		AbstractPiece fromPiece = matrix.get(from);
+		AbstractServerPiece fromPiece = matrix.get(from);
 		
-		matrix.set(to, PieceRegistry.QUEEN.create(fromPiece.getTeam()));
+		matrix.set(to, ServerPieceRegistry.QUEEN.get().create(fromPiece.getTeam()));
 		matrix.set(from, NullPiece.INSTANCE);
 	}
 }

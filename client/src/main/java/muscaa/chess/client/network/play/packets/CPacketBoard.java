@@ -6,15 +6,15 @@ import java.util.List;
 
 import fluff.bin.IBinaryInput;
 import fluff.network.packet.IPacketInbound;
-import muscaa.chess.client.board.TexturedPiece;
-import muscaa.chess.client.registries.TexturedPieceRegistry;
+import muscaa.chess.client.board.ClientPiece;
+import muscaa.chess.client.board.ClientPieceRegistry;
 import muscaa.chess.network.PacketInputUtils;
 
 public class CPacketBoard implements IPacketInbound {
 	
 	private int width;
 	private int height;
-	private List<TexturedPiece> pieces;
+	private List<ClientPiece> pieces;
 	
 	public CPacketBoard() {}
 	
@@ -25,7 +25,7 @@ public class CPacketBoard implements IPacketInbound {
 		
 		pieces = new LinkedList<>();
 		for (int i = 0; i < width * height; i++) {
-			TexturedPiece piece = PacketInputUtils.piece(in, TexturedPieceRegistry.REG);
+			ClientPiece piece = PacketInputUtils.piece(in, ClientPieceRegistry.REG);
 			
 			pieces.add(piece);
 		}
@@ -39,7 +39,7 @@ public class CPacketBoard implements IPacketInbound {
 		return height;
 	}
 	
-	public List<TexturedPiece> getPieces() {
+	public List<ClientPiece> getPieces() {
 		return pieces;
 	}
 }

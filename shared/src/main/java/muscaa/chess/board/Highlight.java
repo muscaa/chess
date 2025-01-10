@@ -3,9 +3,9 @@ package muscaa.chess.board;
 public class Highlight {
 	
 	private final Cell cell;
-	private final HighlightType type;
+	private final HighlightValue type;
 	
-	public Highlight(Cell cell, HighlightType type) {
+	public Highlight(Cell cell, HighlightValue type) {
 		this.cell = cell;
         this.type = type;
 	}
@@ -14,7 +14,7 @@ public class Highlight {
 		return cell;
 	}
 	
-	public HighlightType getType() {
+	public HighlightValue getType() {
 		return type;
 	}
 }

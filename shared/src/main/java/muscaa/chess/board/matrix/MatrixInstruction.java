@@ -1,15 +1,15 @@
 package muscaa.chess.board.matrix;
 
 import muscaa.chess.board.Cell;
-import muscaa.chess.board.piece.AbstractPiece;
+import muscaa.chess.board.piece.AbstractServerPiece;
 
 public class MatrixInstruction {
 	
 	private final Cell cell;
-	private final AbstractPiece oldPiece;
-	private final AbstractPiece newPiece;
+	private final AbstractServerPiece oldPiece;
+	private final AbstractServerPiece newPiece;
 	
-	public MatrixInstruction(Cell cell, AbstractPiece oldPiece, AbstractPiece newPiece) {
+	public MatrixInstruction(Cell cell, AbstractServerPiece oldPiece, AbstractServerPiece newPiece) {
 		this.cell = cell;
 		this.oldPiece = oldPiece;
 		this.newPiece = newPiece;
@@ -19,11 +19,11 @@ public class MatrixInstruction {
 		return cell;
 	}
 	
-	public AbstractPiece getOldPiece() {
+	public AbstractServerPiece getOldPiece() {
 		return oldPiece;
 	}
 	
-	public AbstractPiece getNewPiece() {
+	public AbstractServerPiece getNewPiece() {
 		return newPiece;
 	}
 }

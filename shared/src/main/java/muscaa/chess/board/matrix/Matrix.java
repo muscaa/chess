@@ -4,9 +4,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import muscaa.chess.board.Cell;
-import muscaa.chess.board.piece.AbstractPiece;
+import muscaa.chess.board.piece.AbstractServerPiece;
 
-public class Matrix extends AbstractMatrix<AbstractPiece> {
+public class Matrix extends AbstractMatrix<AbstractServerPiece> {
 	
 	protected final LinkedList<MatrixHistoryEntry> history = new LinkedList<>();
 	protected MatrixHistoryEntry historyEntry;
@@ -16,10 +16,10 @@ public class Matrix extends AbstractMatrix<AbstractPiece> {
 	}
 	
 	@Override
-	public void set(Cell cell, AbstractPiece piece) {
+	public void set(Cell cell, AbstractServerPiece piece) {
 		if (historyEntry == null) throw new MatrixException("No matrix modification in progress!");
 		
-		historyEntry.onSet(cell, (AbstractPiece) pieces[cell.y][cell.x], piece);
+		historyEntry.onSet(cell, (AbstractServerPiece) pieces[cell.y][cell.x], piece);
 		pieces[cell.y][cell.x] = piece;
 	}
 	

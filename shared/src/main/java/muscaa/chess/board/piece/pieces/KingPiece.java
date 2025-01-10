@@ -3,22 +3,22 @@ package muscaa.chess.board.piece.pieces;
 import java.util.Map;
 
 import muscaa.chess.board.Cell;
-import muscaa.chess.board.Team;
+import muscaa.chess.board.TeamValue;
 import muscaa.chess.board.matrix.Matrix;
-import muscaa.chess.board.piece.AbstractPiece;
-import muscaa.chess.board.piece.PieceEntry;
+import muscaa.chess.board.piece.AbstractServerPiece;
+import muscaa.chess.board.piece.ServerPieceRegistry;
 import muscaa.chess.board.piece.PieceUtils;
-import muscaa.chess.board.piece.move.AbstractMove;
-import muscaa.chess.registry.registries.MoveRegistry;
+import muscaa.chess.board.piece.move.AbstractMoveValue;
+import muscaa.chess.board.piece.move.MoveRegistry;
 
-public class KingPiece extends AbstractPiece {
+public class KingPiece extends AbstractServerPiece {
 	
-	public KingPiece(PieceEntry<KingPiece> regEntry, Team team) {
-		super(regEntry, team);
+	public KingPiece(TeamValue team) {
+		super(ServerPieceRegistry.KING.get(), team);
 	}
 	
 	@Override
-	public void findMoves(Map<Cell, AbstractMove> moves, Matrix matrix, Cell from) {
+	public void findMoves(Map<Cell, AbstractMoveValue> moves, Matrix matrix, Cell from) {
 		Cell[] offsets = {
 				// left
 				new Cell(-1, -1),
@@ -56,18 +56,18 @@ public class KingPiece extends AbstractPiece {
 		Cell left = from.subtract(new Cell(2, 0));
 		Cell left1 = from.subtract(new Cell(3, 0));
 		if (leftClearPath && matrix.isInBounds(left1)) {
-			AbstractPiece piece1 = matrix.get(left1);
+			AbstractServerPiece piece1 = matrix.get(left1);
 			if (piece1 instanceof RookPiece rook1) {
 				if (rook1.totalMoves == 0) {
-					moves.put(left, MoveRegistry.CASTLE);
+					moves.put(left, MoveRegistry.CASTLE.get());
 				}
 			} else if (piece1 == NullPiece.INSTANCE) {
 				Cell left2 = left1.subtract(Cell.ONE_ZERO);
 				if (matrix.isInBounds(left2)) {
-					AbstractPiece piece2 = matrix.get(left2);
+					AbstractServerPiece piece2 = matrix.get(left2);
 					if (piece2 instanceof RookPiece rook2) {
 						if (rook2.totalMoves == 0) {
-							moves.put(left, MoveRegistry.CASTLE);
+							moves.put(left, MoveRegistry.CASTLE.get());
 						}
 					}
 				}
@@ -87,18 +87,18 @@ public class KingPiece extends AbstractPiece {
 		Cell right = from.add(new Cell(2, 0));
 		Cell right1 = from.add(new Cell(3, 0));
 		if (rightClearPath && matrix.isInBounds(right1)) {
-			AbstractPiece piece1 = matrix.get(right1);
+			AbstractServerPiece piece1 = matrix.get(right1);
 			if (piece1 instanceof RookPiece rook1) {
 				if (rook1.totalMoves == 0) {
-					moves.put(right, MoveRegistry.CASTLE);
+					moves.put(right, MoveRegistry.CASTLE.get());
 				}
 			} else if (piece1 == NullPiece.INSTANCE) {
 				Cell right2 = right1.add(Cell.ONE_ZERO);
 				if (matrix.isInBounds(right2)) {
-					AbstractPiece piece2 = matrix.get(right2);
+					AbstractServerPiece piece2 = matrix.get(right2);
 					if (piece2 instanceof RookPiece rook2) {
 						if (rook2.totalMoves == 0) {
-							moves.put(right, MoveRegistry.CASTLE);
+							moves.put(right, MoveRegistry.CASTLE.get());
 						}
 					}
 				}
