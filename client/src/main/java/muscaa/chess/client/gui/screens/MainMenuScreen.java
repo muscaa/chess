@@ -11,7 +11,6 @@ import muscaa.chess.client.gui.widgets.WTable;
 import muscaa.chess.client.gui.widgets.WTextButton;
 import muscaa.chess.client.registries.FontRegistry;
 import muscaa.chess.client.registries.TextureRegistry;
-import muscaa.chess.client.utils.WindowUtils;
 
 public class MainMenuScreen extends GuiScreen {
 	
@@ -60,30 +59,30 @@ public class MainMenuScreen extends GuiScreen {
 	
 	private void row1(WTable row) {
 		WTextButton offlineButton = new WTextButton("Offline");
-		offlineButton.addActionListener(w -> Client.INSTANCE.guiLayer.setScreen(null));
+		offlineButton.addActionListener(w -> chess.setScreen(null));
 		offlineButton.setDisabled(true);
 		row.add(offlineButton);
 	}
 	
 	private void row2(WTable row) {
 		WTextButton onlineButton = new WTextButton("Online");
-		onlineButton.addActionListener(w -> Client.INSTANCE.guiLayer.setScreen(new OnlineScreen(this)));
+		onlineButton.addActionListener(w -> chess.setScreen(new OnlineScreen(this)));
 		row.add(onlineButton);
 	}
 	
 	private void row3(WTable row) {
 		WTextButton modsButton = new WTextButton("Mods");
-		modsButton.addActionListener(w -> Client.INSTANCE.guiLayer.setScreen(new OptionsScreen(this)));
+		modsButton.addActionListener(w -> chess.setScreen(new OptionsScreen(this)));
 		row.add(modsButton);
 		
 		WTextButton optionsButton = new WTextButton("Options");
-		optionsButton.addActionListener(w -> Client.INSTANCE.guiLayer.setScreen(new OptionsScreen(this)));
+		optionsButton.addActionListener(w -> chess.setScreen(new OptionsScreen(this)));
 		row.add(optionsButton);
 	}
 	
 	private void row4(WTable row) {
 		WTextButton exitButton = new WTextButton("Exit");
-		exitButton.addActionListener(w -> WindowUtils.exit());
+		exitButton.addActionListener(w -> Client.INSTANCE.exit());
 		row.add(exitButton);
 	}
 	

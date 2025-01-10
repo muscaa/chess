@@ -28,6 +28,7 @@ public abstract class GuiScreen implements ILayerWrapper {
 	public static final int PAD_MEDIUM = 20;
 	public static final int PAD_SMALL = 4;
 	
+	protected Client chess;
 	protected Viewport viewport;
 	protected Stage stage;
 	private ILayer stageLayer;
@@ -79,7 +80,8 @@ public abstract class GuiScreen implements ILayerWrapper {
 		texture.draw(x, y, width, height);
 	}
 	
-	void init(Viewport viewport) {
+	public void init(Client chess, Viewport viewport) {
+		this.chess = chess;
 		this.viewport = viewport;
 		
 		stage = new Stage(viewport);

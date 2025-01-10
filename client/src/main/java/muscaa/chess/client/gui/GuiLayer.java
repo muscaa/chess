@@ -7,20 +7,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.kotcrab.vis.ui.VisUI;
 
 import muscaa.chess.client.Client;
-import muscaa.chess.client.gui.screens.MainMenuScreen;
 import muscaa.chess.client.layer.ILayer;
 import muscaa.chess.client.layer.ILayerWrapper;
 import muscaa.chess.client.layer.LayerUtils;
 import muscaa.chess.client.registries.FontRegistry;
-import muscaa.chess.client.utils.Screen;
 
 public class GuiLayer implements ILayerWrapper {
 	
+	private final Client chess;
     private final Skin skin;
     
-    private GuiScreen screen;
-	
-	public GuiLayer() {
+	public GuiLayer(Client chess) {
+		this.chess = chess;
+		
         skin = new Skin();
         VisUI.load(skin);
         
@@ -34,36 +33,17 @@ public class GuiLayer implements ILayerWrapper {
 	
 	@Override
 	public boolean hover(int mouseX, int mouseY) {
-		return screen != null;
+		return chess.getScreen() != null;
 	}
 	
 	@Override
 	public ILayer getWrappedLayer() {
-		return screen != null ? screen : LayerUtils.EMPTY;
-	}
-	
-	public GuiScreen getScreen() {
-		return screen;
-	}
-	
-	public void setScreen(GuiScreen newScreen) {
-		if (screen != null) {
-			screen.dispose();
-		}
-		
-		screen = newScreen;
-		if (screen == null) {
-			if (Client.INSTANCE.boardLayer.isInGame()) return;
-			
-			screen = new MainMenuScreen();
-		}
-		
-		screen.init(Screen.VIEWPORT);
+		return chess.getScreen() != null ? chess.getScreen() : LayerUtils.EMPTY;
 	}
 	
 	@Override
 	public void dispose() {
-		setScreen(null);
+		chess.setScreen(null);
 		VisUI.dispose();
 	}
 }

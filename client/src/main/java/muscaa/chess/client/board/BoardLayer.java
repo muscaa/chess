@@ -30,6 +30,8 @@ import muscaa.chess.registry.registries.TeamRegistry;
 
 public class BoardLayer implements ILayer {
     
+	private final Client chess;
+	
 	private boolean inGame;
     private ClientMatrix matrix;
     private Team team;
@@ -38,6 +40,10 @@ public class BoardLayer implements ILayer {
     private float tileSize;
     private float boardX, boardY;
 	
+    public BoardLayer(Client chess) {
+    	this.chess = chess;
+	}
+    
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
 		if (!isReady()) return;
@@ -159,7 +165,7 @@ public class BoardLayer implements ILayer {
 		highlights.clear();
 		
 		TaskManager.render(() -> {
-			Client.INSTANCE.guiLayer.setScreen(null);
+			chess.setScreen(null);
 		});
 	}
 	
@@ -192,7 +198,7 @@ public class BoardLayer implements ILayer {
 	
 	public void onPacketEndGame(CPacketGameEnd packet) {
 		TaskManager.render(() -> {
-			Client.INSTANCE.guiLayer.setScreen(new DisconnectedScreen(
+			chess.setScreen(new DisconnectedScreen(
 					packet.getWinner() == TeamRegistry.NULL ? "Stalemate"
 					: packet.getWinner() == team ? "You win"
 							: "Opponent wins"));

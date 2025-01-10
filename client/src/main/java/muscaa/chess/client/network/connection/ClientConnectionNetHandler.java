@@ -17,7 +17,7 @@ public class ClientConnectionNetHandler extends ClientCommonNetHandler implement
 		client.setContext(ClientContexts.LOGIN_CONTEXT, new ClientLoginNetHandler());
 		
 		TaskManager.render(() -> {
-			Client.INSTANCE.guiLayer.setScreen(new LoginFormScreen(client, Client.INSTANCE.guiLayer.getScreen()));
+			Client.INSTANCE.setScreen(new LoginFormScreen(client, Client.INSTANCE.getScreen()));
 		});
 	}
 }

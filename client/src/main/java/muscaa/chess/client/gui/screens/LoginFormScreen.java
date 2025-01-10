@@ -66,7 +66,7 @@ public class LoginFormScreen extends GuiScreen {
 			client.send(new CPacketLogin(nameField.getText(), passwordField.getText()));
 			client.update(NetworkStatus.LOGIN);
 			
-			Client.INSTANCE.guiLayer.setScreen(continueScreen);
+			chess.setScreen(continueScreen);
 		});
 		content.add(loginButton);
 		content.row();

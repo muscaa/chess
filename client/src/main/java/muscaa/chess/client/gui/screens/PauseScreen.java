@@ -13,12 +13,12 @@ public class PauseScreen extends GuiScreen {
 		content.defaults().growX().pad(PAD_SMALL).minHeight(BUTTON_HEIGHT);
 		
 		WTextButton resumeButton = new WTextButton("Resume");
-		resumeButton.addActionListener(w -> Client.INSTANCE.guiLayer.setScreen(null));
+		resumeButton.addActionListener(w -> chess.setScreen(null));
 		content.add(resumeButton);
 		content.row();
 		
 		WTextButton optionsButton = new WTextButton("Options");
-		optionsButton.addActionListener(w -> Client.INSTANCE.guiLayer.setScreen(new OptionsScreen(this)));
+		optionsButton.addActionListener(w -> chess.setScreen(new OptionsScreen(this)));
 		content.add(optionsButton);
 		content.row();
 		

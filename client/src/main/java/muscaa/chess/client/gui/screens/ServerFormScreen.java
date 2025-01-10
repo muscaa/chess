@@ -3,7 +3,6 @@ package muscaa.chess.client.gui.screens;
 import com.kotcrab.vis.ui.util.IntDigitsOnlyFilter;
 
 import fluff.functions.gen.obj.obj._int.VoidFunc3ObjObjInt;
-import muscaa.chess.client.Client;
 import muscaa.chess.client.gui.ChildGuiScreen;
 import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.widgets.WPanel;
@@ -93,13 +92,13 @@ public class ServerFormScreen extends ChildGuiScreen {
 		addButton = new WTextButton(submitText);
 		addButton.addActionListener(w -> {
 			onSubmit.invoke(nameField.getText(), addressField.getText(), Integer.parseInt(portField.getText()));
-			Client.INSTANCE.guiLayer.setScreen(parent);
+			chess.setScreen(parent);
 		});
 		content.add(addButton);
 		content.row();
 		
 		WTextButton cancelButton = new WTextButton("Cancel");
-		cancelButton.addActionListener(w -> Client.INSTANCE.guiLayer.setScreen(parent));
+		cancelButton.addActionListener(w -> chess.setScreen(parent));
 		content.add(cancelButton);
 		content.row();
 		

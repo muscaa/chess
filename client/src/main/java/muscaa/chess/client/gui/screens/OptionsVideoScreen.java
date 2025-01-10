@@ -5,9 +5,9 @@ import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.widgets.WTable;
 import muscaa.chess.client.gui.widgets.WTextButton;
 
-public class OptionsScreen extends ChildGuiScreen {
+public class OptionsVideoScreen extends ChildGuiScreen {
 	
-	public OptionsScreen(GuiScreen parent) {
+	public OptionsVideoScreen(GuiScreen parent) {
 		super(parent);
 	}
 	
@@ -16,19 +16,9 @@ public class OptionsScreen extends ChildGuiScreen {
 		WTable content = new WTable();
 		content.defaults().growX().pad(PAD_SMALL).minHeight(BUTTON_HEIGHT);
 		
-		WTextButton videoButton = new WTextButton("Video");
-		videoButton.addActionListener(w -> chess.setScreen(new OptionsVideoScreen(this)));
-		content.add(videoButton);
-		content.row();
-		
-		WTextButton soundButton = new WTextButton("Sound");
-		soundButton.addActionListener(w -> chess.setScreen(parent));
-		content.add(soundButton);
-		content.row();
-		
-		WTextButton themeButton = new WTextButton("Theme");
-		themeButton.addActionListener(w -> chess.setScreen(parent));
-		content.add(themeButton);
+		WTextButton fullscreenButton = new WTextButton("Toggle Fullscreen");
+		fullscreenButton.addActionListener(w -> chess.toggleFullscreen());
+		content.add(fullscreenButton);
 		content.row();
 		
 		content.add();

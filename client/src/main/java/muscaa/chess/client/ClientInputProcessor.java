@@ -6,29 +6,34 @@ import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.screens.PauseScreen;
 import muscaa.chess.client.layer.ILayer;
 import muscaa.chess.client.layer.LayerInputProcessor;
-import muscaa.chess.client.utils.WindowUtils;
 
 public class ClientInputProcessor extends LayerInputProcessor {
 	
+	private final Client chess;
+	
+	public ClientInputProcessor(Client chess) {
+		this.chess = chess;
+	}
+	
 	@Override
 	protected ILayer getLayer() {
-		return Client.INSTANCE.layerManager;
+		return chess.layerManager;
 	}
 	
 	@Override
 	public boolean keyUp(int keycode) {
 		switch (keycode) {
 			case Keys.F11:
-				WindowUtils.toggleFullscreen();
+				Client.INSTANCE.toggleFullscreen();
 				return true;
 				
 			case Keys.ESCAPE:
-				if (!Client.INSTANCE.boardLayer.isInGame()) break;
+				if (!chess.boardLayer.isInGame()) break;
 				
-				GuiScreen screen = Client.INSTANCE.guiLayer.getScreen();
+				GuiScreen screen = Client.INSTANCE.getScreen();
 				screen = screen == null ? new PauseScreen() : null;
 				
-				Client.INSTANCE.guiLayer.setScreen(screen);
+				chess.setScreen(screen);
 				
 				return true;
 		}

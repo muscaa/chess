@@ -3,7 +3,6 @@ package muscaa.chess.client.gui.screens;
 import com.kotcrab.vis.ui.util.IntDigitsOnlyFilter;
 
 import fluff.functions.gen._int.VoidFunc1Int;
-import muscaa.chess.client.Client;
 import muscaa.chess.client.gui.ChildGuiScreen;
 import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.widgets.WPanel;
@@ -70,7 +69,7 @@ public class LanGameFormScreen extends ChildGuiScreen {
 		content.row();
 		
 		WTextButton cancelButton = new WTextButton("Cancel");
-		cancelButton.addActionListener(w -> Client.INSTANCE.guiLayer.setScreen(parent));
+		cancelButton.addActionListener(w -> chess.setScreen(parent));
 		content.add(cancelButton);
 		content.row();
 		

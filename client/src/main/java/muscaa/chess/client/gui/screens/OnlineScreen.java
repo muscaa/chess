@@ -9,7 +9,6 @@ import com.kotcrab.vis.ui.VisUI;
 
 import fluff.network.NetworkException;
 import muscaa.chess.Server;
-import muscaa.chess.client.Client;
 import muscaa.chess.client.config.ServersConfig;
 import muscaa.chess.client.gui.ChildGuiScreen;
 import muscaa.chess.client.gui.GuiScreen;
@@ -62,7 +61,7 @@ public class OnlineScreen extends ChildGuiScreen {
 		content.top();
 		
 		group = new ButtonGroup<>();
-		for (ServersConfig.Server server : Client.INSTANCE.serversConfig) {
+		for (ServersConfig.Server server : chess.serversConfig) {
             Button button = serverEntry(server);
             group.add(button);
             content.add(button);
@@ -96,20 +95,20 @@ public class OnlineScreen extends ChildGuiScreen {
 		
         joinButton = new WTextButton("Join");
         joinButton.addActionListener(w -> {
-        	ServersConfig.Server server = Client.INSTANCE.serversConfig.get(group.getCheckedIndex());
+        	ServersConfig.Server server = chess.serversConfig.get(group.getCheckedIndex());
         	try {
-				Client.INSTANCE.networkClient.connect(server);
+				chess.networkClient.connect(server);
 			} catch (IOException | NetworkException e) {
 				e.printStackTrace();
 				
-				Client.INSTANCE.guiLayer.setScreen(new DisconnectedScreen(e.toString()));
+				chess.setScreen(new DisconnectedScreen(e.toString()));
 			}
         });
         row1.add(joinButton);
         
         WTextButton lanGameButton = new WTextButton("LAN Game");
         lanGameButton.addActionListener(w -> {
-        	Client.INSTANCE.guiLayer.setScreen(new LanGameFormScreen(this, port -> {
+        	chess.setScreen(new LanGameFormScreen(this, port -> {
         		try {
         			if (Server.INSTANCE.getNetwork() != null && Server.INSTANCE.getNetwork().getServer().isRunning()) {
         				Server.INSTANCE.stop();
@@ -119,7 +118,7 @@ public class OnlineScreen extends ChildGuiScreen {
 				} catch (NetworkException e) {
 					e.printStackTrace();
 					
-					Client.INSTANCE.guiLayer.setScreen(new DisconnectedScreen(e.toString()));
+					chess.setScreen(new DisconnectedScreen(e.toString()));
 				}
         	}));
         });
@@ -127,8 +126,8 @@ public class OnlineScreen extends ChildGuiScreen {
         
 		WTextButton add = new WTextButton("Add");
 		add.addActionListener(w -> {
-			Client.INSTANCE.guiLayer.setScreen(new ServerFormScreen(this, "Add", (name, address, port) -> {
-				Client.INSTANCE.serversConfig.add(name, address, port);
+			chess.setScreen(new ServerFormScreen(this, "Add", (name, address, port) -> {
+				chess.serversConfig.add(name, address, port);
 			}));
 		});
         row1.add(add);
@@ -138,20 +137,20 @@ public class OnlineScreen extends ChildGuiScreen {
 		
 		editButton = new WTextButton("Edit");
 		editButton.addActionListener(w -> {
-			ServersConfig.Server server = Client.INSTANCE.serversConfig.get(group.getCheckedIndex());
-			Client.INSTANCE.guiLayer.setScreen(new ServerFormScreen(this, "Edit", server.name, server.address, server.port, (name, address, port) -> {
+			ServersConfig.Server server = chess.serversConfig.get(group.getCheckedIndex());
+			chess.setScreen(new ServerFormScreen(this, "Edit", server.name, server.address, server.port, (name, address, port) -> {
 				server.name = name;
 				server.address = address;
 				server.port = port;
-				Client.INSTANCE.serversConfig.save();
+				chess.serversConfig.save();
 			}));
 		});
         row2.add(editButton);
         
         deleteButton = new WTextButton("Delete");
         deleteButton.addActionListener(w -> {
-        	Client.INSTANCE.serversConfig.remove(group.getCheckedIndex());
-        	Client.INSTANCE.guiLayer.setScreen(this);
+        	chess.serversConfig.remove(group.getCheckedIndex());
+        	chess.setScreen(this);
         });
         row2.add(deleteButton);
         
@@ -162,7 +161,7 @@ public class OnlineScreen extends ChildGuiScreen {
         row2.add(refreshButton);
         
 		WTextButton cancelButton = new WTextButton("Cancel");
-		cancelButton.addActionListener(w -> Client.INSTANCE.guiLayer.setScreen(parent));
+		cancelButton.addActionListener(w -> chess.setScreen(parent));
         row2.add(cancelButton);
         
         WTable footer = new WTable();
