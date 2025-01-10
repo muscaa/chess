@@ -1,18 +1,25 @@
 package muscaa.chess.client.config;
 
-import muscaa.chess.client.Client;
+import java.io.File;
 
-public class Settings {
+import muscaa.chess.client.Client;
+import muscaa.chess.config.values.IValueBoolean;
+import muscaa.chess.config.values.IValueFloat;
+import muscaa.chess.config.yaml.YamlConfig;
+
+public class Settings extends YamlConfig {
 	
-	public boolean fullscreen = false;
+	private Client chess;
 	
-	public void onLoad(Client instance) {
-		if (fullscreen) {
-			instance.toggleFullscreen();
-		}
-	}
+	public final IValueBoolean fullscreen = Boolean("fullscreen", false)
+			.addListener(v -> chess.setFullscreen(v.get()));
+	public final IValueFloat masterVolume = Float("masterVolume", 1.0F);
+	public final IValueFloat musicVolume = Float("musicVolume", 1.0F);
+	public final IValueFloat soundVolume = Float("soundVolume", 1.0F);
 	
-	public void onSave(Client instance) {
+	public Settings(Client chess) {
+		super(new File("settings.yml"));
 		
+		this.chess = chess;
 	}
 }

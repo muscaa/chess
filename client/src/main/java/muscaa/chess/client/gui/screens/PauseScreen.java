@@ -1,6 +1,5 @@
 package muscaa.chess.client.gui.screens;
 
-import muscaa.chess.client.Client;
 import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.widgets.WTable;
 import muscaa.chess.client.gui.widgets.WTextButton;
@@ -22,7 +21,7 @@ public class PauseScreen extends GuiScreen {
 		content.add(optionsButton);
 		content.row();
 		
-		if (Client.INSTANCE.boardLayer.isInGame()) {
+		if (chess.isInGame()) {
 			WTextButton surrenderButton = new WTextButton("Surrender");
 			surrenderButton.addActionListener(w -> {
 				
@@ -35,7 +34,7 @@ public class PauseScreen extends GuiScreen {
 		content.row();
 		
 		WTextButton mainMenuButton = new WTextButton("Return to Main Menu");
-		mainMenuButton.addActionListener(w -> Client.INSTANCE.returnToMainMenu());
+		mainMenuButton.addActionListener(w -> chess.returnToMainMenu());
 		content.add(mainMenuButton);
 		content.row();
 		

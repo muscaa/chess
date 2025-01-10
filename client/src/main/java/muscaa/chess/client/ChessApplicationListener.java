@@ -6,7 +6,7 @@ public class ChessApplicationListener implements ApplicationListener {
 	
 	@Override
 	public void create() {
-		Client.INSTANCE.returnToMainMenu();
+		Client.INSTANCE.init();
 	}
 	
 	@Override

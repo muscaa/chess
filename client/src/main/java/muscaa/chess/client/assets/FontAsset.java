@@ -13,15 +13,15 @@ import muscaa.chess.utils.NamespacePath;
 
 public class FontAsset implements IRegistryEntry {
 	
-	private final FontAsset parent;
 	private final NamespacePath id;
+	private final FontAsset parent;
 	private final FreeTypeFontGenerator generator;
 	private final BitmapFont font;
 	private final GlyphLayout layout = new GlyphLayout();
 	
 	public FontAsset(NamespacePath id, String path, int size) {
-		this.parent = null;
 		this.id = id;
+		this.parent = null;
 		
 		if (path == null) {
 			this.font = null;
@@ -32,9 +32,9 @@ public class FontAsset implements IRegistryEntry {
 		}
 	}
 	
-	private FontAsset(FontAsset parent, NamespacePath id, BitmapFont font) {
-		this.parent = parent;
+	private FontAsset(NamespacePath id, FontAsset parent, BitmapFont font) {
 		this.id = id;
+		this.parent = parent;
 		this.generator = null;
 		this.font = font;
 	}
@@ -49,7 +49,7 @@ public class FontAsset implements IRegistryEntry {
 	}
 	
 	public FontAsset derive(NamespacePath id, int size) {
-		return new FontAsset(this, id, generate(size));
+		return new FontAsset(id, this, generate(size));
 	}
 	
 	public void dispose() {

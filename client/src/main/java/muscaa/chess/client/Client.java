@@ -1,11 +1,5 @@
 package muscaa.chess.client;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.PrintWriter;
-
-import org.yaml.snakeyaml.Yaml;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
@@ -21,6 +15,7 @@ import muscaa.chess.client.gui.screens.MainMenuScreen;
 import muscaa.chess.client.layer.LayerManager;
 import muscaa.chess.client.network.ChessClient;
 import muscaa.chess.client.registries.FontRegistry;
+import muscaa.chess.client.registries.SoundCategoryRegistry;
 import muscaa.chess.client.registries.SoundRegistry;
 import muscaa.chess.client.registries.TextureRegistry;
 import muscaa.chess.client.utils.Screen;
@@ -42,11 +37,11 @@ public class Client {
 	public final ChessClient networkClient;
 	
 	public final ServersConfig serversConfig;
-	private Settings settings;
+	private final Settings settings;
 	
 	private GuiScreen screen;
 	
-	Client() {
+	private Client() {
 		int width = Gdx.graphics.getWidth();
 		int height = Gdx.graphics.getHeight();
 		
@@ -57,9 +52,8 @@ public class Client {
     	
     	Chess.init();
     	
-    	FontRegistry.init();
-    	TextureRegistry.init();
-    	SoundRegistry.init();
+    	settings = new Settings(this);
+    	settings.load();
     	
     	boardLayer = new BoardLayer(this);
     	layerManager.register(boardLayer);
@@ -71,9 +65,15 @@ public class Client {
     	
     	serversConfig = new ServersConfig();
     	serversConfig.load();
+	}
+	
+	public void init() {
+    	FontRegistry.init();
+    	TextureRegistry.init();
+    	SoundCategoryRegistry.init();
+    	SoundRegistry.init();
     	
-    	//settingsYaml = new Yaml(new Constructor(Settings.class, new LoaderOptions()));
-    	loadSettings();
+    	returnToMainMenu();
 	}
 	
 	public void render() {
@@ -97,7 +97,7 @@ public class Client {
 	}
 	
 	public void dispose() {
-		saveSettings();
+		settings.save();
 		
 		layerManager.dispose();
 		
@@ -128,27 +128,23 @@ public class Client {
 	}
 	
 	public void returnToMainMenu() {
-		//SoundRegistry.AMBIENT.play();
+		SoundRegistry.AMBIENT.loopSingle();
 		
 		networkClient.disconnect();
 		boardLayer.disconnect();
 		setScreen(new MainMenuScreen());
 	}
 	
-	public void toggleFullscreen() {
+	public void setFullscreen(boolean fullscreen) {
     	if (!Gdx.graphics.supportsDisplayModeChange()) return;
     	
-    	if (Gdx.graphics.isFullscreen()) {
+    	if (Gdx.graphics.isFullscreen() && !fullscreen) {
     		Gdx.graphics.setWindowedMode(lastWidth, lastHeight);
-    		
-    		settings.fullscreen = false;
-    	} else {
+    	} else if (!Gdx.graphics.isFullscreen() && fullscreen) {
     		lastWidth = Gdx.graphics.getWidth();
     		lastHeight = Gdx.graphics.getHeight();
     		
     		Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
-    		
-    		settings.fullscreen = true;
     	}
 	}
 	
@@ -160,33 +156,7 @@ public class Client {
 		return settings;
 	}
 	
-	public void loadSettings() {
-		File file = new File("settings.yml");
-		if (!file.exists()) {
-			settings = new Settings();
-			settings.onLoad(this);
-			saveSettings();
-			return;
-		}
-		
-		try (FileInputStream fis = new FileInputStream(file)) {
-			Yaml yaml = new Yaml();
-			settings = yaml.loadAs(fis, Settings.class);
-		} catch (Exception e) {
-			e.printStackTrace();
-			settings = new Settings();
-		}
-		settings.onLoad(this);
-	}
-	
-	public void saveSettings() {
-		File file = new File("settings.yml");
-		try (PrintWriter pw = new PrintWriter(file)) {
-			Yaml yaml = new Yaml();
-			settings.onSave(this);
-			pw.println(yaml.dumpAsMap(settings));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public boolean isInGame() {
+		return boardLayer.isInGame();
 	}
 }

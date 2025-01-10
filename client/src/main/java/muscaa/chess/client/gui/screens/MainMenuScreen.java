@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Align;
 
 import muscaa.chess.Chess;
-import muscaa.chess.client.Client;
 import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.widgets.WLabel;
 import muscaa.chess.client.gui.widgets.WTable;
@@ -82,7 +81,7 @@ public class MainMenuScreen extends GuiScreen {
 	
 	private void row4(WTable row) {
 		WTextButton exitButton = new WTextButton("Exit");
-		exitButton.addActionListener(w -> Client.INSTANCE.exit());
+		exitButton.addActionListener(w -> chess.exit());
 		row.add(exitButton);
 	}
 	

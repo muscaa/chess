@@ -19,8 +19,8 @@ public class Registry<E extends IRegistryEntry> {
 		this.onDispose = onDispose;
 	}
 	
-	public Map<NamespacePath, E> getContents() {
-		return Map.copyOf(reg);
+	public void forEach(VoidFunc1<E> consumer) {
+		reg.forEach((id, entry) -> consumer.invoke(entry));
 	}
 	
 	public boolean contains(NamespacePath id) {

@@ -2,7 +2,6 @@ package muscaa.chess.client.gui.screens;
 
 import com.badlogic.gdx.utils.Align;
 
-import muscaa.chess.client.Client;
 import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.widgets.WLabel;
 import muscaa.chess.client.gui.widgets.WTable;
@@ -31,7 +30,7 @@ public class DisconnectedScreen extends GuiScreen {
 		content.row();
 		
 		WTextButton mainMenuButton = new WTextButton("Return to Main Menu");
-		mainMenuButton.addActionListener(w -> Client.INSTANCE.returnToMainMenu());
+		mainMenuButton.addActionListener(w -> chess.returnToMainMenu());
 		content.add(mainMenuButton);
 		content.row();
 		

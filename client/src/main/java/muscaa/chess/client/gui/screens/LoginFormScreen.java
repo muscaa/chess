@@ -1,6 +1,5 @@
 package muscaa.chess.client.gui.screens;
 
-import muscaa.chess.client.Client;
 import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.widgets.WPanel;
 import muscaa.chess.client.gui.widgets.WTable;
@@ -72,7 +71,7 @@ public class LoginFormScreen extends GuiScreen {
 		content.row();
 		
 		WTextButton mainMenuButton = new WTextButton("Return to Main Menu");
-		mainMenuButton.addActionListener(w -> Client.INSTANCE.returnToMainMenu());
+		mainMenuButton.addActionListener(w -> chess.returnToMainMenu());
 		content.add(mainMenuButton);
 		content.row();
 		

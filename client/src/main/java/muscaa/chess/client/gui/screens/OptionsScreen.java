@@ -22,7 +22,7 @@ public class OptionsScreen extends ChildGuiScreen {
 		content.row();
 		
 		WTextButton soundButton = new WTextButton("Sound");
-		soundButton.addActionListener(w -> chess.setScreen(parent));
+		soundButton.addActionListener(w -> chess.setScreen(new OptionsSoundScreen(this)));
 		content.add(soundButton);
 		content.row();
 		
@@ -44,5 +44,13 @@ public class OptionsScreen extends ChildGuiScreen {
 		main.add(content);
 		
 		stage.addActor(main);
+	}
+	
+	@Override
+	public void dispose() {
+		///chess.saveSettings();
+		chess.getSettings().save();
+		
+		super.dispose();
 	}
 }

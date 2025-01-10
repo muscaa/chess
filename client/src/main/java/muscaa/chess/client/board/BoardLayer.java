@@ -152,7 +152,7 @@ public class BoardLayer implements ILayer {
             }
             
             if (mouseX >= x && mouseY >= y && mouseX < x + tileSize && mouseY < y + tileSize) {
-            	Client.INSTANCE.networkClient.send(new CPacketClickCell(niceCell));
+            	chess.networkClient.send(new CPacketClickCell(niceCell));
             	return true;
             }
 		}
@@ -208,7 +208,7 @@ public class BoardLayer implements ILayer {
 	}
 	
 	public void disconnect() {
-		Client.INSTANCE.networkClient.disconnect();
+		chess.networkClient.disconnect();
 		
 		inGame = false;
 		matrix = null;
