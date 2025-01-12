@@ -13,7 +13,7 @@ import muscaa.chess.client.assets.TextureRegistry;
 import muscaa.chess.client.board.AbstractBoard;
 import muscaa.chess.client.board.BoardLayer;
 import muscaa.chess.client.config.ServersConfig;
-import muscaa.chess.client.config.Settings;
+import muscaa.chess.client.config.SettingsConfig;
 import muscaa.chess.client.gui.GuiLayer;
 import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.screens.MainMenuScreen;
@@ -27,7 +27,7 @@ public class Client {
 	public static final Client INSTANCE = new Client();
 	
 	public final ServersConfig serversConfig;
-	public final Settings settings;
+	public final SettingsConfig settingsConfig;
 	
 	public final LayerManager layerManager;
 	
@@ -43,7 +43,7 @@ public class Client {
 		
 		Screen.init(width, height);
 		
-		settings = new Settings(this);
+		settingsConfig = new SettingsConfig(this);
 		serversConfig = new ServersConfig();
 		
 		layerManager = new LayerManager();
@@ -69,7 +69,7 @@ public class Client {
 		
     	returnToMainMenu();
 		
-    	settings.load();
+    	settingsConfig.load();
     	//serversConfig.load();
 	}
 	
@@ -141,7 +141,7 @@ public class Client {
 	}
 	
 	public void dispose() {
-		settings.save();
+		settingsConfig.save();
 		
 		layerManager.dispose();
 		

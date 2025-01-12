@@ -18,7 +18,7 @@ public class SoundCategoryValue implements IRegistryValue<SoundCategoryValue> {
 	public float getVolume() {
 		if (func == null) return 0.0F;
 		
-		return Client.INSTANCE.settings.masterVolume.get() * func.invoke();
+		return Client.INSTANCE.settingsConfig.masterVolume.get() * func.invoke();
 	}
 	
 	@Override

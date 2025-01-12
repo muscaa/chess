@@ -13,9 +13,9 @@ public class SoundCategoryRegistry {
 	public static final RegistryKey<SoundCategoryValue> NULL = REG.register(Chess.NAMESPACE.path("null"),
 			key -> new SoundCategoryValue(key, null));
 	public static final RegistryKey<SoundCategoryValue> SOUND = REG.register(Chess.NAMESPACE.path("sound"),
-			key -> new SoundCategoryValue(key, Client.INSTANCE.settings.soundVolume::get));
+			key -> new SoundCategoryValue(key, Client.INSTANCE.settingsConfig.soundVolume::get));
 	public static final RegistryKey<SoundCategoryValue> MUSIC = REG.register(Chess.NAMESPACE.path("music"),
-			key -> new SoundCategoryValue(key, Client.INSTANCE.settings.musicVolume::get));
+			key -> new SoundCategoryValue(key, Client.INSTANCE.settingsConfig.musicVolume::get));
 	
 	public static void init() {
 		REG.init();

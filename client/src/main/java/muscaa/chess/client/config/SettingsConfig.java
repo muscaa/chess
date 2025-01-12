@@ -8,7 +8,7 @@ import muscaa.chess.config.values.IValueBoolean;
 import muscaa.chess.config.values.IValueFloat;
 import muscaa.chess.config.yaml.YamlConfig;
 
-public class Settings extends YamlConfig {
+public class SettingsConfig extends YamlConfig {
 	
 	public final IValueBoolean fullscreen = Boolean("fullscreen", false)
 			.addListener(v -> WindowUtils.setFullscreen(v.get()));
@@ -16,7 +16,7 @@ public class Settings extends YamlConfig {
 	public final IValueFloat musicVolume = Float("musicVolume", 1.0F);
 	public final IValueFloat soundVolume = Float("soundVolume", 1.0F);
 	
-	public Settings(Client chess) {
+	public SettingsConfig(Client chess) {
 		super(new File("settings.yml"));
 	}
 }

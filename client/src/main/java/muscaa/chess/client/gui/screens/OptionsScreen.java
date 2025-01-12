@@ -48,7 +48,7 @@ public class OptionsScreen extends ChildGuiScreen {
 	
 	@Override
 	public void dispose() {
-		chess.settings.save();
+		chess.settingsConfig.save();
 		
 		super.dispose();
 	}
