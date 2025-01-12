@@ -12,6 +12,7 @@ import muscaa.chess.client.assets.SoundRegistry;
 import muscaa.chess.client.assets.TextureRegistry;
 import muscaa.chess.client.board.AbstractBoard;
 import muscaa.chess.client.board.BoardLayer;
+import muscaa.chess.client.board.piece.ClientPieceRegistry;
 import muscaa.chess.client.config.ServersConfig;
 import muscaa.chess.client.config.SettingsConfig;
 import muscaa.chess.client.gui.GuiLayer;
@@ -63,6 +64,7 @@ public class Client {
     	TextureRegistry.init();
     	SoundCategoryRegistry.init();
     	SoundRegistry.init();
+    	ClientPieceRegistry.init();
     	
     	boardLayer.init();
     	guiLayer.init();
