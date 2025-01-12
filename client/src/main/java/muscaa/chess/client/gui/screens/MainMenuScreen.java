@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Align;
 import muscaa.chess.Chess;
 import muscaa.chess.client.assets.FontRegistry;
 import muscaa.chess.client.assets.TextureRegistry;
+import muscaa.chess.client.board.OfflineBoard;
 import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.widgets.WLabel;
 import muscaa.chess.client.gui.widgets.WTable;
@@ -59,8 +60,7 @@ public class MainMenuScreen extends GuiScreen {
 	
 	private void row1(WTable row) {
 		WTextButton offlineButton = new WTextButton("Offline");
-		offlineButton.addActionListener(w -> chess.setScreen(null));
-		offlineButton.setDisabled(true);
+		offlineButton.addActionListener(w -> chess.setBoard(new OfflineBoard()));
 		row.add(offlineButton);
 	}
 	

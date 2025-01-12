@@ -20,10 +20,10 @@ public class ServerConnectionNetHandler extends ServerCommonNetHandler implement
 		System.out.println("Received encrypt");
 		
 		// TODO allow multiple people on the server using lobbies
-		if (server.getTotalPlayers() >= 2) {
+		/*if (server.getTotalPlayers() >= 2) {
 			connection.disconnect("Server is full!");
 			return;
-		}
+		}*/
 		
 		connection.send(new SPacketHandshake(packet.getKey()));
 		connection.setChannel(new EncryptedPacketChannel(packet.getKey()));

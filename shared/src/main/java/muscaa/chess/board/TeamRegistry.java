@@ -12,6 +12,7 @@ public class TeamRegistry {
 	public static final RegistryKey<TeamValue> NULL = REG.register(Chess.NAMESPACE.path("null"), TeamValue::new);
 	public static final RegistryKey<TeamValue> WHITE = REG.register(Chess.NAMESPACE.path("white"), TeamValue::new);
 	public static final RegistryKey<TeamValue> BLACK = REG.register(Chess.NAMESPACE.path("black"), TeamValue::new);
+	public static final RegistryKey<TeamValue> SPECTATOR = REG.register(Chess.NAMESPACE.path("spectator"), TeamValue::new);
 	
 	public static void init() {
 		REG.init();

@@ -1,18 +1,18 @@
 package muscaa.chess;
 
 import fluff.network.NetworkException;
-import muscaa.chess.board.ServerBoard;
+import muscaa.chess.board.Lobby;
 import muscaa.chess.network.ServerNetwork;
 
 public class Server {
 	
 	public static final Server INSTANCE = new Server();
 	
-	private ServerBoard board; // TODO boards and lobbies
+	private Lobby lobby;
 	private ServerNetwork network;
 	
 	public void start() throws NetworkException {
-		board = new ServerBoard();
+		lobby = new Lobby();
 		
 		network = new ServerNetwork();
 		network.start();
@@ -22,8 +22,8 @@ public class Server {
 		network.stop();
 	}
 	
-	public ServerBoard getBoard() {
-		return board;
+	public Lobby getLobby() {
+		return lobby;
 	}
 	
 	public ServerNetwork getNetwork() {

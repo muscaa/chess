@@ -7,11 +7,13 @@ import fluff.network.packet.IPacketChannel;
 import fluff.network.packet.PacketContext;
 import fluff.network.server.AbstractClientConnection;
 import fluff.network.server.AbstractServer;
+import muscaa.chess.board.player.AbstractPlayer;
 import muscaa.chess.network.common.packets.PacketDisconnect;
 
 public class ChessClientConnection extends AbstractClientConnection {
 	
 	private UUID uuid;
+	private AbstractPlayer player;
 	
 	public ChessClientConnection(AbstractServer server, PacketContext<?> context, INetHandler handler, IPacketChannel channel) {
 		super(server);
@@ -29,6 +31,14 @@ public class ChessClientConnection extends AbstractClientConnection {
 	public void disconnect(String message) {
 		send(new PacketDisconnect(message));
 		disconnect();
+	}
+	
+	public AbstractPlayer getPlayer() {
+		return player;
+	}
+	
+	public void setPlayer(AbstractPlayer player) {
+		this.player = player;
 	}
 	
 	@Override
