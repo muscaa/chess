@@ -5,12 +5,12 @@ import java.io.IOException;
 import fluff.bin.IBinaryInput;
 import fluff.network.packet.IPacketInbound;
 
-public class PacketLogin implements IPacketInbound {
+public class SPacketLogin implements IPacketInbound {
 	
 	private String name;
 	private String password;
 	
-	public PacketLogin() {}
+	public SPacketLogin() {}
 	
 	@Override
 	public void readData(IBinaryInput in) throws IOException {

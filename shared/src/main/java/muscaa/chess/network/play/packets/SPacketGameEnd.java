@@ -7,16 +7,16 @@ import fluff.network.packet.IPacketOutbound;
 import muscaa.chess.board.TeamValue;
 import muscaa.chess.network.PacketOutputUtils;
 
-public class PacketTeam implements IPacketOutbound {
+public class SPacketGameEnd implements IPacketOutbound {
 	
-	private TeamValue team;
+	private TeamValue winner;
 	
-	public PacketTeam(TeamValue team) {
-		this.team = team;
+	public SPacketGameEnd(TeamValue winner) {
+		this.winner = winner;
 	}
 	
 	@Override
 	public void writeData(IBinaryOutput out) throws IOException {
-		PacketOutputUtils.regEntry(out, team);
+		PacketOutputUtils.regEntry(out, winner);
 	}
 }

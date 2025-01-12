@@ -24,11 +24,11 @@ public class ClientInputProcessor extends LayerInputProcessor {
 	public boolean keyUp(int keycode) {
 		switch (keycode) {
 			case Keys.F11:
-				chess.getSettings().fullscreen.toggle();
+				chess.settings.fullscreen.toggle();
 				return true;
 				
 			case Keys.ESCAPE:
-				if (!chess.isInGame()) break;
+				if (chess.getBoard() == null) break;
 				
 				GuiScreen screen = chess.getScreen();
 				screen = screen == null ? new PauseScreen() : null;

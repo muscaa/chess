@@ -6,8 +6,8 @@ import java.util.List;
 
 import fluff.bin.IBinaryInput;
 import fluff.network.packet.IPacketInbound;
-import muscaa.chess.client.board.ClientPiece;
-import muscaa.chess.client.board.ClientPieceRegistry;
+import muscaa.chess.client.board.piece.ClientPiece;
+import muscaa.chess.client.board.piece.ClientPieceRegistry;
 import muscaa.chess.network.PacketInputUtils;
 
 public class CPacketBoard implements IPacketInbound {

@@ -8,12 +8,12 @@ import javax.crypto.spec.SecretKeySpec;
 import fluff.bin.IBinaryInput;
 import fluff.network.packet.IPacketInbound;
 
-public class PacketEncrypt implements IPacketInbound {
+public class SPacketEncrypt implements IPacketInbound {
 	
 	private int protocolVersion;
 	private SecretKey key;
 	
-	public PacketEncrypt() {}
+	public SPacketEncrypt() {}
 	
 	@Override
 	public void readData(IBinaryInput in) throws IOException {

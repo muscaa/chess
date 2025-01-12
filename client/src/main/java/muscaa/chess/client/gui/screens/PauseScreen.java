@@ -21,7 +21,7 @@ public class PauseScreen extends GuiScreen {
 		content.add(optionsButton);
 		content.row();
 		
-		if (chess.isInGame()) {
+		if (chess.getBoard() != null) {
 			WTextButton surrenderButton = new WTextButton("Surrender");
 			surrenderButton.addActionListener(w -> {
 				

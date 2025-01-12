@@ -6,12 +6,12 @@ import java.util.LinkedList;
 import muscaa.chess.board.Cell;
 import muscaa.chess.board.piece.AbstractServerPiece;
 
-public class Matrix extends AbstractMatrix<AbstractServerPiece> {
+public class ServerMatrix extends AbstractMatrix<AbstractServerPiece> {
 	
 	protected final LinkedList<MatrixHistoryEntry> history = new LinkedList<>();
 	protected MatrixHistoryEntry historyEntry;
 	
-	public Matrix(int width, int height) {
+	public ServerMatrix(int width, int height) {
 		super(width, height);
 	}
 	

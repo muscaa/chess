@@ -1,4 +1,4 @@
-package muscaa.chess.client.board;
+package muscaa.chess.client.board.piece;
 
 import muscaa.chess.board.TeamValue;
 import muscaa.chess.board.piece.AbstractPieceValue;

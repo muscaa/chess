@@ -1,7 +1,5 @@
 package muscaa.chess.client.board;
 
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
@@ -13,30 +11,17 @@ import muscaa.chess.board.HighlightValue;
 import muscaa.chess.board.TeamRegistry;
 import muscaa.chess.board.TeamValue;
 import muscaa.chess.client.Client;
-import muscaa.chess.client.assets.SoundRegistry;
 import muscaa.chess.client.assets.TextureValue;
+import muscaa.chess.client.board.matrix.ClientMatrix;
+import muscaa.chess.client.board.piece.ClientPiece;
 import muscaa.chess.client.config.Theme;
-import muscaa.chess.client.gui.screens.DisconnectedScreen;
 import muscaa.chess.client.layer.ILayer;
-import muscaa.chess.client.network.play.packets.CPacketBoard;
-import muscaa.chess.client.network.play.packets.CPacketClickCell;
-import muscaa.chess.client.network.play.packets.CPacketGameEnd;
-import muscaa.chess.client.network.play.packets.CPacketGameStart;
-import muscaa.chess.client.network.play.packets.CPacketHighlightCells;
-import muscaa.chess.client.network.play.packets.CPacketTeam;
-import muscaa.chess.client.utils.Screen;
 import muscaa.chess.client.utils.Shapes;
-import muscaa.chess.client.utils.TaskManager;
 
 public class BoardLayer implements ILayer {
     
 	private final Client chess;
 	
-	private boolean inGame;
-    private ClientMatrix matrix;
-    private TeamValue team;
-    private List<Highlight> highlights = new LinkedList<>();
-    
     private float tileSize;
     private float boardX, boardY;
 	
@@ -44,9 +29,18 @@ public class BoardLayer implements ILayer {
     	this.chess = chess;
 	}
     
+    public void init() {}
+    
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
-		if (!isReady()) return;
+		if (chess.getBoard() == null) return;
+		
+		AbstractBoard board = chess.getBoard();
+		if (board.getMatrix() == null || board.getTeam() == null) return;
+		
+		ClientMatrix matrix = board.getMatrix();
+		TeamValue team = board.getTeam();
+		List<Highlight> highlights = board.getHighlights();
 		
 		// chess table
 		for (Cell cell : matrix) {
@@ -125,7 +119,12 @@ public class BoardLayer implements ILayer {
 	
 	@Override
 	public void resize(int width, int height) {
-		if (matrix == null) return;
+		if (chess.getBoard() == null) return;
+		
+		AbstractBoard board = chess.getBoard();
+		if (board.getMatrix() == null) return;
+		
+		ClientMatrix matrix = board.getMatrix();
 		
         tileSize = Math.min(width, height) / Math.max(matrix.getWidth(), matrix.getHeight());
         
@@ -135,12 +134,18 @@ public class BoardLayer implements ILayer {
 	
 	@Override
 	public boolean hover(int mouseX, int mouseY) {
-		return isReady();
+		return chess.getBoard() != null;
 	}
 	
 	@Override
 	public boolean mouseDown(int mouseX, int mouseY, int pointer, int button) {
-		if (!isReady()) return false;
+		if (chess.getBoard() == null) return false;
+		
+		AbstractBoard board = chess.getBoard();
+		if (board.getMatrix() == null || board.getTeam() == null) return false;
+		
+		ClientMatrix matrix = board.getMatrix();
+		TeamValue team = board.getTeam();
 		
 		for (Cell cell : matrix) {
             float x = boardX + cell.x * tileSize;
@@ -152,7 +157,7 @@ public class BoardLayer implements ILayer {
             }
             
             if (mouseX >= x && mouseY >= y && mouseX < x + tileSize && mouseY < y + tileSize) {
-            	chess.networkClient.send(new CPacketClickCell(niceCell));
+            	board.click(niceCell);
             	return true;
             }
 		}
@@ -160,67 +165,8 @@ public class BoardLayer implements ILayer {
 		return false;
 	}
 	
-	public void onPacketStartGame(CPacketGameStart packet) {
-		inGame = true;
-		highlights.clear();
-		
-		TaskManager.render(() -> {
-			chess.setScreen(null);
-		});
-	}
-	
-	public void onPacketBoard(CPacketBoard packet) {
-		if (matrix == null) {
-			matrix = new ClientMatrix(packet.getWidth(), packet.getHeight());
-		} else if (matrix.getWidth() != packet.getWidth() || matrix.getHeight() != packet.getHeight()) {
-			matrix.reset(packet.getWidth(), packet.getHeight());
-		}
-		
-		Iterator<ClientPiece> it = packet.getPieces().iterator();
-		for (Cell cell : matrix) {
-			ClientPiece piece = it.next();
-			
-			matrix.set(cell, piece);
-		}
-		
-		resize(Screen.WIDTH, Screen.HEIGHT);
-		
-		SoundRegistry.MOVE.get().play();
-	}
-	
-	public void onPacketTeam(CPacketTeam packet) {
-		team = packet.getTeam();
-	}
-	
-	public void onPacketHighlightCells(CPacketHighlightCells packet) {
-		highlights = packet.getHighlights();
-	}
-	
-	public void onPacketEndGame(CPacketGameEnd packet) {
-		TaskManager.render(() -> {
-			chess.setScreen(new DisconnectedScreen(
-					packet.getWinner() == TeamRegistry.NULL.get() ? "Stalemate"
-					: packet.getWinner() == team ? "You win"
-							: "Opponent wins"));
-		});
-		
-		disconnect();
-	}
-	
-	public void disconnect() {
-		chess.networkClient.disconnect();
-		
-		inGame = false;
-		matrix = null;
-		team = null;
-		highlights = new LinkedList<>();
-	}
-	
-	public boolean isInGame() {
-		return inGame;
-	}
-	
-	public boolean isReady() {
-		return matrix != null && team != null;
+	@Override
+	public void dispose() {
+		chess.setBoard(null);
 	}
 }

@@ -74,6 +74,10 @@ public class SoundValue implements IRegistryValue<SoundValue> {
 		sound.dispose();
 	}
 	
+	public boolean isPlaying() {
+		return playingID != -1;
+	}
+	
 	public SoundCategoryValue getCategory() {
 		return category;
 	}

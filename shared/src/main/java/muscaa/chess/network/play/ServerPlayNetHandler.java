@@ -3,7 +3,7 @@ package muscaa.chess.network.play;
 import fluff.network.client.IClient;
 import muscaa.chess.Server;
 import muscaa.chess.network.common.ServerCommonNetHandler;
-import muscaa.chess.network.play.packets.PacketClickCell;
+import muscaa.chess.network.play.packets.SPacketClickCell;
 
 public class ServerPlayNetHandler extends ServerCommonNetHandler implements IServerPlayNetHandler {
 	
@@ -20,7 +20,7 @@ public class ServerPlayNetHandler extends ServerCommonNetHandler implements ISer
 	}
 	
 	@Override
-	public void onPacketClickCell(PacketClickCell packet) {
+	public void onPacketClickCell(SPacketClickCell packet) {
 		Server.INSTANCE.getBoard().onPacketClickCell(connection, packet);
 	}
 }

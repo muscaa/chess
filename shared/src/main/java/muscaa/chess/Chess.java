@@ -16,7 +16,7 @@ public class Chess {
 	
 	public static final Namespace NAMESPACE = Namespace.of("chess");
 	public static final String VERSION = getVersion();
-	public static final int PROTOCOL_VERSION = 1;
+	public static final int PROTOCOL_VERSION = 2;
 	
 	public static final EventManager EVENTS = new EventManager();
 	

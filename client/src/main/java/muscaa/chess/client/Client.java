@@ -10,6 +10,7 @@ import muscaa.chess.client.assets.FontRegistry;
 import muscaa.chess.client.assets.SoundCategoryRegistry;
 import muscaa.chess.client.assets.SoundRegistry;
 import muscaa.chess.client.assets.TextureRegistry;
+import muscaa.chess.client.board.AbstractBoard;
 import muscaa.chess.client.board.BoardLayer;
 import muscaa.chess.client.config.ServersConfig;
 import muscaa.chess.client.config.Settings;
@@ -17,7 +18,6 @@ import muscaa.chess.client.gui.GuiLayer;
 import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.screens.MainMenuScreen;
 import muscaa.chess.client.layer.LayerManager;
-import muscaa.chess.client.network.ChessClient;
 import muscaa.chess.client.utils.Screen;
 import muscaa.chess.client.utils.Shapes;
 import muscaa.chess.client.utils.TaskManager;
@@ -26,52 +26,51 @@ public class Client {
 	
 	public static final Client INSTANCE = new Client();
 	
-    private int lastWidth;
-    private int lastHeight;
+	public final ServersConfig serversConfig;
+	public final Settings settings;
 	
-	public LayerManager layerManager;
+	public final LayerManager layerManager;
 	
-	public BoardLayer boardLayer;
-	private GuiLayer guiLayer;
+	private final BoardLayer boardLayer;
+	private AbstractBoard board;
 	
-	public ChessClient networkClient;
-	
-	public ServersConfig serversConfig;
-	private Settings settings;
-	
+	private final GuiLayer guiLayer;
 	private GuiScreen screen;
 	
-	public void init() {
+	private Client() {
 		int width = Gdx.graphics.getWidth();
 		int height = Gdx.graphics.getHeight();
 		
 		Screen.init(width, height);
 		
-    	layerManager = new LayerManager();
-    	Gdx.input.setInputProcessor(new ClientInputProcessor(this));
-    	
-    	Chess.init();
-    	
-    	settings = new Settings(this);
-    	settings.load();
-    	
+		settings = new Settings(this);
+		serversConfig = new ServersConfig();
+		
+		layerManager = new LayerManager();
+		Gdx.input.setInputProcessor(new ClientInputProcessor(this));
+		
+		boardLayer = new BoardLayer(this);
+		layerManager.register(boardLayer);
+		
+		guiLayer = new GuiLayer(this);
+		layerManager.register(guiLayer);
+	}
+	
+	public void init() {
+		Chess.init();
+		
     	FontRegistry.init();
     	TextureRegistry.init();
     	SoundCategoryRegistry.init();
     	SoundRegistry.init();
     	
-    	boardLayer = new BoardLayer(this);
-    	layerManager.register(boardLayer);
-    	
-    	guiLayer = new GuiLayer(this);
-    	layerManager.register(guiLayer);
-    	
-    	networkClient = new ChessClient();
-    	
-    	serversConfig = new ServersConfig();
-    	serversConfig.load();
+    	boardLayer.init();
+    	guiLayer.init();
 		
     	returnToMainMenu();
+		
+    	settings.load();
+    	//serversConfig.load();
 	}
 	
 	public void render() {
@@ -94,6 +93,53 @@ public class Client {
 		layerManager.resize(width, height);
 	}
 	
+	public AbstractBoard getBoard() {
+		return board;
+	}
+	
+	public void setBoard(AbstractBoard newBoard) {
+		AbstractBoard oldBoard = board;
+		if (oldBoard != null) {
+			oldBoard.dispose();
+		}
+		
+		board = newBoard;
+		if (board != null) {
+			SoundRegistry.AMBIENT.get().stop();
+			
+			board.init(this, boardLayer);
+		} else {
+			if (!SoundRegistry.AMBIENT.get().isPlaying()) {
+				SoundRegistry.AMBIENT.get().loopSingle();
+			}
+		}
+	}
+	
+	public GuiScreen getScreen() {
+		return screen;
+	}
+	
+	public void setScreen(GuiScreen newScreen) {
+		GuiScreen oldScreen = screen;
+		if (oldScreen != null) {
+			oldScreen.dispose();
+		}
+		
+		screen = newScreen;
+		if (screen == null) {
+			if (board != null) return;
+			
+			screen = new MainMenuScreen();
+		}
+		
+		screen.init(this, guiLayer, Screen.VIEWPORT);
+	}
+	
+	public void returnToMainMenu() {
+		setBoard(null);
+		setScreen(new MainMenuScreen());
+	}
+	
 	public void dispose() {
 		settings.save();
 		
@@ -104,57 +150,5 @@ public class Client {
 		SoundRegistry.dispose();
 		
 		Screen.dispose();
-	}
-	
-	public GuiScreen getScreen() {
-		return screen;
-	}
-	
-	public void setScreen(GuiScreen newScreen) {
-		if (screen != null) {
-			screen.dispose();
-		}
-		
-		screen = newScreen;
-		if (screen == null) {
-			if (boardLayer.isInGame()) return;
-			
-			screen = new MainMenuScreen();
-		}
-		
-		screen.init(this, Screen.VIEWPORT);
-	}
-	
-	public void returnToMainMenu() {
-		SoundRegistry.AMBIENT.get().loopSingle();
-		
-		networkClient.disconnect();
-		boardLayer.disconnect();
-		setScreen(new MainMenuScreen());
-	}
-	
-	public void setFullscreen(boolean fullscreen) {
-    	if (!Gdx.graphics.supportsDisplayModeChange()) return;
-    	
-    	if (Gdx.graphics.isFullscreen() && !fullscreen) {
-    		Gdx.graphics.setWindowedMode(lastWidth, lastHeight);
-    	} else if (!Gdx.graphics.isFullscreen() && fullscreen) {
-    		lastWidth = Gdx.graphics.getWidth();
-    		lastHeight = Gdx.graphics.getHeight();
-    		
-    		Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
-    	}
-	}
-	
-	public void exit() {
-		Gdx.app.exit();
-	}
-	
-	public Settings getSettings() {
-		return settings;
-	}
-	
-	public boolean isInGame() {
-		return boardLayer.isInGame();
 	}
 }

@@ -5,9 +5,9 @@ import java.io.IOException;
 import fluff.bin.IBinaryOutput;
 import fluff.network.packet.IPacketOutbound;
 
-public class PacketGameStart implements IPacketOutbound {
+public class SPacketGameStart implements IPacketOutbound {
 	
-	public PacketGameStart() {
+	public SPacketGameStart() {
 	}
 	
 	@Override

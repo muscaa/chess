@@ -6,7 +6,7 @@ import java.util.Map;
 
 import muscaa.chess.board.Cell;
 import muscaa.chess.board.TeamValue;
-import muscaa.chess.board.matrix.Matrix;
+import muscaa.chess.board.matrix.ServerMatrix;
 import muscaa.chess.board.piece.move.AbstractMoveValue;
 
 public abstract class MultiPiece extends AbstractServerPiece {
@@ -24,14 +24,14 @@ public abstract class MultiPiece extends AbstractServerPiece {
 	protected abstract List<ServerPieceValue> getPieces();
 	
 	@Override
-	public void findMoves(Map<Cell, AbstractMoveValue> moves, Matrix matrix, Cell from) {
+	public void findMoves(Map<Cell, AbstractMoveValue> moves, ServerMatrix matrix, Cell from) {
 		for (AbstractServerPiece piece : pieces) {
 			piece.findMoves(moves, matrix, from);
 		}
 	}
 	
 	@Override
-	public void onPreMove(Matrix matrix, Cell from, Cell to) {
+	public void onPreMove(ServerMatrix matrix, Cell from, Cell to) {
 		super.onPreMove(matrix, from, to);
 		
 		for (AbstractServerPiece piece : pieces) {
@@ -40,7 +40,7 @@ public abstract class MultiPiece extends AbstractServerPiece {
 	}
 	
 	@Override
-	public void onPostMove(Matrix matrix, Cell from, Cell to) {
+	public void onPostMove(ServerMatrix matrix, Cell from, Cell to) {
 		super.onPostMove(matrix, from, to);
 		
 		for (AbstractServerPiece piece : pieces) {

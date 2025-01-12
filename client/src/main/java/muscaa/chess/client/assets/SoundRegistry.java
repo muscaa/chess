@@ -32,9 +32,9 @@ public class SoundRegistry {
 	public static void init() {
 		REG.init();
 		
-		Client.INSTANCE.getSettings().masterVolume.addListener(v -> updateVolume());
-		Client.INSTANCE.getSettings().musicVolume.addListener(v -> updateVolume());
-		Client.INSTANCE.getSettings().soundVolume.addListener(v -> updateVolume());
+		Client.INSTANCE.settings.masterVolume.addListener(v -> updateVolume());
+		Client.INSTANCE.settings.musicVolume.addListener(v -> updateVolume());
+		Client.INSTANCE.settings.soundVolume.addListener(v -> updateVolume());
 	}
 	
 	private static void updateVolume() {

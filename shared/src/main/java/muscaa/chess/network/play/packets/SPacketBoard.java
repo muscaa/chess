@@ -5,15 +5,15 @@ import java.io.IOException;
 import fluff.bin.IBinaryOutput;
 import fluff.network.packet.IPacketOutbound;
 import muscaa.chess.board.Cell;
-import muscaa.chess.board.matrix.Matrix;
+import muscaa.chess.board.matrix.ServerMatrix;
 import muscaa.chess.board.piece.AbstractServerPiece;
 import muscaa.chess.network.PacketOutputUtils;
 
-public class PacketBoard implements IPacketOutbound {
+public class SPacketBoard implements IPacketOutbound {
 	
-	private Matrix matrix;
+	private ServerMatrix matrix;
 	
-	public PacketBoard(Matrix matrix) {
+	public SPacketBoard(ServerMatrix matrix) {
 		this.matrix = matrix;
 	}
 	

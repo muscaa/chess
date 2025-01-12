@@ -7,11 +7,11 @@ import fluff.network.packet.IPacketInbound;
 import muscaa.chess.board.Cell;
 import muscaa.chess.network.PacketInputUtils;
 
-public class PacketClickCell implements IPacketInbound {
+public class SPacketClickCell implements IPacketInbound {
 	
 	private Cell cell;
 	
-	public PacketClickCell() {}
+	public SPacketClickCell() {}
 	
 	@Override
 	public void readData(IBinaryInput in) throws IOException {

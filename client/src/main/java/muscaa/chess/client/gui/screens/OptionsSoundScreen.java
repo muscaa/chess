@@ -21,13 +21,13 @@ public class OptionsSoundScreen extends ChildGuiScreen {
 		WTable content = new WTable();
 		content.defaults().growX().pad(PAD_SMALL).minHeight(BUTTON_HEIGHT);
 		
-		content.add(volume("Master Volume", chess.getSettings().masterVolume));
+		content.add(volume("Master Volume", chess.settings.masterVolume));
 		content.row();
 		
-		content.add(volume("Music Volume", chess.getSettings().musicVolume));
+		content.add(volume("Music Volume", chess.settings.musicVolume));
 		content.row();
 		
-		content.add(volume("Sound Volume", chess.getSettings().soundVolume));
+		content.add(volume("Sound Volume", chess.settings.soundVolume));
 		content.row();
 		
 		content.add();

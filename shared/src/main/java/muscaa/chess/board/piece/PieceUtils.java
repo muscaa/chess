@@ -4,14 +4,14 @@ import java.util.Map;
 
 import muscaa.chess.board.Cell;
 import muscaa.chess.board.TeamRegistry;
-import muscaa.chess.board.matrix.Matrix;
+import muscaa.chess.board.matrix.ServerMatrix;
 import muscaa.chess.board.piece.move.AbstractMoveValue;
 import muscaa.chess.board.piece.move.MoveRegistry;
 import muscaa.chess.board.piece.pieces.NullPiece;
 
 public class PieceUtils {
 	
-	public static boolean basicCapture(AbstractServerPiece piece, Map<Cell, AbstractMoveValue> moves, Matrix matrix, Cell to) {
+	public static boolean basicCapture(AbstractServerPiece piece, Map<Cell, AbstractMoveValue> moves, ServerMatrix matrix, Cell to) {
 		if (!matrix.isInBounds(to)) return false;
 		
 		AbstractServerPiece toPiece = matrix.get(to);
@@ -26,7 +26,7 @@ public class PieceUtils {
 		return true;
 	}
 	
-	public static void basicPromote(AbstractServerPiece piece, Map<Cell, AbstractMoveValue> moves, Matrix matrix, Cell to) {
+	public static void basicPromote(AbstractServerPiece piece, Map<Cell, AbstractMoveValue> moves, ServerMatrix matrix, Cell to) {
 		if (!matrix.isInBounds(to)) return;
 		
 		AbstractServerPiece toPiece = matrix.get(to);
@@ -39,7 +39,7 @@ public class PieceUtils {
 		}
 	}
 	
-	public static void capturePromote(AbstractServerPiece piece, Map<Cell, AbstractMoveValue> moves, Matrix matrix, Cell to) {
+	public static void capturePromote(AbstractServerPiece piece, Map<Cell, AbstractMoveValue> moves, ServerMatrix matrix, Cell to) {
 		if (!matrix.isInBounds(to)) return;
 		
 		AbstractServerPiece toPiece = matrix.get(to);

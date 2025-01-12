@@ -17,7 +17,7 @@ public class OptionsVideoScreen extends ChildGuiScreen {
 		content.defaults().growX().pad(PAD_SMALL).minHeight(BUTTON_HEIGHT);
 		
 		WTextButton fullscreenButton = new WTextButton("Toggle Fullscreen");
-		fullscreenButton.addActionListener(w -> chess.getSettings().fullscreen.toggle());
+		fullscreenButton.addActionListener(w -> chess.settings.fullscreen.toggle());
 		content.add(fullscreenButton);
 		content.row();
 		

@@ -7,11 +7,11 @@ import javax.crypto.SecretKey;
 import fluff.bin.IBinaryOutput;
 import fluff.network.packet.IPacketOutbound;
 
-public class PacketHandshake implements IPacketOutbound {
+public class SPacketHandshake implements IPacketOutbound {
 	
 	private SecretKey key;
 	
-	public PacketHandshake(SecretKey key) {
+	public SPacketHandshake(SecretKey key) {
 		this.key = key;
 	}
 	

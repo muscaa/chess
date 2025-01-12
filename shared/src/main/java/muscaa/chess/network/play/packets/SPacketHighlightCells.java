@@ -9,11 +9,11 @@ import fluff.network.packet.IPacketOutbound;
 import muscaa.chess.board.Highlight;
 import muscaa.chess.network.PacketOutputUtils;
 
-public class PacketHighlightCells implements IPacketOutbound {
+public class SPacketHighlightCells implements IPacketOutbound {
 	
 	private List<Highlight> highlights = new LinkedList<>();
 	
-	public PacketHighlightCells(List<Highlight> highlights) {
+	public SPacketHighlightCells(List<Highlight> highlights) {
 		this.highlights = highlights;
 	}
 	

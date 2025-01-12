@@ -1,8 +1,8 @@
 package muscaa.chess.network.connection;
 
-import muscaa.chess.network.connection.packets.PacketEncrypt;
+import muscaa.chess.network.connection.packets.SPacketEncrypt;
 
 public interface IServerConnectionNetHandler extends IConnectionNetHandler {
 	
-	void onPacketEncrypt(PacketEncrypt packet);
+	void onPacketEncrypt(SPacketEncrypt packet);
 }

@@ -9,6 +9,7 @@ import com.kotcrab.vis.ui.VisUI;
 
 import fluff.network.NetworkException;
 import muscaa.chess.Server;
+import muscaa.chess.client.board.OnlineBoard;
 import muscaa.chess.client.config.ServersConfig;
 import muscaa.chess.client.gui.ChildGuiScreen;
 import muscaa.chess.client.gui.GuiScreen;
@@ -31,6 +32,8 @@ public class OnlineScreen extends ChildGuiScreen {
 	
 	@Override
 	protected void init() {
+		chess.serversConfig.load();
+		
 		WTable main = new WTable(true);
 		main.defaults().growX().pad(PAD_LARGE).maxWidth(PANEL_LARGE);
 		
@@ -95,9 +98,9 @@ public class OnlineScreen extends ChildGuiScreen {
 		
         joinButton = new WTextButton("Join");
         joinButton.addActionListener(w -> {
-        	ServersConfig.Server server = chess.serversConfig.get(group.getCheckedIndex());
         	try {
-				chess.networkClient.connect(server);
+        		ServersConfig.Server server = chess.serversConfig.get(group.getCheckedIndex());
+				chess.setBoard(new OnlineBoard(server));
 			} catch (IOException | NetworkException e) {
 				e.printStackTrace();
 				

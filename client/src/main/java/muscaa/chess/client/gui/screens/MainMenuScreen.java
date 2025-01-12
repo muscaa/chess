@@ -10,6 +10,7 @@ import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.widgets.WLabel;
 import muscaa.chess.client.gui.widgets.WTable;
 import muscaa.chess.client.gui.widgets.WTextButton;
+import muscaa.chess.client.utils.WindowUtils;
 
 public class MainMenuScreen extends GuiScreen {
 	
@@ -81,7 +82,7 @@ public class MainMenuScreen extends GuiScreen {
 	
 	private void row4(WTable row) {
 		WTextButton exitButton = new WTextButton("Exit");
-		exitButton.addActionListener(w -> chess.exit());
+		exitButton.addActionListener(w -> WindowUtils.exit());
 		row.add(exitButton);
 	}
 	

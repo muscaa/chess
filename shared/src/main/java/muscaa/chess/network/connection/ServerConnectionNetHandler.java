@@ -4,14 +4,14 @@ import fluff.network.packet.channels.EncryptedPacketChannel;
 import muscaa.chess.Chess;
 import muscaa.chess.network.ServerContexts;
 import muscaa.chess.network.common.ServerCommonNetHandler;
-import muscaa.chess.network.connection.packets.PacketEncrypt;
-import muscaa.chess.network.connection.packets.PacketHandshake;
+import muscaa.chess.network.connection.packets.SPacketEncrypt;
+import muscaa.chess.network.connection.packets.SPacketHandshake;
 import muscaa.chess.network.login.ServerLoginNetHandler;
 
 public class ServerConnectionNetHandler extends ServerCommonNetHandler implements IServerConnectionNetHandler {
 	
 	@Override
-	public void onPacketEncrypt(PacketEncrypt packet) {
+	public void onPacketEncrypt(SPacketEncrypt packet) {
 		if (packet.getProtocolVersion() != Chess.PROTOCOL_VERSION) {
 			connection.disconnect("Invalid protocol version!");
             return;
@@ -25,7 +25,7 @@ public class ServerConnectionNetHandler extends ServerCommonNetHandler implement
 			return;
 		}
 		
-		connection.send(new PacketHandshake(packet.getKey()));
+		connection.send(new SPacketHandshake(packet.getKey()));
 		connection.setChannel(new EncryptedPacketChannel(packet.getKey()));
 		connection.setContext(ServerContexts.LOGIN_CONTEXT, new ServerLoginNetHandler());
 	}

@@ -1,6 +1,8 @@
-package muscaa.chess.client;
+package muscaa.chess.client.main;
 
 import com.badlogic.gdx.ApplicationListener;
+
+import muscaa.chess.client.Client;
 
 public class ChessApplicationListener implements ApplicationListener {
 	

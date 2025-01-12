@@ -29,6 +29,7 @@ public abstract class GuiScreen implements ILayerWrapper {
 	public static final int PAD_SMALL = 4;
 	
 	protected Client chess;
+	protected GuiLayer layer;
 	protected Viewport viewport;
 	protected Stage stage;
 	private ILayer stageLayer;
@@ -49,7 +50,7 @@ public abstract class GuiScreen implements ILayerWrapper {
 	}
 	
 	protected void renderBackground(int mouseX, int mouseY, float delta) {
-		if (chess.isInGame()) {
+		if (chess.getBoard() != null) {
 			Shapes.rect(0, 0, viewport.getWorldWidth(), viewport.getWorldHeight(), Theme.GUISCREEN_BACKGROUND);
 		} else {
 			drawWallpaper(TextureRegistry.WALLPAPER_BLUR.get());
@@ -80,8 +81,9 @@ public abstract class GuiScreen implements ILayerWrapper {
 		texture.draw(x, y, width, height);
 	}
 	
-	public void init(Client chess, Viewport viewport) {
+	public void init(Client chess, GuiLayer layer, Viewport viewport) {
 		this.chess = chess;
+		this.layer = layer;
 		this.viewport = viewport;
 		
 		stage = new Stage(viewport);

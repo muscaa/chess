@@ -1,8 +1,8 @@
 package muscaa.chess.network.login;
 
-import muscaa.chess.network.login.packets.PacketLogin;
+import muscaa.chess.network.login.packets.SPacketLogin;
 
 public interface IServerLoginNetHandler extends ILoginNetHandler {
 	
-	void onPacketLogin(PacketLogin packet);
+	void onPacketLogin(SPacketLogin packet);
 }

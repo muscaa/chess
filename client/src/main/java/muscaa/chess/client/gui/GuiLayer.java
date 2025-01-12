@@ -22,7 +22,9 @@ public class GuiLayer implements ILayerWrapper {
 		
         skin = new Skin();
         VisUI.load(skin);
-        
+	}
+	
+	public void init() {
         skin.add(GuiScreen.FONT_DEFAULT, FontRegistry.VARELA_24.get().getBitmapFont(), BitmapFont.class);
         skin.add(GuiScreen.FONT_SMALL, FontRegistry.VARELA_18.get().getBitmapFont(), BitmapFont.class);
         skin.add(GuiScreen.FONT_TITLE, FontRegistry.MONTEZ_128.get().getBitmapFont(), BitmapFont.class);

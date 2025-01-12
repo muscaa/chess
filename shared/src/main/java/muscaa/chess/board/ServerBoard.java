@@ -6,19 +6,19 @@ import java.util.List;
 import java.util.Map;
 
 import fluff.network.packet.IPacketOutbound;
-import muscaa.chess.board.matrix.Matrix;
+import muscaa.chess.board.matrix.ServerMatrix;
 import muscaa.chess.board.piece.AbstractServerPiece;
 import muscaa.chess.board.piece.ServerPieceRegistry;
 import muscaa.chess.board.piece.move.AbstractMoveValue;
 import muscaa.chess.board.piece.move.moves.CaptureMove;
 import muscaa.chess.board.piece.pieces.NullPiece;
 import muscaa.chess.network.ChessClientConnection;
-import muscaa.chess.network.play.packets.PacketBoard;
-import muscaa.chess.network.play.packets.PacketClickCell;
-import muscaa.chess.network.play.packets.PacketGameEnd;
-import muscaa.chess.network.play.packets.PacketHighlightCells;
-import muscaa.chess.network.play.packets.PacketGameStart;
-import muscaa.chess.network.play.packets.PacketTeam;
+import muscaa.chess.network.play.packets.SPacketBoard;
+import muscaa.chess.network.play.packets.SPacketClickCell;
+import muscaa.chess.network.play.packets.SPacketGameEnd;
+import muscaa.chess.network.play.packets.SPacketHighlightCells;
+import muscaa.chess.network.play.packets.SPacketGameStart;
+import muscaa.chess.network.play.packets.SPacketTeam;
 
 public class ServerBoard {
 	
@@ -30,7 +30,7 @@ public class ServerBoard {
 	private List<Cell> inCheckCells = new LinkedList<>();
 	private List<Cell> lastMoveCells = new LinkedList<>();
 	
-	private Matrix matrix;
+	private ServerMatrix matrix;
 	
 	private Map<Cell, Map<Cell, AbstractMoveValue>> allMoves = new HashMap<>();
 	
@@ -70,7 +70,7 @@ public class ServerBoard {
 		selectedPiece.onPostMove(matrix, selectedCell, cell);
 		matrix.end();
 		
-		send(new PacketBoard(matrix));
+		send(new SPacketBoard(matrix));
 		findAllMoves();
 		
 		inCheckCells.clear();
@@ -101,7 +101,7 @@ public class ServerBoard {
 	}
 	
 	public void endGame(TeamValue winner) {
-		send(new PacketGameEnd(winner));
+		send(new SPacketGameEnd(winner));
 		
 		players.get(TeamRegistry.WHITE.get()).disconnect("Game ended!");
 		players.get(TeamRegistry.BLACK.get()).disconnect("Game ended!");
@@ -136,14 +136,14 @@ public class ServerBoard {
 			}
 		}
 		
-		player.send(new PacketHighlightCells(highlights));
+		player.send(new SPacketHighlightCells(highlights));
 		if (opponent != null) {
-			opponent.send(new PacketHighlightCells(opponentHighlights));
+			opponent.send(new SPacketHighlightCells(opponentHighlights));
 		}
 	}
 	
 	private void reset() {
-		matrix = new Matrix(8, 8);
+		matrix = new ServerMatrix(8, 8);
 		
 		matrix.begin();
 		for (Cell cell : matrix) {
@@ -252,12 +252,12 @@ public class ServerBoard {
 		teams.put(connection, team);
 		
 		if (players.size() == 2) {
-			send(new PacketGameStart());
+			send(new SPacketGameStart());
 			
-			players.get(TeamRegistry.WHITE.get()).send(new PacketTeam(TeamRegistry.WHITE.get()));
-			players.get(TeamRegistry.BLACK.get()).send(new PacketTeam(TeamRegistry.BLACK.get()));
+			players.get(TeamRegistry.WHITE.get()).send(new SPacketTeam(TeamRegistry.WHITE.get()));
+			players.get(TeamRegistry.BLACK.get()).send(new SPacketTeam(TeamRegistry.BLACK.get()));
 			
-			send(new PacketBoard(matrix));
+			send(new SPacketBoard(matrix));
 			findAllMoves();
 			inCheckCells.clear();
 			lastMoveCells.clear();
@@ -271,7 +271,7 @@ public class ServerBoard {
 		reset();
 	}
 	
-	public synchronized void onPacketClickCell(ChessClientConnection connection, PacketClickCell packet) {
+	public synchronized void onPacketClickCell(ChessClientConnection connection, SPacketClickCell packet) {
 		if (players.size() != 2) return;
 		
 		TeamValue clientTeam = teams.get(connection);
