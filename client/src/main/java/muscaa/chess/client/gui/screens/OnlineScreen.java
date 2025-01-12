@@ -9,7 +9,7 @@ import com.kotcrab.vis.ui.VisUI;
 
 import fluff.network.NetworkException;
 import muscaa.chess.Server;
-import muscaa.chess.client.board.OnlineBoard;
+import muscaa.chess.client.board.RemoteBoard;
 import muscaa.chess.client.config.ServersConfig;
 import muscaa.chess.client.gui.ChildGuiScreen;
 import muscaa.chess.client.gui.GuiScreen;
@@ -18,6 +18,7 @@ import muscaa.chess.client.gui.widgets.WPanel;
 import muscaa.chess.client.gui.widgets.WScrollPane;
 import muscaa.chess.client.gui.widgets.WTable;
 import muscaa.chess.client.gui.widgets.WTextButton;
+import muscaa.chess.client.network.ChessClient;
 
 public class OnlineScreen extends ChildGuiScreen {
 	
@@ -100,7 +101,11 @@ public class OnlineScreen extends ChildGuiScreen {
         joinButton.addActionListener(w -> {
         	try {
         		ServersConfig.Server server = chess.serversConfig.get(group.getCheckedIndex());
-				chess.setBoard(new OnlineBoard(server));
+        		
+        		ChessClient client = new ChessClient();
+            	client.connect(server);
+        		
+				chess.setBoard(new RemoteBoard(client));
 			} catch (IOException | NetworkException e) {
 				e.printStackTrace();
 				
@@ -117,8 +122,13 @@ public class OnlineScreen extends ChildGuiScreen {
         				Server.INSTANCE.stop();
         			} else {
         				Server.INSTANCE.start();
+        				
+                		ChessClient client = new ChessClient();
+                    	client.connect(new ServersConfig.Server("LAN Game", "localhost", port));
+                		
+        				chess.setBoard(new RemoteBoard(client));
         			}
-				} catch (NetworkException e) {
+				} catch (IOException | NetworkException e) {
 					e.printStackTrace();
 					
 					chess.setScreen(new DisconnectedScreen(e.toString()));

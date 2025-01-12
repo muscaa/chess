@@ -15,17 +15,17 @@ import muscaa.chess.board.player.AbstractPlayer;
 
 public class Lobby {
 	
-	private final List<AbstractPlayer> players = new LinkedList<>();
+	public final LinkedList<AbstractPlayer> players = new LinkedList<>();
 	public final Map<TeamValue, AbstractPlayer> teams = new HashMap<>();
 	
 	public ServerMatrix matrix;
 	public TeamValue turn;
-	private Cell selectedCell;
-	private List<Cell> inCheckCells;
-	private List<Cell> lastMoveCells;
-	private Map<Cell, Map<Cell, AbstractMoveValue>> allMoves;
+	public Cell selectedCell;
+	public List<Cell> inCheckCells;
+	public List<Cell> lastMoveCells;
+	public Map<Cell, Map<Cell, AbstractMoveValue>> allMoves;
 	
-	protected void reset() {
+	public void reset() {
 		matrix = new ServerMatrix(8, 8);
 		
 		matrix.begin();
@@ -61,12 +61,15 @@ public class Lobby {
 		allMoves = new HashMap<>();
 	}
 	
-	protected void startGame() {
+	public void startGame() {
 		reset();
 		findAllMoves();
 		
 		for (AbstractPlayer p : players) {
 			p.updateBoard(matrix);
+		}
+		
+		for (AbstractPlayer p : players) {
 			p.startGame();
 		}
 	}
@@ -112,6 +115,8 @@ public class Lobby {
 			inCheckCells.clear();
 			inCheckCells.addAll(getInCheck(turn.invert()));
 			
+			System.out.println(inCheckCells.size());
+			
 			lastMoveCells.clear();
 			lastMoveCells.add(selectedCell);
 			lastMoveCells.add(cell);
@@ -134,16 +139,22 @@ public class Lobby {
 			}
 			
 			turn = turn.invert();
+			
+			for (AbstractPlayer p : players) {
+                p.updateTurn(turn);
+			}
 		}
 	}
 	
-	protected void endGame(TeamValue winner) {
+	public void endGame(TeamValue winner) {
+		System.out.println("Winner: " + winner.getKey().getID());
+		
 		for (AbstractPlayer p : players) {
 			p.endGame(winner);
 		}
 	}
 	
-	protected void selectCell(AbstractPlayer player, AbstractPlayer opponent, Cell cell) {
+	public void selectCell(AbstractPlayer player, AbstractPlayer opponent, Cell cell) {
 		selectedCell = cell;
 		
 		List<Highlight> highlights = new LinkedList<>();
@@ -178,7 +189,7 @@ public class Lobby {
 		}
 	}
 	
-	protected void findAllMoves() {
+	public void findAllMoves() {
 		allMoves.clear();
 		
 		for (Cell from : matrix) {
@@ -208,7 +219,7 @@ public class Lobby {
 		}
 	}
 	
-	protected List<Cell> getInCheck(TeamValue team) {
+	public List<Cell> getInCheck(TeamValue team) {
 		List<Cell> inCheck = new LinkedList<>();
 		for (Cell opponentFrom : matrix) {
 			AbstractServerPiece opponentPiece = matrix.get(opponentFrom);
@@ -231,7 +242,7 @@ public class Lobby {
 		return inCheck;
 	}
 	
-	protected Map<Cell, Map<Cell, AbstractMoveValue>> getMoves(TeamValue team) {
+	public Map<Cell, Map<Cell, AbstractMoveValue>> getMoves(TeamValue team) {
 		Map<Cell, Map<Cell, AbstractMoveValue>> moves = new HashMap<>();
 		for (Map.Entry<Cell, Map<Cell, AbstractMoveValue>> e : allMoves.entrySet()) {
 			Cell from = e.getKey();
@@ -288,6 +299,16 @@ public class Lobby {
 			if (player != null) {
 				endGame(player.getTeam().invert());
 			}
+		}
+	}
+	
+	public void close() {
+		synchronized (players) {
+			if (teams.isEmpty()) return;
+			
+			endGame(TeamRegistry.NULL.get());
+			players.clear();
+			teams.clear();
 		}
 	}
 }

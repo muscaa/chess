@@ -12,14 +12,11 @@ public abstract class AbstractPlayer {
 	
 	protected Lobby lobby;
 	protected TeamValue team;
+	protected List<Highlight> highlights;
 	
-	public abstract void startGame();
-	
-	public abstract void updateBoard(ServerMatrix matrix);
-	
-	public abstract void endGame(TeamValue winner);
-	
-	public abstract void setHighlights(List<Highlight> highlights);
+	public void init(Lobby lobby) {
+		this.lobby = lobby;
+	}
 	
 	public void click(Cell cell) {
 		if (lobby.teams.size() != 2) return;
@@ -29,9 +26,13 @@ public abstract class AbstractPlayer {
 		lobby.click(cell);
 	}
 	
-	public void init(Lobby lobby) {
-		this.lobby = lobby;
-	}
+	public void updateTurn(TeamValue turn) {}
+	
+	public abstract void startGame();
+	
+	public abstract void updateBoard(ServerMatrix matrix);
+	
+	public abstract void endGame(TeamValue winner);
 	
 	public TeamValue getTeam() {
 		return team;
@@ -39,5 +40,13 @@ public abstract class AbstractPlayer {
 	
 	public void setTeam(TeamValue team) {
 		this.team = team;
+	}
+	
+	public List<Highlight> getHighlights() {
+		return highlights;
+	}
+	
+	public void setHighlights(List<Highlight> highlights) {
+		this.highlights = highlights;
 	}
 }

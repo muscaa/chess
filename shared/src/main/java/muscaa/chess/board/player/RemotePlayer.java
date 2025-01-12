@@ -38,11 +38,14 @@ public class RemotePlayer extends AbstractPlayer {
 	@Override
 	public void setTeam(TeamValue team) {
 		super.setTeam(team);
+		
 		connection.send(new SPacketTeam(team));
 	}
 	
 	@Override
 	public void setHighlights(List<Highlight> highlights) {
+		super.setHighlights(highlights);
+		
 		connection.send(new SPacketHighlightCells(highlights));
 	}
 }

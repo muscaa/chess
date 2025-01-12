@@ -60,9 +60,9 @@ public abstract class AbstractBoard {
 					winner == TeamRegistry.NULL.get() ? "Stalemate"
 					: winner == team ? "You win"
 							: "Opponent wins"));
+			
+			chess.setBoard(null);
 		});
-		
-		chess.setBoard(null);
 	}
 	
 	public void init(Client chess, BoardLayer layer) {
