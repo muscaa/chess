@@ -77,7 +77,6 @@ public class Lobby {
 	public void click(Cell cell) {
 		synchronized (players) {
 			AbstractPlayer player = teams.get(turn);
-			AbstractPlayer opponent = teams.get(turn.invert());
 			AbstractServerPiece piece = matrix.get(cell);
 			
 			if (selectedCell.equals(Cell.INVALID)) {
@@ -92,7 +91,6 @@ public class Lobby {
 				return;
 			}
 			
-			AbstractServerPiece selectedPiece = matrix.get(selectedCell);
 			Map<Cell, AbstractMoveValue> moves = allMoves.get(selectedCell);
 			
 			AbstractMoveValue move = moves.get(cell);
@@ -101,48 +99,54 @@ public class Lobby {
 				return;
 			}
 			
-			matrix.begin();
-			selectedPiece.onPreMove(matrix, selectedCell, cell);
-			move.doMove(matrix, selectedCell, cell);
-			selectedPiece.onPostMove(matrix, selectedCell, cell);
-			matrix.end();
-			
-			for (AbstractPlayer p : players) {
-				p.updateBoard(matrix);
+			doMove(move, selectedCell, cell);
+		}
+	}
+	
+	public void doMove(AbstractMoveValue move, Cell from, Cell to) {
+		AbstractServerPiece selectedPiece = matrix.get(from);
+		AbstractPlayer player = teams.get(turn);
+		AbstractPlayer opponent = teams.get(turn.invert());
+		
+		matrix.begin();
+		selectedPiece.onPreMove(matrix, from, to);
+		move.doMove(matrix, from, to);
+		selectedPiece.onPostMove(matrix, from, to);
+		matrix.end();
+		
+		for (AbstractPlayer p : players) {
+			p.updateBoard(matrix);
+		}
+		findAllMoves();
+		
+		inCheckCells.clear();
+		inCheckCells.addAll(getInCheck(turn.invert()));
+		
+		lastMoveCells.clear();
+		lastMoveCells.add(from);
+		lastMoveCells.add(to);
+		
+		selectCell(player, opponent, Cell.INVALID);
+		
+		Map<Cell, Map<Cell, AbstractMoveValue>> remainingMoves = getMoves(turn.invert());
+		int remainingMovesCount = 0;
+		for (Map.Entry<Cell, Map<Cell, AbstractMoveValue>> e : remainingMoves.entrySet()) {
+			remainingMovesCount += e.getValue().size();
+		}
+		
+		if (remainingMovesCount == 0) {
+			if (!inCheckCells.isEmpty()) {
+				endGame(turn);
+			} else {
+				endGame(TeamRegistry.NULL.get());
 			}
-			findAllMoves();
-			
-			inCheckCells.clear();
-			inCheckCells.addAll(getInCheck(turn.invert()));
-			
-			System.out.println(inCheckCells.size());
-			
-			lastMoveCells.clear();
-			lastMoveCells.add(selectedCell);
-			lastMoveCells.add(cell);
-			
-			selectCell(player, opponent, Cell.INVALID);
-			
-			Map<Cell, Map<Cell, AbstractMoveValue>> remainingMoves = getMoves(turn.invert());
-			int remainingMovesCount = 0;
-			for (Map.Entry<Cell, Map<Cell, AbstractMoveValue>> e : remainingMoves.entrySet()) {
-				remainingMovesCount += e.getValue().size();
-			}
-			
-			if (remainingMovesCount == 0) {
-				if (!inCheckCells.isEmpty()) {
-					endGame(turn);
-				} else {
-					endGame(TeamRegistry.NULL.get());
-				}
-				return;
-			}
-			
-			turn = turn.invert();
-			
-			for (AbstractPlayer p : players) {
-                p.updateTurn(turn);
-			}
+			return;
+		}
+		
+		turn = turn.invert();
+		
+		for (AbstractPlayer p : players) {
+            p.updateTurn(turn);
 		}
 	}
 	
