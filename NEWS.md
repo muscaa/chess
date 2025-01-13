@@ -2,7 +2,7 @@
 - Added an options screen for more customization.
 - Implemented config API for better configuration handling.
 - Added players & lobbies functionality.
-- Improved bot player performance.
+- Implemented BOT player.
 - Changed default icons.
 - Refactored registries and client-side logic.
 
