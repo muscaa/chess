@@ -3,10 +3,8 @@ package muscaa.chess.client.network.intent;
 import fluff.network.NetworkException;
 import muscaa.chess.Chess;
 import muscaa.chess.client.network.ClientContextRegistry;
-import muscaa.chess.client.network.ClientContexts;
 import muscaa.chess.client.network.NetworkStatus;
 import muscaa.chess.client.network.common.ClientCommonNetHandler;
-import muscaa.chess.client.network.connection.ClientConnectionNetHandler;
 import muscaa.chess.client.network.connection.packets.CPacketEncrypt;
 import muscaa.chess.client.network.intent.packets.CPacketIntent;
 import muscaa.chess.client.network.intent.packets.CPacketIntentResponse;
@@ -36,7 +34,6 @@ public class ClientIntentNetHandler extends ClientCommonNetHandler implements IC
 		}
 		
 		if (intent == IntentRegistry.CONNECT.get()) {
-			//client.setContext(ClientContexts.CONNECTION_CONTEXT, new ClientConnectionNetHandler());
 			client.setContext(ClientContextRegistry.CONNECTION.get());
 			
 			client.send(new CPacketEncrypt(Chess.PROTOCOL_VERSION, CPacketEncrypt.generate()));

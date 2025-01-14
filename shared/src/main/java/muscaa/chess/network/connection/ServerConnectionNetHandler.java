@@ -18,7 +18,6 @@ public class ServerConnectionNetHandler extends ServerCommonNetHandler implement
 		
 		connection.send(new SPacketHandshake(packet.getKey()));
 		connection.setChannel(new EncryptedPacketChannel(packet.getKey()));
-		//connection.setContext(ServerContexts.LOGIN_CONTEXT, new ServerLoginNetHandler());
 		connection.setContext(ServerContextRegistry.LOGIN.get());
 	}
 }

@@ -22,7 +22,6 @@ public class ServerIntentNetHandler extends ServerCommonNetHandler implements IS
 		
 		if (intent == IntentRegistry.CONNECT.get()) {
 			connection.send(new SPacketIntentResponse(true));
-			//connection.setContext(ServerContexts.CONNECTION_CONTEXT, new ServerConnectionNetHandler());
 			connection.setContext(ServerContextRegistry.CONNECTION.get());
 		}
 	}

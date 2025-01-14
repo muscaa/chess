@@ -53,7 +53,6 @@ public class ServerLoginNetHandler extends ServerCommonNetHandler implements ISe
 	public void onConnect() throws NetworkException {
 		connection.send(new SPacketLoginSuccess());
 		
-		//connection.setContext(ServerContexts.PLAY_CONTEXT, new ServerPlayNetHandler());
 		connection.setContext(ServerContextRegistry.PLAY.get());
 	}
 }
