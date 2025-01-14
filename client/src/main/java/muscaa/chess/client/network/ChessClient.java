@@ -25,9 +25,7 @@ public class ChessClient extends AbstractClient {
 	protected boolean connect(String host, int port) throws UnknownHostException, IOException, NetworkException {
     	if (isConnected()) return false;
     	
-    	//setContext(ClientContexts.INTENT_CONTEXT, new ClientIntentNetHandler(IntentRegistry.CONNECT.get()));
-    	//setContext(ClientContextRegistry.INTENT.get());
-    	setContext(ClientContextRegistry.INTENT.get().getContext(), new ClientIntentNetHandler(IntentRegistry.CONNECT.get()));
+    	setContext(ClientContextRegistry.INTENT.get(), new ClientIntentNetHandler(IntentRegistry.CONNECT.get()));
 		setChannel(new DefaultPacketChannel());
 		openConnection(new Socket(host, port));
 		
@@ -51,9 +49,12 @@ public class ChessClient extends AbstractClient {
 		statusScreen.setText(status.getText());
 	}
 	
-	public void setContext(ClientContextValue<?> context) {
-		// send change context packet
-		setContextUnsafe(context.getContext(), context.getHandlerFunc().invoke());
+	public <V extends IClientNetHandler> void setContext(ClientContextValue<V> context) {
+		setContext(context, context.getHandlerFunc().invoke());
+	}
+	
+	public <V extends IClientNetHandler> void setContext(ClientContextValue<V> context, V handler) {
+		setContextUnsafe(context.getContext(), handler);
 	}
 	
 	public StatusScreen getStatusScreen() {

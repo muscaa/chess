@@ -9,6 +9,7 @@ public class HighlightRegistry {
 	
 	public static final Registry<HighlightValue> REG = Registries.create(Chess.NAMESPACE.path("highlights"));
 	
+	public static final RegistryKey<HighlightValue> NULL = REG.register(Chess.NULL, HighlightValue::new);
 	public static final RegistryKey<HighlightValue> SELECTED = REG.register(Chess.NAMESPACE.path("selected"), HighlightValue::new);
 	public static final RegistryKey<HighlightValue> MOVE_AVAILABLE = REG.register(Chess.NAMESPACE.path("move_available"), HighlightValue::new);
 	public static final RegistryKey<HighlightValue> CHECK = REG.register(Chess.NAMESPACE.path("check"), HighlightValue::new);

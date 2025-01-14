@@ -13,16 +13,11 @@ public class ServerIntentNetHandler extends ServerCommonNetHandler implements IS
 	public void onPacketIntent(SPacketIntent packet) {
 		IntentValue intent = packet.getIntent();
 		
-		if (intent == null) {
-			connection.disconnect("Invalid intent!");
-			return;
-		}
-		
-		System.out.println("Received intent: " + intent.getKey().getID());
-		
 		if (intent == IntentRegistry.CONNECT.get()) {
-			connection.send(new SPacketIntentResponse(true));
+			//connection.send(new SPacketIntentResponse(true));
 			connection.setContext(ServerContextRegistry.CONNECTION.get());
+		} else {
+			connection.disconnect("Invalid intent!");
 		}
 	}
 }

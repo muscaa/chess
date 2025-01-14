@@ -14,7 +14,6 @@ public class ChessServer extends AbstractServer {
 		
 		addModule(new TimeoutModule(30000));
 		
-		//setDefaultContext(ServerContexts.INTENT_CONTEXT, ServerIntentNetHandler::new);
 		setDefaultContext(ServerContextRegistry.INTENT.get().getContext(), ServerContextRegistry.INTENT.get().getHandlerFunc());
 		setDefaultChannel(DefaultPacketChannel::new);
 	}

@@ -5,6 +5,7 @@ import fluff.network.NetworkException;
 import muscaa.chess.client.Client;
 import muscaa.chess.client.gui.screens.DisconnectedScreen;
 import muscaa.chess.client.network.ChessClient;
+import muscaa.chess.client.network.common.packets.CPacketChangeContext;
 import muscaa.chess.client.utils.TaskManager;
 import muscaa.chess.network.common.packets.PacketDisconnect;
 
@@ -31,5 +32,10 @@ public class ClientCommonNetHandler extends AbstractClientNetHandler<ChessClient
 		disconnectMessage = packet.getMessage();
 		
 		client.disconnect();
+	}
+	
+	@Override
+	public void onPacketChangeContext(CPacketChangeContext packet) {
+		client.setContext(packet.getContext());
 	}
 }

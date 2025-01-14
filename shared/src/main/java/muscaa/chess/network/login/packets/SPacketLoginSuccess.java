@@ -5,10 +5,10 @@ import java.io.IOException;
 import fluff.bin.IBinaryOutput;
 import fluff.network.packet.IPacketOutbound;
 
-public class SPacketLoginSuccess implements IPacketOutbound {
+public class SPacketLoginSuccess /*implements IPacketOutbound*/ {
 	
-	public SPacketLoginSuccess() {}
+	/*public SPacketLoginSuccess() {}
 	
 	@Override
-	public void writeData(IBinaryOutput out) throws IOException {}
+	public void writeData(IBinaryOutput out) throws IOException {}*/
 }

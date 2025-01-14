@@ -14,9 +14,11 @@ import muscaa.chess.network.IntentRegistry;
 import muscaa.chess.network.ServerContextRegistry;
 import muscaa.chess.network.SharedContextRegistry;
 import muscaa.chess.utils.Namespace;
+import muscaa.chess.utils.NamespacePath;
 
 public class Chess {
 	
+	public static final NamespacePath NULL = NamespacePath.of("null", "null");
 	public static final Namespace NAMESPACE = Namespace.of("chess");
 	public static final String VERSION = getVersion();
 	public static final int PROTOCOL_VERSION = 3;

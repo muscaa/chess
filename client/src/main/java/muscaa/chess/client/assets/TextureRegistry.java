@@ -9,7 +9,7 @@ public class TextureRegistry {
 	
 	public static final Registry<TextureValue> REG = Registries.create(Chess.NAMESPACE.path("textures"));
 	
-	public static final RegistryKey<TextureValue> NULL = REG.register(Chess.NAMESPACE.path("null"),
+	public static final RegistryKey<TextureValue> NULL = REG.register(Chess.NULL,
 			key -> new TextureValue(key, null));
 	public static final RegistryKey<TextureValue> WHITE_KING = REG.register(Chess.NAMESPACE.path("white_king"),
 			key -> new TextureValue(key, "pieces/white_king.png"));

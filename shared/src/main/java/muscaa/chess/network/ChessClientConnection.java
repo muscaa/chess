@@ -8,6 +8,7 @@ import fluff.network.packet.PacketContext;
 import fluff.network.server.AbstractClientConnection;
 import fluff.network.server.AbstractServer;
 import muscaa.chess.network.common.packets.PacketDisconnect;
+import muscaa.chess.network.common.packets.SPacketChangeContext;
 
 public class ChessClientConnection extends AbstractClientConnection {
 	
@@ -20,9 +21,13 @@ public class ChessClientConnection extends AbstractClientConnection {
         setChannel(channel);
 	}
 	
-	public void setContext(ServerContextValue<?> context) {
-		// send change context packet
-		setContextUnsafe(context.getContext(), context.getHandlerFunc().invoke());
+	public <V extends IServerNetHandler> void setContext(ServerContextValue<V> context) {
+		setContext(context, context.getHandlerFunc().invoke());
+	}
+	
+	public <V extends IServerNetHandler> void setContext(ServerContextValue<V> context, V handler) {
+		send(new SPacketChangeContext(context));
+		setContextUnsafe(context.getContext(), handler);
 	}
 	
 	public void login(String name) {

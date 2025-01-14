@@ -5,9 +5,9 @@ import java.io.IOException;
 import fluff.bin.IBinaryInput;
 import fluff.network.packet.IPacketInbound;
 
-public class CPacketIntentResponse implements IPacketInbound {
+public class CPacketIntentResponse /*implements IPacketInbound*/ {
 	
-	private boolean approved;
+	/*private boolean approved;
 	
 	public CPacketIntentResponse() {}
 	
@@ -18,5 +18,5 @@ public class CPacketIntentResponse implements IPacketInbound {
 	
 	public boolean isApproved() {
 		return approved;
-	}
+	}*/
 }

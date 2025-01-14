@@ -10,7 +10,7 @@ public class SoundRegistry {
 	
 	public static final Registry<SoundValue> REG = Registries.create(Chess.NAMESPACE.path("sounds"));
 	
-	public static final RegistryKey<SoundValue> NULL = REG.register(Chess.NAMESPACE.path("null"),
+	public static final RegistryKey<SoundValue> NULL = REG.register(Chess.NULL,
 			key -> new SoundValue(key, null, null));
 	public static final RegistryKey<SoundValue> GAME_START = REG.register(Chess.NAMESPACE.path("game_start"),
 			key -> new SoundValue(key, "sounds/game-start.ogg", SoundCategoryRegistry.SOUND.get()));

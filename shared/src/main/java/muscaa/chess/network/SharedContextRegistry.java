@@ -16,9 +16,12 @@ public class SharedContextRegistry {
 	
 	public static final Registry<SharedContextValue<?>> REG = Registries.create(Chess.NAMESPACE.path("shared_contexts"));
 	
+	public static final RegistryKey<SharedContextValue<ICommonNetHandler>> NULL = REG.register(Chess.NULL,
+			key -> new SharedContextValue<>(key, null));
+	
 	private static final PacketContext<ICommonNetHandler> COMMON_CONTEXT =
 			new PacketContext<ICommonNetHandler>("common_context")
-					.register(100, PacketDisconnect.class, PacketDisconnect::new, ICommonNetHandler::onPacketDisconnect)
+					.register(0, PacketDisconnect.class, PacketDisconnect::new, ICommonNetHandler::onPacketDisconnect)
 			;
 	public static final RegistryKey<SharedContextValue<ICommonNetHandler>> COMMON = REG.register(Chess.NAMESPACE.path("common"),
 			key -> new SharedContextValue<>(key, COMMON_CONTEXT));

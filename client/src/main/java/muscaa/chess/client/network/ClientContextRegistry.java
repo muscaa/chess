@@ -2,6 +2,8 @@ package muscaa.chess.client.network;
 
 import fluff.network.packet.PacketContext;
 import muscaa.chess.Chess;
+import muscaa.chess.client.network.common.IClientCommonNetHandler;
+import muscaa.chess.client.network.common.packets.CPacketChangeContext;
 import muscaa.chess.client.network.connection.ClientConnectionNetHandler;
 import muscaa.chess.client.network.connection.IClientConnectionNetHandler;
 import muscaa.chess.client.network.connection.packets.CPacketEncrypt;
@@ -31,16 +33,28 @@ public class ClientContextRegistry {
 	
 	public static final Registry<ClientContextValue<?>> REG = Registries.create(Chess.NAMESPACE.path("client_contexts"));
 	
+	public static final RegistryKey<ClientContextValue<IClientCommonNetHandler>> NULL = REG.register(Chess.NULL,
+			key -> new ClientContextValue<>(key, null, null));
+	
+	private static final PacketContext<IClientCommonNetHandler> COMMON_CONTEXT =
+			new PacketContext<IClientCommonNetHandler>(SharedContextRegistry.COMMON.get().getContext())
+					.registerInbound(1, CPacketChangeContext::new, IClientCommonNetHandler::onPacketChangeContext)
+			;
+	public static final RegistryKey<ClientContextValue<IClientCommonNetHandler>> COMMON = REG.register(Chess.NAMESPACE.path("common"),
+			key -> new ClientContextValue<>(key, COMMON_CONTEXT, null));
+	
 	private static final PacketContext<IClientIntentNetHandler> INTENT_CONTEXT =
 			new PacketContext<IClientIntentNetHandler>(SharedContextRegistry.INTENT.get().getContext())
+					.extend(COMMON_CONTEXT)
 					.registerOutbound(100, CPacketIntent.class)
-					.registerInbound(101, CPacketIntentResponse::new, IClientIntentNetHandler::onPacketIntentResponse)
+					//.registerInbound(101, CPacketIntentResponse::new, IClientIntentNetHandler::onPacketIntentResponse)
 			;
 	public static final RegistryKey<ClientContextValue<IClientIntentNetHandler>> INTENT = REG.register(Chess.NAMESPACE.path("intent"),
 			key -> new ClientContextValue<>(key, INTENT_CONTEXT, null));
 	
 	private static final PacketContext<IClientConnectionNetHandler> CONNECTION_CONTEXT =
 			new PacketContext<IClientConnectionNetHandler>(SharedContextRegistry.CONNECTION.get().getContext())
+			        .extend(COMMON_CONTEXT)
 					.registerOutbound(200, CPacketEncrypt.class)
 					.registerInbound(201, CPacketHandshake::new, IClientConnectionNetHandler::onPacketHandshake)
 			;
@@ -49,15 +63,17 @@ public class ClientContextRegistry {
 	
 	private static final PacketContext<IClientLoginNetHandler> LOGIN_CONTEXT =
 			new PacketContext<IClientLoginNetHandler>(SharedContextRegistry.LOGIN.get().getContext())
+			        .extend(COMMON_CONTEXT)
 					.registerInbound(300, CPacketLoginForm::new, IClientLoginNetHandler::onPacketLoginForm)
 					.registerOutbound(301, CPacketLogin.class)
-					.registerInbound(302, CPacketLoginSuccess::new, IClientLoginNetHandler::onPacketLoginSuccess)
+					//.registerInbound(302, CPacketLoginSuccess::new, IClientLoginNetHandler::onPacketLoginSuccess)
 			;
 	public static final RegistryKey<ClientContextValue<IClientLoginNetHandler>> LOGIN = REG.register(Chess.NAMESPACE.path("login"),
 			key -> new ClientContextValue<>(key, LOGIN_CONTEXT, ClientLoginNetHandler::new));
 	
 	private static final PacketContext<IClientPlayNetHandler> PLAY_CONTEXT =
 			new PacketContext<IClientPlayNetHandler>(SharedContextRegistry.PLAY.get().getContext())
+			        .extend(COMMON_CONTEXT)
 					.registerInbound(400, CPacketGameStart::new, IClientPlayNetHandler::onPacketStartGame)
 					.registerInbound(401, CPacketBoard::new, IClientPlayNetHandler::onPacketBoard)
 					.registerInbound(402, CPacketTeam::new, IClientPlayNetHandler::onPacketTeam)

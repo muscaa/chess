@@ -51,7 +51,7 @@ public class ServerLoginNetHandler extends ServerCommonNetHandler implements ISe
 	
 	@Override
 	public void onConnect() throws NetworkException {
-		connection.send(new SPacketLoginSuccess());
+		//connection.send(new SPacketLoginSuccess());
 		
 		connection.setContext(ServerContextRegistry.PLAY.get());
 	}

@@ -5,9 +5,9 @@ import java.io.IOException;
 import fluff.bin.IBinaryOutput;
 import fluff.network.packet.IPacketOutbound;
 
-public class SPacketIntentResponse implements IPacketOutbound {
+public class SPacketIntentResponse /*implements IPacketOutbound*/ {
 	
-	private boolean approved;
+	/*private boolean approved;
 	
 	public SPacketIntentResponse(boolean approved) {
 		this.approved = approved;
@@ -16,5 +16,5 @@ public class SPacketIntentResponse implements IPacketOutbound {
 	@Override
 	public void writeData(IBinaryOutput out) throws IOException {
 		out.Boolean(approved);
-	}
+	}*/
 }

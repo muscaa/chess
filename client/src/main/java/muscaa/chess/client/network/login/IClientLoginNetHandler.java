@@ -9,5 +9,5 @@ public interface IClientLoginNetHandler extends IClientCommonNetHandler, ILoginN
 	
 	void onPacketLoginForm(CPacketLoginForm packet);
 	
-	void onPacketLoginSuccess(CPacketLoginSuccess packet);
+	//void onPacketLoginSuccess(CPacketLoginSuccess packet);
 }

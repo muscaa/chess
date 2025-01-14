@@ -24,10 +24,10 @@ public class ClientLoginNetHandler extends ClientCommonNetHandler implements ICl
 		});
 	}
 	
-	@Override
+	/*@Override
 	public void onPacketLoginSuccess(CPacketLoginSuccess packet) {
 		client.setContext(ClientContextRegistry.PLAY.get());
 		
 		client.update(NetworkStatus.DONE);
-	}
+	}*/
 }

@@ -9,7 +9,7 @@ public class ClientPieceRegistry {
 	
 	public static final Registry<ClientPieceValue> REG = Registries.create(Chess.NAMESPACE.path("client_pieces"));
 	
-	public static final RegistryKey<ClientPieceValue> NULL = REG.register(Chess.NAMESPACE.path("null"), ClientPieceValue::new);
+	public static final RegistryKey<ClientPieceValue> NULL = REG.register(Chess.NULL, ClientPieceValue::new);
 	public static final RegistryKey<ClientPieceValue> PAWN = REG.register(Chess.NAMESPACE.path("pawn"), ClientPieceValue::new);
 	public static final RegistryKey<ClientPieceValue> ROOK = REG.register(Chess.NAMESPACE.path("rook"), ClientPieceValue::new);
 	public static final RegistryKey<ClientPieceValue> KNIGHT = REG.register(Chess.NAMESPACE.path("knight"), ClientPieceValue::new);

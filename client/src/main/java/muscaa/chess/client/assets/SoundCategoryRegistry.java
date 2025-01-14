@@ -10,7 +10,7 @@ public class SoundCategoryRegistry {
 	
 	public static final Registry<SoundCategoryValue> REG = Registries.create(Chess.NAMESPACE.path("sound_categories"));
 	
-	public static final RegistryKey<SoundCategoryValue> NULL = REG.register(Chess.NAMESPACE.path("null"),
+	public static final RegistryKey<SoundCategoryValue> NULL = REG.register(Chess.NULL,
 			key -> new SoundCategoryValue(key, null));
 	public static final RegistryKey<SoundCategoryValue> SOUND = REG.register(Chess.NAMESPACE.path("sound"),
 			key -> new SoundCategoryValue(key, Client.INSTANCE.settingsConfig.soundVolume::get));

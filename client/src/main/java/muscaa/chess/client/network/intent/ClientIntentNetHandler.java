@@ -26,7 +26,7 @@ public class ClientIntentNetHandler extends ClientCommonNetHandler implements IC
 		client.send(new CPacketIntent(intent));
 	}
 	
-	@Override
+	/*@Override
 	public void onPacketIntentResponse(CPacketIntentResponse packet) {
 		if (!packet.isApproved()) {
 			client.disconnect();
@@ -38,6 +38,8 @@ public class ClientIntentNetHandler extends ClientCommonNetHandler implements IC
 			
 			client.send(new CPacketEncrypt(Chess.PROTOCOL_VERSION, CPacketEncrypt.generate()));
 			client.update(NetworkStatus.ENCRYPT);
+		} else {
+			client.disconnect();
 		}
-	}
+	}*/
 }

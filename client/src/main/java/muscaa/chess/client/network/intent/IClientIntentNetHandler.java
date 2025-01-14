@@ -6,5 +6,5 @@ import muscaa.chess.network.intent.IIntentNetHandler;
 
 public interface IClientIntentNetHandler extends IClientCommonNetHandler, IIntentNetHandler {
 	
-	void onPacketIntentResponse(CPacketIntentResponse packet);
+	//void onPacketIntentResponse(CPacketIntentResponse packet);
 }

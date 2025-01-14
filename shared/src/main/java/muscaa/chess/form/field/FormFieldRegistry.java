@@ -9,7 +9,7 @@ public class FormFieldRegistry {
 	
 	public static final Registry<FormFieldValue> REG = Registries.create(Chess.NAMESPACE.path("formfields"));
 	
-	public static final RegistryKey<FormFieldValue> NULL = REG.register(Chess.NAMESPACE.path("null"),
+	public static final RegistryKey<FormFieldValue> NULL = REG.register(Chess.NULL,
 			key -> new FormFieldValue(key, null));
 	public static final RegistryKey<FormFieldValue> BOOLEAN = REG.register(Chess.NAMESPACE.path("boolean"),
 			key -> new FormFieldValue(key, Boolean::parseBoolean));
