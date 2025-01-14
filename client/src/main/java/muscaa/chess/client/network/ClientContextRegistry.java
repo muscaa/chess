@@ -10,12 +10,10 @@ import muscaa.chess.client.network.connection.packets.CPacketEncrypt;
 import muscaa.chess.client.network.connection.packets.CPacketHandshake;
 import muscaa.chess.client.network.intent.IClientIntentNetHandler;
 import muscaa.chess.client.network.intent.packets.CPacketIntent;
-import muscaa.chess.client.network.intent.packets.CPacketIntentResponse;
 import muscaa.chess.client.network.login.ClientLoginNetHandler;
 import muscaa.chess.client.network.login.IClientLoginNetHandler;
 import muscaa.chess.client.network.login.packets.CPacketLogin;
 import muscaa.chess.client.network.login.packets.CPacketLoginForm;
-import muscaa.chess.client.network.login.packets.CPacketLoginSuccess;
 import muscaa.chess.client.network.play.ClientPlayNetHandler;
 import muscaa.chess.client.network.play.IClientPlayNetHandler;
 import muscaa.chess.client.network.play.packets.CPacketBoard;
@@ -47,7 +45,6 @@ public class ClientContextRegistry {
 			new PacketContext<IClientIntentNetHandler>(SharedContextRegistry.INTENT.get().getContext())
 					.extend(COMMON_CONTEXT)
 					.registerOutbound(100, CPacketIntent.class)
-					//.registerInbound(101, CPacketIntentResponse::new, IClientIntentNetHandler::onPacketIntentResponse)
 			;
 	public static final RegistryKey<ClientContextValue<IClientIntentNetHandler>> INTENT = REG.register(Chess.NAMESPACE.path("intent"),
 			key -> new ClientContextValue<>(key, INTENT_CONTEXT, null));
@@ -66,7 +63,6 @@ public class ClientContextRegistry {
 			        .extend(COMMON_CONTEXT)
 					.registerInbound(300, CPacketLoginForm::new, IClientLoginNetHandler::onPacketLoginForm)
 					.registerOutbound(301, CPacketLogin.class)
-					//.registerInbound(302, CPacketLoginSuccess::new, IClientLoginNetHandler::onPacketLoginSuccess)
 			;
 	public static final RegistryKey<ClientContextValue<IClientLoginNetHandler>> LOGIN = REG.register(Chess.NAMESPACE.path("login"),
 			key -> new ClientContextValue<>(key, LOGIN_CONTEXT, ClientLoginNetHandler::new));

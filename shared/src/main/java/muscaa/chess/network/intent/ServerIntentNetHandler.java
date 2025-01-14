@@ -5,7 +5,6 @@ import muscaa.chess.network.IntentValue;
 import muscaa.chess.network.ServerContextRegistry;
 import muscaa.chess.network.common.ServerCommonNetHandler;
 import muscaa.chess.network.intent.packets.SPacketIntent;
-import muscaa.chess.network.intent.packets.SPacketIntentResponse;
 
 public class ServerIntentNetHandler extends ServerCommonNetHandler implements IServerIntentNetHandler {
 	
@@ -14,7 +13,6 @@ public class ServerIntentNetHandler extends ServerCommonNetHandler implements IS
 		IntentValue intent = packet.getIntent();
 		
 		if (intent == IntentRegistry.CONNECT.get()) {
-			//connection.send(new SPacketIntentResponse(true));
 			connection.setContext(ServerContextRegistry.CONNECTION.get());
 		} else {
 			connection.disconnect("Invalid intent!");

@@ -11,12 +11,10 @@ import muscaa.chess.network.connection.packets.SPacketHandshake;
 import muscaa.chess.network.intent.IServerIntentNetHandler;
 import muscaa.chess.network.intent.ServerIntentNetHandler;
 import muscaa.chess.network.intent.packets.SPacketIntent;
-import muscaa.chess.network.intent.packets.SPacketIntentResponse;
 import muscaa.chess.network.login.IServerLoginNetHandler;
 import muscaa.chess.network.login.ServerLoginNetHandler;
 import muscaa.chess.network.login.packets.SPacketLogin;
 import muscaa.chess.network.login.packets.SPacketLoginForm;
-import muscaa.chess.network.login.packets.SPacketLoginSuccess;
 import muscaa.chess.network.play.IServerPlayNetHandler;
 import muscaa.chess.network.play.packets.SPacketBoard;
 import muscaa.chess.network.play.packets.SPacketClickCell;
@@ -46,7 +44,6 @@ public class ServerContextRegistry {
 			new PacketContext<IServerIntentNetHandler>(SharedContextRegistry.INTENT.get().getContext())
 					.extend(COMMON_CONTEXT)
 					.registerInbound(100, SPacketIntent::new, IServerIntentNetHandler::onPacketIntent)
-					//.registerOutbound(101, SPacketIntentResponse.class)
 			;
 	public static final RegistryKey<ServerContextValue<IServerIntentNetHandler>> INTENT = REG.register(Chess.NAMESPACE.path("intent"),
 			key -> new ServerContextValue<>(key, INTENT_CONTEXT, ServerIntentNetHandler::new));
@@ -65,7 +62,6 @@ public class ServerContextRegistry {
 			        .extend(COMMON_CONTEXT)
 					.registerOutbound(300, SPacketLoginForm.class)
 					.registerInbound(301, SPacketLogin::new, IServerLoginNetHandler::onPacketLogin)
-					//.registerOutbound(302, SPacketLoginSuccess.class)
 			;
 	public static final RegistryKey<ServerContextValue<IServerLoginNetHandler>> LOGIN = REG.register(Chess.NAMESPACE.path("login"),
 			key -> new ServerContextValue<>(key, LOGIN_CONTEXT, ServerLoginNetHandler::new));
