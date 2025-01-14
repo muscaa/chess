@@ -1,23 +1,15 @@
 package muscaa.chess.client.gui.screens;
 
-import java.io.IOException;
-
 import com.kotcrab.vis.ui.util.IntDigitsOnlyFilter;
 
 import fluff.network.NetworkException;
-import muscaa.chess.board.Lobby;
-import muscaa.chess.client.board.RemoteBoard;
-import muscaa.chess.client.config.ServersConfig;
+import muscaa.chess.client.board.LanBoard;
 import muscaa.chess.client.gui.ChildGuiScreen;
 import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.widgets.WPanel;
 import muscaa.chess.client.gui.widgets.WTable;
 import muscaa.chess.client.gui.widgets.WTextButton;
 import muscaa.chess.client.gui.widgets.WTextField;
-import muscaa.chess.client.network.ChessClient;
-import muscaa.chess.network.ChessServer;
-import muscaa.chess.network.ServerContextRegistry;
-import muscaa.chess.network.play.ServerPlayNetHandler;
 
 public class LanGameFormScreen extends ChildGuiScreen {
 	
@@ -71,23 +63,8 @@ public class LanGameFormScreen extends ChildGuiScreen {
 			int port = Integer.parseInt(portField.getText());
 			
     		try {
-    			/*if (Server.INSTANCE.getNetwork() != null && Server.INSTANCE.getNetwork().getServer().isRunning()) {
-    				Server.INSTANCE.stop();
-    			} else {
-    				Server.INSTANCE.start();
-    				*/
-    				Lobby lobby = new Lobby();
-    				ServerContextRegistry.PLAY.get().setHandlerFunc(() -> new ServerPlayNetHandler(lobby));
-    				
-    				ChessServer server = new ChessServer(port);
-    				server.start(true);
-    			
-            		ChessClient client = new ChessClient();
-                	client.connect(new ServersConfig.Server("LAN Game", "localhost", port));
-            		
-    				chess.setBoard(new RemoteBoard(client));
-    			//}
-			} catch (IOException | NetworkException e) {
+				chess.setBoard(new LanBoard(port));
+			} catch (NetworkException e) {
 				e.printStackTrace();
 				
 				chess.setScreen(new DisconnectedScreen(e.toString()));
