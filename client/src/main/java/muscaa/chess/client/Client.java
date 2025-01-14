@@ -19,6 +19,7 @@ import muscaa.chess.client.gui.GuiLayer;
 import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.screens.MainMenuScreen;
 import muscaa.chess.client.layer.LayerManager;
+import muscaa.chess.client.network.ClientContextRegistry;
 import muscaa.chess.client.utils.Screen;
 import muscaa.chess.client.utils.Shapes;
 import muscaa.chess.client.utils.TaskManager;
@@ -65,6 +66,7 @@ public class Client {
     	SoundCategoryRegistry.init();
     	SoundRegistry.init();
     	ClientPieceRegistry.init();
+    	ClientContextRegistry.init();
     	
     	boardLayer.init();
     	guiLayer.init();

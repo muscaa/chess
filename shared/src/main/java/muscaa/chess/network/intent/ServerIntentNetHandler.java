@@ -2,9 +2,8 @@ package muscaa.chess.network.intent;
 
 import muscaa.chess.network.IntentRegistry;
 import muscaa.chess.network.IntentValue;
-import muscaa.chess.network.ServerContexts;
+import muscaa.chess.network.ServerContextRegistry;
 import muscaa.chess.network.common.ServerCommonNetHandler;
-import muscaa.chess.network.connection.ServerConnectionNetHandler;
 import muscaa.chess.network.intent.packets.SPacketIntent;
 import muscaa.chess.network.intent.packets.SPacketIntentResponse;
 
@@ -23,7 +22,8 @@ public class ServerIntentNetHandler extends ServerCommonNetHandler implements IS
 		
 		if (intent == IntentRegistry.CONNECT.get()) {
 			connection.send(new SPacketIntentResponse(true));
-			connection.setContext(ServerContexts.CONNECTION_CONTEXT, new ServerConnectionNetHandler());
+			//connection.setContext(ServerContexts.CONNECTION_CONTEXT, new ServerConnectionNetHandler());
+			connection.setContext(ServerContextRegistry.CONNECTION.get());
 		}
 	}
 }

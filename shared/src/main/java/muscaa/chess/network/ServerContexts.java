@@ -20,7 +20,7 @@ import muscaa.chess.network.play.packets.SPacketTeam;
 
 public class ServerContexts {
 	
-	public static final PacketContext<IServerIntentNetHandler> INTENT_CONTEXT =
+	/*public static final PacketContext<IServerIntentNetHandler> INTENT_CONTEXT =
 			new PacketContext<IServerIntentNetHandler>(SharedContexts.INTENT_CONTEXT)
 			.registerInbound(100, SPacketIntent::new, IServerIntentNetHandler::onPacketIntent)
 			.registerOutbound(101, SPacketIntentResponse.class)
@@ -46,5 +46,5 @@ public class ServerContexts {
 			.registerInbound(403, SPacketClickCell::new, IServerPlayNetHandler::onPacketClickCell)
 			.registerOutbound(404, SPacketHighlightCells.class)
 			.registerOutbound(405, SPacketGameEnd.class)
-			;
+			;*/
 }

@@ -16,7 +16,7 @@ public class CPacketTeam implements IPacketInbound {
 	
 	@Override
 	public void readData(IBinaryInput in) throws IOException {
-		team = PacketInputUtils.regEntry(in, TeamRegistry.REG);
+		team = PacketInputUtils.regValue(in, TeamRegistry.REG);
 	}
 	
 	public TeamValue getTeam() {

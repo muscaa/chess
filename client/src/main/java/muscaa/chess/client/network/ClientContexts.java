@@ -21,7 +21,7 @@ import muscaa.chess.network.SharedContexts;
 
 public class ClientContexts {
 	
-	public static final PacketContext<IClientIntentNetHandler> INTENT_CONTEXT =
+	/*public static final PacketContext<IClientIntentNetHandler> INTENT_CONTEXT =
 			new PacketContext<IClientIntentNetHandler>(SharedContexts.INTENT_CONTEXT)
 			.registerOutbound(100, CPacketIntent.class)
 			.registerInbound(101, CPacketIntentResponse::new, IClientIntentNetHandler::onPacketIntentResponse)
@@ -47,5 +47,5 @@ public class ClientContexts {
 			.registerOutbound(403, CPacketClickCell.class)
 			.registerInbound(404, CPacketHighlightCells::new, IClientPlayNetHandler::onPacketHighlightCells)
 			.registerInbound(405, CPacketGameEnd::new, IClientPlayNetHandler::onPacketEndGame)
-			;
+			;*/
 }

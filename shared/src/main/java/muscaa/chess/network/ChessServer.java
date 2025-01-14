@@ -1,6 +1,7 @@
 package muscaa.chess.network;
 
 import fluff.network.NetworkException;
+import fluff.network.packet.channels.DefaultPacketChannel;
 import fluff.network.server.AbstractClientConnection;
 import fluff.network.server.AbstractServer;
 import fluff.network.server.modules.TimeoutModule;
@@ -12,6 +13,10 @@ public class ChessServer extends AbstractServer {
 		super(port);
 		
 		addModule(new TimeoutModule(30000));
+		
+		//setDefaultContext(ServerContexts.INTENT_CONTEXT, ServerIntentNetHandler::new);
+		setDefaultContext(ServerContextRegistry.INTENT.get().getContext(), ServerContextRegistry.INTENT.get().getHandlerFunc());
+		setDefaultChannel(DefaultPacketChannel::new);
 	}
 	
 	@Override
@@ -21,24 +26,13 @@ public class ChessServer extends AbstractServer {
 	
 	@Override
 	protected void onConnect(AbstractClientConnection connection) throws NetworkException {
-		//System.out.println(connection.hashCode() + " connected");
-		
 		super.onConnect(connection);
 	}
 	
 	@Override
 	protected void onDisconnect(AbstractClientConnection connection) {
-		//System.out.println(connection.hashCode() + " disconnected");
-		
 		super.onDisconnect(connection);
 	}
-	
-	/*@Override
-	protected boolean establishConnection(IClientConnection client) {
-		boolean result = super.establishConnection(client);
-		System.out.println("timedout: " + !result);
-		return result;
-	}*/
 	
 	@Override
 	public void disconnectAll() {

@@ -17,6 +17,6 @@ public class CPacketIntent implements IPacketOutbound {
 	
 	@Override
 	public void writeData(IBinaryOutput out) throws IOException {
-		PacketOutputUtils.regEntry(out, intent);
+		PacketOutputUtils.regValue(out, intent);
 	}
 }

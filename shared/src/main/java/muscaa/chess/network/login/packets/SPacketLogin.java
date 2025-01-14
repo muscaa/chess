@@ -4,25 +4,21 @@ import java.io.IOException;
 
 import fluff.bin.IBinaryInput;
 import fluff.network.packet.IPacketInbound;
+import muscaa.chess.form.FormData;
+import muscaa.chess.network.PacketInputUtils;
 
 public class SPacketLogin implements IPacketInbound {
 	
-	private String name;
-	private String password;
+	private FormData formData;
 	
 	public SPacketLogin() {}
 	
 	@Override
 	public void readData(IBinaryInput in) throws IOException {
-		name = in.LenString();
-		password = in.LenString();
+		formData = PacketInputUtils.formData(in);
 	}
 	
-	public String getName() {
-		return name;
-	}
-	
-	public String getPassword() {
-		return password;
+	public FormData getFormData() {
+		return formData;
 	}
 }

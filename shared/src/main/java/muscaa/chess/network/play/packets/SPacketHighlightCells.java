@@ -22,7 +22,7 @@ public class SPacketHighlightCells implements IPacketOutbound {
 		out.Int(highlights.size());
 		for (Highlight highlight : highlights) {
 			PacketOutputUtils.cell(out, highlight.getCell());
-			PacketOutputUtils.regEntry(out, highlight.getType());
+			PacketOutputUtils.regValue(out, highlight.getType());
 		}
 	}
 }

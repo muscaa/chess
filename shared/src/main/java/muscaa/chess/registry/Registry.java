@@ -3,6 +3,7 @@ package muscaa.chess.registry;
 import java.util.HashMap;
 import java.util.Map;
 
+import fluff.events.EventStage;
 import fluff.functions.gen.obj.Func1;
 import fluff.functions.gen.obj.VoidFunc1;
 import muscaa.chess.Chess;
@@ -11,7 +12,7 @@ import muscaa.chess.utils.NamespacePath;
 
 public class Registry<V extends IRegistryValue> {
 	
-	private final Map<NamespacePath, RegistryEntry<V>> entries = new HashMap<>();
+	private final Map<NamespacePath, RegistryEntry> entries = new HashMap<>();
 	private final Map<NamespacePath, RegistryKey<V>> lookup = new HashMap<>();
 	private final Map<V, RegistryKey<V>> reverseLookup = new HashMap<>();
 	private final NamespacePath id;
@@ -31,11 +32,12 @@ public class Registry<V extends IRegistryValue> {
 				IRegistryInitEventListener::onRegistryInitEvent,
 				new IRegistryInitEventListener.RegistryInitEvent(
 						this
-						)
+						),
+				EventStage.PRE
 				);
 		state = RegistryState.INIT;
 		
-		for (Map.Entry<NamespacePath, RegistryEntry<V>> e : entries.entrySet()) {
+		for (Map.Entry<NamespacePath, RegistryEntry> e : entries.entrySet()) {
 			RegistryEntry<V> entry = e.getValue();
 			RegistryKey<V> key = entry.key;
 			
@@ -47,6 +49,15 @@ public class Registry<V extends IRegistryValue> {
 		}
 		entries.clear();
 		state = RegistryState.LOCKED;
+		
+		Chess.EVENTS.call(
+				IRegistryInitEventListener.class,
+				IRegistryInitEventListener::onRegistryInitEvent,
+				new IRegistryInitEventListener.RegistryInitEvent(
+						this
+						),
+				EventStage.POST
+				);
 	}
 	
 	public boolean contains(NamespacePath id) {
@@ -57,11 +68,11 @@ public class Registry<V extends IRegistryValue> {
 		return lookup.get(id);
 	}
 	
-	public RegistryKey<V> register(NamespacePath id, Func1<V, RegistryKey<V>> func) {
+	public <T extends V> RegistryKey<T> register(NamespacePath id, Func1<T, RegistryKey<T>> func) {
 		if (state.isLocked()) throw new RegistryException("Registry locked!");
 		if (entries.containsKey(id)) throw new RegistryException("Entry already exists!");
 		
-		RegistryEntry<V> entry = new RegistryEntry<>(id, func, new RegistryKey<>(this));
+		RegistryEntry<T> entry = new RegistryEntry<>(id, func, new RegistryKey<>(this));
 		entries.put(id, entry);
 		return entry.key;
 	}

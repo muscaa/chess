@@ -11,7 +11,7 @@ import muscaa.chess.client.network.login.packets.CPacketLogin;
 
 public class LoginFormScreen extends GuiScreen {
 	
-	private final GuiScreen continueScreen;
+	/*private final GuiScreen continueScreen;
 	private final ChessClient client;
 	
 	private WTextField nameField;
@@ -21,20 +21,20 @@ public class LoginFormScreen extends GuiScreen {
 	public LoginFormScreen(ChessClient client, GuiScreen continueScreen) {
 		this.client = client;
 		this.continueScreen = continueScreen;
-	}
+	}*/
 	
 	@Override
 	protected void init() {
-		WTable main = new WTable(true);
+		/*WTable main = new WTable(true);
 		main.defaults().growX().pad(PAD_LARGE).maxWidth(PANEL_MEDIUM);
 		main.add(form());
 		
 		update();
 		
-		stage.addActor(main);
+		stage.addActor(main);*/
 	}
 	
-	private void update() {
+	/*private void update() {
 		loginButton.setDisabled(!nameField.isInputValid() || !passwordField.isInputValid());
 	}
 	
@@ -80,5 +80,5 @@ public class LoginFormScreen extends GuiScreen {
 		form.add(content);
 		
 		return form;
-	}
+	}*/
 }

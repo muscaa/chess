@@ -23,7 +23,7 @@ public class CPacketHighlightCells implements IPacketInbound {
 		int len = in.Int();
 		for (int i = 0; i < len; i++) {
 			Cell cell = PacketInputUtils.cell(in);
-			HighlightValue highlight = PacketInputUtils.regEntry(in, HighlightRegistry.REG);
+			HighlightValue highlight = PacketInputUtils.regValue(in, HighlightRegistry.REG);
 			
 			highlights.add(new Highlight(cell, highlight));
 		}

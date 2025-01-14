@@ -17,6 +17,6 @@ public class SPacketTeam implements IPacketOutbound {
 	
 	@Override
 	public void writeData(IBinaryOutput out) throws IOException {
-		PacketOutputUtils.regEntry(out, team);
+		PacketOutputUtils.regValue(out, team);
 	}
 }

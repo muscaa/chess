@@ -16,7 +16,7 @@ public class SPacketIntent implements IPacketInbound {
 	
 	@Override
 	public void readData(IBinaryInput in) throws IOException {
-		intent = PacketInputUtils.regEntry(in, IntentRegistry.REG);
+		intent = PacketInputUtils.regValue(in, IntentRegistry.REG);
 	}
 	
 	public IntentValue getIntent() {

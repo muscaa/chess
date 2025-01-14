@@ -10,7 +10,7 @@ import muscaa.chess.network.play.IPlayNetHandler;
 
 public class SharedContexts {
 	
-	public static final PacketContext<ICommonNetHandler> COMMON_CONTEXT =
+	/*public static final PacketContext<ICommonNetHandler> COMMON_CONTEXT =
 			new PacketContext<ICommonNetHandler>("common_context")
 			.register(100, PacketDisconnect.class, PacketDisconnect::new, ICommonNetHandler::onPacketDisconnect)
 			;
@@ -33,5 +33,5 @@ public class SharedContexts {
 	public static final PacketContext<IPlayNetHandler> PLAY_CONTEXT =
 			new PacketContext<IPlayNetHandler>("play_context")
 			.extend(COMMON_CONTEXT)
-			;
+			;*/
 }

@@ -9,7 +9,7 @@ public class RegistryKey<V extends IRegistryValue> {
 	NamespacePath id;
 	V value;
 	
-	RegistryKey(Registry<V> registry) {
+	RegistryKey(Registry registry) {
 		this.registry = registry;
 	}
 	

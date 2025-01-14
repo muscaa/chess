@@ -3,6 +3,7 @@ package muscaa.chess.client.network.connection;
 import fluff.network.packet.channels.EncryptedPacketChannel;
 import muscaa.chess.client.Client;
 import muscaa.chess.client.gui.screens.LoginFormScreen;
+import muscaa.chess.client.network.ClientContextRegistry;
 import muscaa.chess.client.network.ClientContexts;
 import muscaa.chess.client.network.common.ClientCommonNetHandler;
 import muscaa.chess.client.network.connection.packets.CPacketHandshake;
@@ -14,10 +15,11 @@ public class ClientConnectionNetHandler extends ClientCommonNetHandler implement
 	@Override
 	public void onPacketHandshake(CPacketHandshake packet) {
 		client.setChannel(new EncryptedPacketChannel(packet.getKey()));
-		client.setContext(ClientContexts.LOGIN_CONTEXT, new ClientLoginNetHandler());
+		//client.setContext(ClientContexts.LOGIN_CONTEXT, new ClientLoginNetHandler());
+		client.setContext(ClientContextRegistry.LOGIN.get());
 		
-		TaskManager.render(() -> {
+		/*TaskManager.render(() -> {
 			Client.INSTANCE.setScreen(new LoginFormScreen(client, Client.INSTANCE.getScreen()));
-		});
+		});*/
 	}
 }

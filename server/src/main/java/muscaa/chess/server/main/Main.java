@@ -5,7 +5,6 @@ import java.util.Scanner;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import muscaa.chess.Chess;
-import muscaa.chess.Server;
 import muscaa.chess.command.CommandRegistry;
 import muscaa.chess.command.ICommandSource;
 
@@ -14,7 +13,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
     	Chess.init();
     	
-    	Server.INSTANCE.start();
+    	//Server.INSTANCE.start();
     	
 		System.out.println("Server started. Type 'stop' to stop.");
 		Scanner s = new Scanner(System.in);
@@ -30,6 +29,6 @@ public class Main {
 		}
 		s.close();
 		
-		Server.INSTANCE.stop();
+		//Server.INSTANCE.stop();
     }
 }

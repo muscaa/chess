@@ -16,7 +16,7 @@ public class CPacketGameEnd implements IPacketInbound {
 	
 	@Override
 	public void readData(IBinaryInput in) throws IOException {
-		winner = PacketInputUtils.regEntry(in, TeamRegistry.REG);
+		winner = PacketInputUtils.regValue(in, TeamRegistry.REG);
 	}
 	
 	public TeamValue getWinner() {

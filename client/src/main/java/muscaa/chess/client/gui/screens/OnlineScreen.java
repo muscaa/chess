@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.kotcrab.vis.ui.VisUI;
 
 import fluff.network.NetworkException;
-import muscaa.chess.Server;
 import muscaa.chess.client.board.RemoteBoard;
 import muscaa.chess.client.config.ServersConfig;
 import muscaa.chess.client.gui.ChildGuiScreen;
@@ -116,24 +115,7 @@ public class OnlineScreen extends ChildGuiScreen {
         
         WTextButton lanGameButton = new WTextButton("LAN Game");
         lanGameButton.addActionListener(w -> {
-        	chess.setScreen(new LanGameFormScreen(this, port -> {
-        		try {
-        			if (Server.INSTANCE.getNetwork() != null && Server.INSTANCE.getNetwork().getServer().isRunning()) {
-        				Server.INSTANCE.stop();
-        			} else {
-        				Server.INSTANCE.start();
-        				
-                		ChessClient client = new ChessClient();
-                    	client.connect(new ServersConfig.Server("LAN Game", "localhost", port));
-                		
-        				chess.setBoard(new RemoteBoard(client));
-        			}
-				} catch (IOException | NetworkException e) {
-					e.printStackTrace();
-					
-					chess.setScreen(new DisconnectedScreen(e.toString()));
-				}
-        	}));
+        	chess.setScreen(new LanGameFormScreen(this));
         });
         row1.add(lanGameButton);
         

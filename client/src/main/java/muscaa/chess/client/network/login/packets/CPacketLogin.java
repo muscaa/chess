@@ -4,20 +4,19 @@ import java.io.IOException;
 
 import fluff.bin.IBinaryOutput;
 import fluff.network.packet.IPacketOutbound;
+import muscaa.chess.form.FormData;
+import muscaa.chess.network.PacketOutputUtils;
 
 public class CPacketLogin implements IPacketOutbound {
 	
-	private String name;
-	private String password;
+	private FormData formData;
 	
-	public CPacketLogin(String name, String password) {
-		this.name = name;
-		this.password = password;
+	public CPacketLogin(FormData formData) {
+		this.formData = formData;
 	}
 	
 	@Override
 	public void writeData(IBinaryOutput out) throws IOException {
-		out.LenString(name);
-		out.LenString(password);
+		PacketOutputUtils.formData(out, formData);
 	}
 }
