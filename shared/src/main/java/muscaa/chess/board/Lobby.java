@@ -24,6 +24,7 @@ public class Lobby {
 	public List<Cell> inCheckCells;
 	public List<Cell> lastMoveCells;
 	public Map<Cell, Map<Cell, AbstractMoveValue>> allMoves;
+	private boolean started;
 	
 	public void reset() {
 		matrix = new ServerMatrix(8, 8);
@@ -68,6 +69,8 @@ public class Lobby {
 		for (AbstractPlayer p : players) {
 			p.updateBoard(matrix);
 		}
+		
+		started = true;
 		
 		for (AbstractPlayer p : players) {
 			p.startGame();
@@ -151,6 +154,9 @@ public class Lobby {
 	}
 	
 	public void endGame(TeamValue winner) {
+		if (!started) return;
+		started = false;
+		
 		System.out.println("Winner: " + winner.getKey().getID());
 		
 		for (AbstractPlayer p : players) {

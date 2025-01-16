@@ -8,12 +8,6 @@ public class LayerManager implements ILayer {
 	private final LinkedList<ILayer> reg = new LinkedList<>();
 	private ILayer hovered;
 	
-	public void registerFirst(ILayer input) {
-		synchronized (reg) {
-			reg.addFirst(input);
-		}
-	}
-	
 	public void register(ILayer input) {
 		synchronized (reg) {
 			reg.add(input);
@@ -76,6 +70,8 @@ public class LayerManager implements ILayer {
 	@Override
 	public boolean keyDown(int keycode) {
 		synchronized (reg) {
+			if (hovered != null && hovered.keyDown(keycode)) return true;
+			
 			Iterator<ILayer> it = reg.descendingIterator();
 			while (it.hasNext()) {
 				ILayer l = it.next();
@@ -88,6 +84,8 @@ public class LayerManager implements ILayer {
 	@Override
 	public boolean keyUp(int keycode) {
 		synchronized (reg) {
+			if (hovered != null && hovered.keyUp(keycode)) return true;
+			
 			Iterator<ILayer> it = reg.descendingIterator();
 			while (it.hasNext()) {
 				ILayer l = it.next();
@@ -100,6 +98,8 @@ public class LayerManager implements ILayer {
 	@Override
 	public boolean keyTyped(char character) {
 		synchronized (reg) {
+			if (hovered != null && hovered.keyTyped(character)) return true;
+			
 			Iterator<ILayer> it = reg.descendingIterator();
 			while (it.hasNext()) {
 				ILayer l = it.next();
@@ -112,6 +112,8 @@ public class LayerManager implements ILayer {
 	@Override
 	public boolean mouseDown(int mouseX, int mouseY, int pointer, int button) {
 		synchronized (reg) {
+			if (hovered != null && hovered.mouseDown(mouseX, mouseY, pointer, button)) return true;
+			
 			Iterator<ILayer> it = reg.descendingIterator();
 			while (it.hasNext()) {
 				ILayer l = it.next();
@@ -124,6 +126,8 @@ public class LayerManager implements ILayer {
 	@Override
 	public boolean mouseUp(int mouseX, int mouseY, int pointer, int button) {
 		synchronized (reg) {
+			if (hovered != null && hovered.mouseUp(mouseX, mouseY, pointer, button)) return true;
+			
 			Iterator<ILayer> it = reg.descendingIterator();
 			while (it.hasNext()) {
 				ILayer l = it.next();
@@ -136,6 +140,8 @@ public class LayerManager implements ILayer {
 	@Override
 	public boolean mouseCancelled(int mouseX, int mouseY, int pointer, int button) {
 		synchronized (reg) {
+			if (hovered != null && hovered.mouseCancelled(mouseX, mouseY, pointer, button)) return true;
+			
 			Iterator<ILayer> it = reg.descendingIterator();
 			while (it.hasNext()) {
 				ILayer l = it.next();
@@ -148,6 +154,8 @@ public class LayerManager implements ILayer {
 	@Override
 	public boolean mouseDragged(int mouseX, int mouseY, int pointer) {
 		synchronized (reg) {
+			if (hovered != null && hovered.mouseDragged(mouseX, mouseY, pointer)) return true;
+			
 			Iterator<ILayer> it = reg.descendingIterator();
 			while (it.hasNext()) {
 				ILayer l = it.next();
@@ -160,6 +168,8 @@ public class LayerManager implements ILayer {
 	@Override
 	public boolean mouseMoved(int mouseX, int mouseY) {
 		synchronized (reg) {
+			if (hovered != null && hovered.mouseMoved(mouseX, mouseY)) return true;
+			
 			Iterator<ILayer> it = reg.descendingIterator();
 			while (it.hasNext()) {
 				ILayer l = it.next();
@@ -172,6 +182,8 @@ public class LayerManager implements ILayer {
 	@Override
 	public boolean scrolled(float amountX, float amountY) {
 		synchronized (reg) {
+			if (hovered != null && hovered.scrolled(amountX, amountY)) return true;
+			
 			Iterator<ILayer> it = reg.descendingIterator();
 			while (it.hasNext()) {
 				ILayer l = it.next();

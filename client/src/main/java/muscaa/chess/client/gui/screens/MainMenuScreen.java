@@ -72,7 +72,7 @@ public class MainMenuScreen extends GuiScreen {
 	
 	private void row3(WTable row) {
 		WTextButton modsButton = new WTextButton("Mods");
-		modsButton.addActionListener(w -> chess.setScreen(new OptionsScreen(this)));
+		modsButton.addActionListener(w -> chess.setScreen(new ModsScreen(this)));
 		row.add(modsButton);
 		
 		WTextButton optionsButton = new WTextButton("Options");

@@ -13,6 +13,7 @@ import muscaa.chess.client.assets.TextureRegistry;
 import muscaa.chess.client.board.AbstractBoard;
 import muscaa.chess.client.board.BoardLayer;
 import muscaa.chess.client.board.piece.ClientPieceRegistry;
+import muscaa.chess.client.chat.ChatLayer;
 import muscaa.chess.client.config.ServersConfig;
 import muscaa.chess.client.config.SettingsConfig;
 import muscaa.chess.client.gui.GuiLayer;
@@ -23,6 +24,8 @@ import muscaa.chess.client.network.ClientContextRegistry;
 import muscaa.chess.client.utils.Screen;
 import muscaa.chess.client.utils.Shapes;
 import muscaa.chess.client.utils.TaskManager;
+import muscaa.chess.mod.ChessModLoader;
+import muscaa.chess.mod.ModException;
 
 public class Client {
 	
@@ -36,10 +39,18 @@ public class Client {
 	private final BoardLayer boardLayer;
 	private AbstractBoard board;
 	
+	private final ChatLayer chatLayer;
+	
 	private final GuiLayer guiLayer;
 	private GuiScreen screen;
 	
 	private Client() {
+		try {
+			ChessModLoader.INSTANCE.loadPreClient();
+		} catch (ModException e) {
+			throw new RuntimeException(e);
+		}
+		
 		int width = Gdx.graphics.getWidth();
 		int height = Gdx.graphics.getHeight();
 		
@@ -53,6 +64,9 @@ public class Client {
 		
 		boardLayer = new BoardLayer(this);
 		layerManager.register(boardLayer);
+		
+		chatLayer = new ChatLayer(this);
+		layerManager.register(chatLayer);
 		
 		guiLayer = new GuiLayer(this);
 		layerManager.register(guiLayer);
@@ -69,12 +83,19 @@ public class Client {
     	ClientContextRegistry.init();
     	
     	boardLayer.init();
+    	chatLayer.init();
     	guiLayer.init();
 		
     	returnToMainMenu();
 		
     	settingsConfig.load();
     	//serversConfig.load();
+    	
+		try {
+			ChessModLoader.INSTANCE.loadPostClient();
+		} catch (ModException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	public void render() {

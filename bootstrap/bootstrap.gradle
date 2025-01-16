@@ -9,6 +9,7 @@ application.setMainClass(mainClassName)
 
 dependencies {
 	bootstrap project(":bootstrap")
+	compileOnly "com.github.muscaa:fluff-loader:1.0.11"
 }
 
 tasks.register("copyLibs") {
