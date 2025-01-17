@@ -29,7 +29,7 @@ tasks.register("copyLibs") {
 }
 
 run {
-	dependsOn "processResources"
+	dependsOn "classes"
     dependsOn "copyLibs"
     
     standardInput = System.in
