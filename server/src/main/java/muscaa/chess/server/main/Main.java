@@ -9,17 +9,26 @@ import muscaa.chess.board.Lobby;
 import muscaa.chess.command.CommandRegistry;
 import muscaa.chess.command.ICommandSource;
 import muscaa.chess.mod.ChessModLoader;
+import muscaa.chess.mod.ModInfo;
 import muscaa.chess.network.ChessServer;
 import muscaa.chess.network.ServerContextRegistry;
 import muscaa.chess.network.play.ServerPlayNetHandler;
+import muscaa.chess.server.mod.IServerModInitializer;
 
 public class Main {
+	
+	public static final ChessModLoader<IServerModInitializer> MOD_LOADER = new ChessModLoader<>(
+			IServerModInitializer.class,
+			ModInfo::getServerMain,
+			IServerModInitializer::onPreInitializeServer,
+			IServerModInitializer::onPostInitializeServer
+			);
 	
 	public static ChessServer server;
 	public static Lobby lobby;
 	
     public static void main(String[] args) throws Exception {
-    	ChessModLoader.INSTANCE.loadPreServer();
+    	MOD_LOADER.loadPre();
     	
     	Chess.init();
     	
@@ -29,7 +38,7 @@ public class Main {
 		ServerContextRegistry.PLAY.get().setHandlerFunc(() -> new ServerPlayNetHandler(lobby));
 		server.start(true);
 		
-		ChessModLoader.INSTANCE.loadPostServer();
+		MOD_LOADER.loadPost();
     	
 		System.out.println("Server started. Type 'stop' to stop.");
 		Scanner s = new Scanner(System.in);

@@ -3,28 +3,28 @@ package muscaa.chess.client.board;
 import muscaa.chess.board.Cell;
 import muscaa.chess.board.Lobby;
 import muscaa.chess.board.player.AbstractPlayer;
-import muscaa.chess.board.player.BotPlayer;
 import muscaa.chess.client.Client;
 import muscaa.chess.client.board.player.LocalPlayer;
 
-public class LocalBoard extends AbstractBoard {
+public abstract class AbstractLocalBoard extends AbstractBoard {
 	
 	protected final Lobby lobby;
 	protected final AbstractPlayer player;
-	protected final AbstractPlayer bot;
 	
-	public LocalBoard() {
+	public AbstractLocalBoard() {
 		lobby = new Lobby();
 		player = new LocalPlayer(this);
-		bot = new BotPlayer();
+	}
+	
+	protected void addPlayers() {
+		lobby.join(player, false);
 	}
 	
 	@Override
 	public void init(Client chess, BoardLayer layer) {
 		super.init(chess, layer);
 		
-		lobby.join(player, false);
-		lobby.join(bot, false);
+		addPlayers();
 		
 		Client.INSTANCE.setScreen(null);
 	}

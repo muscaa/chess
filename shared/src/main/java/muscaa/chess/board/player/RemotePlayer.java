@@ -31,20 +31,25 @@ public class RemotePlayer extends AbstractPlayer {
 	}
 	
 	@Override
+	public void updateTurn(TeamValue turn) {
+		// TODO create packet
+	}
+	
+	@Override
 	public void endGame(TeamValue winner) {
 		connection.send(new SPacketGameEnd(winner));
 	}
 	
 	@Override
-	public void setTeam(TeamValue team) {
-		super.setTeam(team);
+	public void updateTeam(TeamValue team) {
+		super.updateTeam(team);
 		
 		connection.send(new SPacketTeam(team));
 	}
 	
 	@Override
-	public void setHighlights(List<Highlight> highlights) {
-		super.setHighlights(highlights);
+	public void updateHighlights(List<Highlight> highlights) {
+		super.updateHighlights(highlights);
 		
 		connection.send(new SPacketHighlightCells(highlights));
 	}

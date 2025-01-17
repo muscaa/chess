@@ -1,4 +1,4 @@
-package muscaa.chess.mod;
+package muscaa.chess.server.mod;
 
 public interface IServerModInitializer {
 	

@@ -43,20 +43,25 @@ public class LocalPlayer extends AbstractPlayer {
 	}
 	
 	@Override
+	public void updateTurn(TeamValue turn) {
+		// TODO
+	}
+	
+	@Override
 	public void endGame(TeamValue winner) {
 		board.endGame(winner);
 	}
 	
 	@Override
-	public void setTeam(TeamValue team) {
-		super.setTeam(team);
+	public void updateTeam(TeamValue team) {
+		super.updateTeam(team);
 		
 		board.setTeam(team);
 	}
 	
 	@Override
-	public void setHighlights(List<Highlight> highlights) {
-		super.setHighlights(highlights);
+	public void updateHighlights(List<Highlight> highlights) {
+		super.updateHighlights(highlights);
 		
 		board.setHighlights(highlights);
 	}

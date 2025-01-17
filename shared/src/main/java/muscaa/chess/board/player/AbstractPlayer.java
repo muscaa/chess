@@ -26,27 +26,27 @@ public abstract class AbstractPlayer {
 		lobby.click(cell);
 	}
 	
-	public void updateTurn(TeamValue turn) {}
-	
 	public abstract void startGame();
 	
 	public abstract void updateBoard(ServerMatrix matrix);
 	
+	public abstract void updateTurn(TeamValue turn);
+	
 	public abstract void endGame(TeamValue winner);
+	
+	public void updateTeam(TeamValue team) {
+		this.team = team;
+	}
+	
+	public void updateHighlights(List<Highlight> highlights) {
+		this.highlights = highlights;
+	}
 	
 	public TeamValue getTeam() {
 		return team;
 	}
 	
-	public void setTeam(TeamValue team) {
-		this.team = team;
-	}
-	
 	public List<Highlight> getHighlights() {
 		return highlights;
-	}
-	
-	public void setHighlights(List<Highlight> highlights) {
-		this.highlights = highlights;
 	}
 }

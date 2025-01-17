@@ -16,7 +16,7 @@ import muscaa.chess.board.player.AbstractPlayer;
 public class Lobby {
 	
 	public final LinkedList<AbstractPlayer> players = new LinkedList<>();
-	public final Map<TeamValue, AbstractPlayer> teams = new HashMap<>();
+	public final HashMap<TeamValue, AbstractPlayer> teams = new HashMap<>();
 	
 	public ServerMatrix matrix;
 	public TeamValue turn;
@@ -193,9 +193,9 @@ public class Lobby {
 			}
 		}
 		
-		player.setHighlights(highlights);
+		player.updateHighlights(highlights);
 		if (opponent != null) {
-			opponent.setHighlights(opponentHighlights);
+			opponent.updateHighlights(opponentHighlights);
 		}
 	}
 	
@@ -270,7 +270,7 @@ public class Lobby {
 			player.init(this);
 			
 			if (spectator) {
-				player.setTeam(TeamRegistry.SPECTATOR.get());
+				player.updateTeam(TeamRegistry.SPECTATOR.get());
 				return true;
 			}
 			
@@ -279,7 +279,7 @@ public class Lobby {
 			
 			if (white == null) {
 				teams.put(TeamRegistry.WHITE.get(), player);
-				player.setTeam(TeamRegistry.WHITE.get());
+				player.updateTeam(TeamRegistry.WHITE.get());
 				
 				if (black != null) {
 					startGame();
@@ -289,7 +289,7 @@ public class Lobby {
 			
 			if (black == null) {
 				teams.put(TeamRegistry.BLACK.get(), player);
-				player.setTeam(TeamRegistry.BLACK.get());
+				player.updateTeam(TeamRegistry.BLACK.get());
 				
 				if (white != null) {
 					startGame();

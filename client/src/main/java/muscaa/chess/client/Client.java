@@ -1,7 +1,6 @@
 package muscaa.chess.client;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 
@@ -16,19 +15,28 @@ import muscaa.chess.client.board.piece.ClientPieceRegistry;
 import muscaa.chess.client.chat.ChatLayer;
 import muscaa.chess.client.config.ServersConfig;
 import muscaa.chess.client.config.SettingsConfig;
+import muscaa.chess.client.config.Theme;
 import muscaa.chess.client.gui.GuiLayer;
 import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.screens.MainMenuScreen;
 import muscaa.chess.client.layer.LayerManager;
+import muscaa.chess.client.mod.IClientModInitializer;
 import muscaa.chess.client.network.ClientContextRegistry;
 import muscaa.chess.client.utils.Screen;
 import muscaa.chess.client.utils.Shapes;
 import muscaa.chess.client.utils.TaskManager;
 import muscaa.chess.mod.ChessModLoader;
 import muscaa.chess.mod.ModException;
+import muscaa.chess.mod.ModInfo;
 
 public class Client {
 	
+	public static final ChessModLoader<IClientModInitializer> MOD_LOADER = new ChessModLoader<>(
+			IClientModInitializer.class,
+			ModInfo::getClientMain,
+			IClientModInitializer::onPreInitializeClient,
+			IClientModInitializer::onPostInitializeClient
+			);
 	public static final Client INSTANCE = new Client();
 	
 	public final ServersConfig serversConfig;
@@ -46,7 +54,7 @@ public class Client {
 	
 	private Client() {
 		try {
-			ChessModLoader.INSTANCE.loadPreClient();
+			MOD_LOADER.loadPre();
 		} catch (ModException e) {
 			throw new RuntimeException(e);
 		}
@@ -92,7 +100,7 @@ public class Client {
     	//serversConfig.load();
     	
 		try {
-			ChessModLoader.INSTANCE.loadPostClient();
+			MOD_LOADER.loadPost();
 		} catch (ModException e) {
 			throw new RuntimeException(e);
 		}
@@ -105,7 +113,7 @@ public class Client {
     	float delta = Gdx.graphics.getDeltaTime();
     	
     	Screen.beginScreen();
-    	Shapes.rect(0, 0, Screen.WIDTH, Screen.HEIGHT, Color.BLACK);
+    	Shapes.rect(0, 0, Screen.WIDTH, Screen.HEIGHT, Theme.WINDOW_BACKGROUND);
     	layerManager.render((int) mouse.x, (int) mouse.y, delta);
     	Screen.endScreen();
     	

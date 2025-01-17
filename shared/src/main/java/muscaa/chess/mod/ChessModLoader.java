@@ -15,12 +15,62 @@ import fluff.json.JSONObject;
 import muscaa.chess.bootstrap.Bootstrap;
 import muscaa.chess.utils.FileUtils;
 
-public class ChessModLoader {
+public class ChessModLoader<V> {
 	
-	public static final ChessModLoader INSTANCE = new ChessModLoader();
-	
-	public final Map<String, ModInfo> mods = new HashMap<>();
+	public final Map<String, ModInfo> modInfos = new HashMap<>();
 	public final Map<String, Object> loaded = new HashMap<>();
+	
+	protected final Class<V> initializerClass;
+	protected final Func1<String, ModInfo> mainClassFunc;
+	protected final TVoidFunc1<V, Exception> preInitFunc;
+	protected final TVoidFunc1<V, Exception> postInitFunc;
+	
+	public ChessModLoader(
+			Class<V> initializerClass,
+			Func1<String, ModInfo> mainClassFunc,
+			TVoidFunc1<V, Exception> preInitFunc,
+			TVoidFunc1<V, Exception> postInitFunc
+			) {
+		this.initializerClass = initializerClass;
+		this.mainClassFunc = mainClassFunc;
+		this.preInitFunc = preInitFunc;
+		this.postInitFunc = postInitFunc;
+	}
+	
+	public void loadPre() throws ModException {
+	    loadBase();
+	    load(preInitFunc, true);
+	}
+	
+	public void loadPost() throws ModException {
+		load(postInitFunc, false);
+	}
+	
+	protected void load(TVoidFunc1<V, Exception> initFunc, boolean create) throws ModException {
+		for (Map.Entry<String, ModInfo> entry : modInfos.entrySet()) {
+			ModInfo info = entry.getValue();
+			if (mainClassFunc.invoke(info) == null) continue;
+			
+			try {
+				Class<?> clazz = Bootstrap.INSTANCE.loader.loadClass(mainClassFunc.invoke(info));
+				if (!initializerClass.isAssignableFrom(clazz)) {
+					throw new ModException("Mod main class " + mainClassFunc.invoke(info) + " does not implement " + initializerClass.getName());
+				}
+				
+				V initializer;
+				if (create) {
+					initializer = (V) clazz.getConstructor().newInstance();
+					loaded.put(info.getID(), initializer);
+				} else {
+					initializer = (V) loaded.get(info.getID());
+				}
+				
+				initFunc.invoke(initializer);
+			} catch (Exception e) {
+				throw new ModException("Failed to load mod main class " + mainClassFunc.invoke(info), e);
+			}
+		}
+	}
 	
 	protected void loadBase() throws ModException {
 	    for (File file : FileUtils.MODS.listFiles()) {
@@ -45,58 +95,20 @@ public class ChessModLoader {
 					throw new ModException("Mod " + file.getName() + " is missing main class");
 				}
 				
+				if (modInfos.containsKey(info.getID())) {
+					throw new ModException("Duplicate mod ID " + info.getID());
+				}
+				
 				if (!Bootstrap.INSTANCE.loader.addJar(file)) {
 					throw new IOException("Failed to load jar " + file.getName());
 				}
 				
-				mods.put(info.getID(), info);
+				modInfos.put(info.getID(), info);
 			} catch (Exception e) {
 				throw new ModException("Failed to load mod " + file.getName(), e);
 			}
 	    }
-	}
-	
-	protected <V> void load(Class<V> initializerClass, Func1<String, ModInfo> mainFunc, TVoidFunc1<V, Exception> initFunc, boolean pre) throws ModException {
-		for (Map.Entry<String, ModInfo> entry : mods.entrySet()) {
-			ModInfo info = entry.getValue();
-			if (mainFunc.invoke(info) == null) continue;
-			
-			try {
-				Class<?> clazz = Bootstrap.INSTANCE.loader.loadClass(mainFunc.invoke(info));
-				if (!initializerClass.isAssignableFrom(clazz)) {
-					throw new ModException("Mod main class " + mainFunc.invoke(info) + " does not implement " + initializerClass.getName());
-				}
-				
-				V initializer;
-				if (pre) {
-					initializer = (V) clazz.getConstructor().newInstance();
-					loaded.put(info.getID(), initializer);
-				} else {
-					initializer = (V) loaded.get(info.getID());
-				}
-				
-				initFunc.invoke(initializer);
-			} catch (Exception e) {
-				throw new ModException("Failed to load mod main class " + mainFunc.invoke(info), e);
-			}
-		}
-	}
-	
-	public void loadPreClient() throws ModException {
-	    loadBase();
-	    load(IClientModInitializer.class, ModInfo::getClientMain, IClientModInitializer::onPreInitializeClient, true);
-	}
-	
-	public void loadPostClient() throws ModException {
-		load(IClientModInitializer.class, ModInfo::getClientMain, IClientModInitializer::onPostInitializeClient, false);
-	}
-	
-	public void loadPreServer() throws ModException {
-	    loadBase();
-	    load(IServerModInitializer.class, ModInfo::getClientMain, IServerModInitializer::onPreInitializeServer, true);
-	}
-	
-	public void loadPostServer() throws ModException {
-	    load(IServerModInitializer.class, ModInfo::getClientMain, IServerModInitializer::onPostInitializeServer, false);
+	    
+	    // TODO handle bootstrap mods
 	}
 }
