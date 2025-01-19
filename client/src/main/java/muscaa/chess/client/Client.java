@@ -90,9 +90,8 @@ public class Client {
     	ClientPieceRegistry.init();
     	ClientContextRegistry.init();
     	
-    	boardLayer.init();
-    	chatLayer.init();
     	guiLayer.init();
+    	chatLayer.init();
 		
     	returnToMainMenu();
 		

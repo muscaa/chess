@@ -48,4 +48,58 @@ public class GuiLayer implements ILayerWrapper {
 		chess.setScreen(null);
 		VisUI.dispose();
 	}
+	
+	@Override
+	public boolean keyDown(int keycode) {
+		getWrappedLayer().keyDown(keycode);
+		return chess.getScreen() != null;
+	}
+	
+	@Override
+	public boolean keyUp(int keycode) {
+		getWrappedLayer().keyUp(keycode);
+		return chess.getScreen() != null;
+	}
+	
+	@Override
+	public boolean keyTyped(char character) {
+		getWrappedLayer().keyTyped(character);
+		return chess.getScreen() != null;
+	}
+	
+	@Override
+	public boolean mouseDown(int mouseX, int mouseY, int pointer, int button) {
+		getWrappedLayer().mouseDown(mouseX, mouseY, pointer, button);
+		return chess.getScreen() != null;
+	}
+	
+	@Override
+	public boolean mouseUp(int mouseX, int mouseY, int pointer, int button) {
+		getWrappedLayer().mouseUp(mouseX, mouseY, pointer, button);
+		return chess.getScreen() != null;
+	}
+	
+	@Override
+	public boolean mouseCancelled(int mouseX, int mouseY, int pointer, int button) {
+		getWrappedLayer().mouseCancelled(mouseX, mouseY, pointer, button);
+		return chess.getScreen() != null;
+	}
+	
+	@Override
+	public boolean mouseDragged(int mouseX, int mouseY, int pointer) {
+		getWrappedLayer().mouseDragged(mouseX, mouseY, pointer);
+		return chess.getScreen() != null;
+	}
+	
+	@Override
+	public boolean mouseMoved(int mouseX, int mouseY) {
+		getWrappedLayer().mouseMoved(mouseX, mouseY);
+		return chess.getScreen() != null;
+	}
+	
+	@Override
+	public boolean scrolled(float amountX, float amountY) {
+		getWrappedLayer().scrolled(amountX, amountY);
+		return chess.getScreen() != null;
+	}
 }

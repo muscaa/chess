@@ -14,6 +14,7 @@ import muscaa.chess.client.Client;
 import muscaa.chess.client.assets.TextureValue;
 import muscaa.chess.client.board.matrix.ClientMatrix;
 import muscaa.chess.client.board.piece.ClientPiece;
+import muscaa.chess.client.chat.ChatLayer;
 import muscaa.chess.client.config.Theme;
 import muscaa.chess.client.layer.ILayer;
 import muscaa.chess.client.utils.Shapes;
@@ -22,14 +23,14 @@ public class BoardLayer implements ILayer {
     
 	private final Client chess;
 	
-    private float tileSize;
-    private float boardX, boardY;
+	private float tileSize;
+	private float boardWidth, boardHeight;
+	private float emptyX, emptyY;
+	private float boardX, boardY;
 	
     public BoardLayer(Client chess) {
     	this.chess = chess;
 	}
-    
-    public void init() {}
     
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
@@ -126,10 +127,21 @@ public class BoardLayer implements ILayer {
 		
 		ClientMatrix matrix = board.getMatrix();
 		
-        tileSize = Math.min(width, height) / Math.max(matrix.getWidth(), matrix.getHeight());
+		int padLeft = ChatLayer.WIDTH;
+		int padRight = 0;
+		int padBottom = 0;
+		int padTop = 0;
+		
+        tileSize = Math.min(width - padLeft - padRight, height - padBottom - padTop) / Math.max(matrix.getWidth(), matrix.getHeight());
         
-        boardX = (width - (tileSize * matrix.getWidth())) / 2;
-        boardY = (height - (tileSize * matrix.getHeight())) / 2;
+        boardWidth = tileSize * matrix.getWidth();
+        boardHeight = tileSize * matrix.getHeight();
+        
+        emptyX = width - boardWidth;
+        emptyY = height - boardHeight;
+        
+        boardX = (emptyX + padLeft - padRight) / 2;
+        boardY = (emptyY + padBottom - padTop) / 2;
 	}
 	
 	@Override

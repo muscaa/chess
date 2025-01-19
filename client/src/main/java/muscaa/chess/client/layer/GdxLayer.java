@@ -15,6 +15,11 @@ public abstract class GdxLayer implements ILayer {
 	}
 	
 	@Override
+	public void resize(int width, int height) {
+		ILayer.super.resize(width, height);
+	}
+	
+	@Override
 	public boolean hover(int mouseX, int mouseY) {
 		return ILayer.super.hover(mouseX, mouseY);
 	}

@@ -22,6 +22,5 @@ public class WScrollPane extends VisScrollPane {
 	private void init() {
 		setFadeScrollBars(false);
 		setFlickScroll(false);
-		setScrollbarsOnTop(true);
 	}
 }
