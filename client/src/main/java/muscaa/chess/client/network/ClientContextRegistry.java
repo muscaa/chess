@@ -14,6 +14,9 @@ import muscaa.chess.client.network.login.ClientLoginNetHandler;
 import muscaa.chess.client.network.login.IClientLoginNetHandler;
 import muscaa.chess.client.network.login.packets.CPacketLogin;
 import muscaa.chess.client.network.login.packets.CPacketLoginForm;
+import muscaa.chess.client.network.ping.ClientPingNetHandler;
+import muscaa.chess.client.network.ping.IClientPingNetHandler;
+import muscaa.chess.client.network.ping.packets.CPacketPing;
 import muscaa.chess.client.network.play.ClientPlayNetHandler;
 import muscaa.chess.client.network.play.IClientPlayNetHandler;
 import muscaa.chess.client.network.play.packets.CPacketBoard;
@@ -38,8 +41,6 @@ public class ClientContextRegistry {
 			new PacketContext<IClientCommonNetHandler>(SharedContextRegistry.COMMON.get().getContext())
 					.registerInbound(1, CPacketChangeContext::new, IClientCommonNetHandler::onPacketChangeContext)
 			;
-	public static final RegistryKey<ClientContextValue<IClientCommonNetHandler>> COMMON = REG.register(Chess.NAMESPACE.path("common"),
-			key -> new ClientContextValue<>(key, COMMON_CONTEXT, null));
 	
 	private static final PacketContext<IClientIntentNetHandler> INTENT_CONTEXT =
 			new PacketContext<IClientIntentNetHandler>(SharedContextRegistry.INTENT.get().getContext())
@@ -48,6 +49,14 @@ public class ClientContextRegistry {
 			;
 	public static final RegistryKey<ClientContextValue<IClientIntentNetHandler>> INTENT = REG.register(Chess.NAMESPACE.path("intent"),
 			key -> new ClientContextValue<>(key, INTENT_CONTEXT, null));
+	
+	private static final PacketContext<IClientPingNetHandler> PING_CONTEXT =
+			new PacketContext<IClientPingNetHandler>(SharedContextRegistry.PING.get().getContext())
+			        .extend(COMMON_CONTEXT)
+					.registerInbound(200, CPacketPing::new, IClientPingNetHandler::onPacketPing)
+			;
+	public static final RegistryKey<ClientContextValue<IClientPingNetHandler>> PING = REG.register(Chess.NAMESPACE.path("ping"),
+			key -> new ClientContextValue<>(key, PING_CONTEXT, ClientPingNetHandler::new));
 	
 	private static final PacketContext<IClientConnectionNetHandler> CONNECTION_CONTEXT =
 			new PacketContext<IClientConnectionNetHandler>(SharedContextRegistry.CONNECTION.get().getContext())

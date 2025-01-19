@@ -7,6 +7,7 @@ import muscaa.chess.network.common.packets.PacketDisconnect;
 import muscaa.chess.network.connection.IConnectionNetHandler;
 import muscaa.chess.network.intent.IIntentNetHandler;
 import muscaa.chess.network.login.ILoginNetHandler;
+import muscaa.chess.network.ping.IPingNetHandler;
 import muscaa.chess.network.play.IPlayNetHandler;
 import muscaa.chess.registry.Registries;
 import muscaa.chess.registry.Registry;
@@ -32,6 +33,13 @@ public class SharedContextRegistry {
 			;
 	public static final RegistryKey<SharedContextValue<IIntentNetHandler>> INTENT = REG.register(Chess.NAMESPACE.path("intent"),
 			key -> new SharedContextValue<>(key, INTENT_CONTEXT));
+	
+	private static final PacketContext<IPingNetHandler> PING_CONTEXT =
+			new PacketContext<IPingNetHandler>("ping_context")
+					.extend(COMMON_CONTEXT)
+			;
+	public static final RegistryKey<SharedContextValue<IPingNetHandler>> PING = REG.register(Chess.NAMESPACE.path("ping"),
+			key -> new SharedContextValue<>(key, PING_CONTEXT));
 	
 	private static final PacketContext<IConnectionNetHandler> CONNECTION_CONTEXT =
 			new PacketContext<IConnectionNetHandler>("connection_context")

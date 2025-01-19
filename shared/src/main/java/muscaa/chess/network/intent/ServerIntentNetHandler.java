@@ -12,7 +12,9 @@ public class ServerIntentNetHandler extends ServerCommonNetHandler implements IS
 	public void onPacketIntent(SPacketIntent packet) {
 		IntentValue intent = packet.getIntent();
 		
-		if (intent == IntentRegistry.CONNECT.get()) {
+		if (intent == IntentRegistry.PING.get()) {
+			connection.setContext(ServerContextRegistry.PING.get());
+		} else if (intent == IntentRegistry.CONNECT.get()) {
 			connection.setContext(ServerContextRegistry.CONNECTION.get());
 		} else {
 			connection.disconnect("Invalid intent!");

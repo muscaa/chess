@@ -15,6 +15,9 @@ import muscaa.chess.network.login.IServerLoginNetHandler;
 import muscaa.chess.network.login.ServerLoginNetHandler;
 import muscaa.chess.network.login.packets.SPacketLogin;
 import muscaa.chess.network.login.packets.SPacketLoginForm;
+import muscaa.chess.network.ping.IServerPingNetHandler;
+import muscaa.chess.network.ping.ServerPingNetHandler;
+import muscaa.chess.network.ping.packets.SPacketPing;
 import muscaa.chess.network.play.IServerPlayNetHandler;
 import muscaa.chess.network.play.packets.SPacketBoard;
 import muscaa.chess.network.play.packets.SPacketClickCell;
@@ -47,6 +50,14 @@ public class ServerContextRegistry {
 			;
 	public static final RegistryKey<ServerContextValue<IServerIntentNetHandler>> INTENT = REG.register(Chess.NAMESPACE.path("intent"),
 			key -> new ServerContextValue<>(key, INTENT_CONTEXT, ServerIntentNetHandler::new));
+	
+	private static final PacketContext<IServerPingNetHandler> PING_CONTEXT =
+			new PacketContext<IServerPingNetHandler>(SharedContextRegistry.PING.get().getContext())
+			        .extend(COMMON_CONTEXT)
+					.registerOutbound(200, SPacketPing.class)
+			;
+	public static final RegistryKey<ServerContextValue<IServerPingNetHandler>> PING = REG.register(Chess.NAMESPACE.path("ping"),
+			key -> new ServerContextValue<>(key, PING_CONTEXT, ServerPingNetHandler::new));
 	
 	private static final PacketContext<IServerConnectionNetHandler> CONNECTION_CONTEXT =
 			new PacketContext<IServerConnectionNetHandler>(SharedContextRegistry.CONNECTION.get().getContext())

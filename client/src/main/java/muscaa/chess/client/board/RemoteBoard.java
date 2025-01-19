@@ -1,14 +1,14 @@
 package muscaa.chess.client.board;
 
 import muscaa.chess.board.Cell;
-import muscaa.chess.client.network.ChessClient;
+import muscaa.chess.client.network.AbstractChessClient;
 import muscaa.chess.client.network.play.packets.CPacketClickCell;
 
 public class RemoteBoard extends AbstractBoard {
 	
-	protected final ChessClient client;
+	protected final AbstractChessClient client;
     
-    public RemoteBoard(ChessClient client) {
+    public RemoteBoard(AbstractChessClient client) {
     	this.client = client;
 	}
     

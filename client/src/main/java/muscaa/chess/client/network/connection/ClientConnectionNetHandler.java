@@ -3,6 +3,7 @@ package muscaa.chess.client.network.connection;
 import fluff.network.client.IClient;
 import fluff.network.packet.channels.EncryptedPacketChannel;
 import muscaa.chess.Chess;
+import muscaa.chess.client.network.ConnectChessClient;
 import muscaa.chess.client.network.NetworkStatus;
 import muscaa.chess.client.network.common.ClientCommonNetHandler;
 import muscaa.chess.client.network.connection.packets.CPacketEncrypt;
@@ -12,7 +13,10 @@ public class ClientConnectionNetHandler extends ClientCommonNetHandler implement
 	
 	protected void sendEncrypt() {
 		client.send(new CPacketEncrypt(Chess.PROTOCOL_VERSION, CPacketEncrypt.generate()));
-		client.update(NetworkStatus.ENCRYPT);
+		
+		if (client instanceof ConnectChessClient connectClient) {
+			connectClient.update(NetworkStatus.ENCRYPT);
+		}
 	}
 	
 	@Override

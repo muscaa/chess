@@ -2,6 +2,7 @@ package muscaa.chess.client.network.login;
 
 import muscaa.chess.client.Client;
 import muscaa.chess.client.gui.screens.FormScreen;
+import muscaa.chess.client.network.ConnectChessClient;
 import muscaa.chess.client.network.NetworkStatus;
 import muscaa.chess.client.network.common.ClientCommonNetHandler;
 import muscaa.chess.client.network.login.packets.CPacketLogin;
@@ -15,9 +16,12 @@ public class ClientLoginNetHandler extends ClientCommonNetHandler implements ICl
 		TaskManager.render(() -> {
 			Client.INSTANCE.setScreen(new FormScreen(packet.getForm(), (form, formData) -> {
 				client.send(new CPacketLogin(formData));
-				client.update(NetworkStatus.LOGIN);
 				
-				Client.INSTANCE.setScreen(client.getStatusScreen());
+				if (client instanceof ConnectChessClient connectClient) {
+					connectClient.update(NetworkStatus.LOGIN);
+					
+					Client.INSTANCE.setScreen(connectClient.statusScreen);
+				}
 			}));
 		});
 	}

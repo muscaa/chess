@@ -9,45 +9,24 @@ import fluff.network.client.AbstractClient;
 import fluff.network.client.ClientErrorType;
 import fluff.network.packet.IPacketOutbound;
 import fluff.network.packet.channels.DefaultPacketChannel;
-import muscaa.chess.client.Client;
-import muscaa.chess.client.config.ServersConfig;
-import muscaa.chess.client.gui.screens.StatusScreen;
 import muscaa.chess.client.network.intent.ClientIntentNetHandler;
-import muscaa.chess.network.IntentRegistry;
+import muscaa.chess.network.IntentValue;
 import muscaa.chess.network.common.packets.PacketDisconnect;
 
-public class ChessClient extends AbstractClient {
-	
-	private NetworkStatus status;
-	private StatusScreen statusScreen;
+public abstract class AbstractChessClient extends AbstractClient {
 	
     @SuppressWarnings("resource")
-	protected boolean connect(String host, int port) throws UnknownHostException, IOException, NetworkException {
-    	if (isConnected()) return false;
+	protected void connect(String host, int port, IntentValue intent) throws UnknownHostException, IOException, NetworkException {
+    	if (isConnected()) disconnect();
     	
-    	setContext(ClientContextRegistry.INTENT.get(), new ClientIntentNetHandler(IntentRegistry.CONNECT.get()));
+    	setContext(ClientContextRegistry.INTENT.get(), new ClientIntentNetHandler(intent));
 		setChannel(new DefaultPacketChannel());
 		openConnection(new Socket(host, port));
 		
-		return isConnected();
-    }
-    
-	public void connect(ServersConfig.Server server) throws UnknownHostException, IOException, NetworkException {
-		status = NetworkStatus.CONNECT;
-		Client.INSTANCE.setScreen(statusScreen = new StatusScreen(status.getText()));
-		
-		if (isConnected()) disconnect();
-		
-		if (!connect(server.address, server.port)) {
+		if (!isConnected()) {
 			disconnect();
 		}
-	}
-	
-	public void update(NetworkStatus status) {
-		this.status = status;
-		
-		statusScreen.setText(status.getText());
-	}
+    }
 	
 	public <V extends IClientNetHandler> void setContext(ClientContextValue<V> context) {
 		setContext(context, context.getHandlerFunc().invoke());
@@ -55,10 +34,6 @@ public class ChessClient extends AbstractClient {
 	
 	public <V extends IClientNetHandler> void setContext(ClientContextValue<V> context, V handler) {
 		setContextUnsafe(context.getContext(), handler);
-	}
-	
-	public StatusScreen getStatusScreen() {
-		return statusScreen;
 	}
 	
 	@Override

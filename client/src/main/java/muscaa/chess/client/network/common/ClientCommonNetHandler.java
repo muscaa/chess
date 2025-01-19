@@ -2,34 +2,27 @@ package muscaa.chess.client.network.common;
 
 import fluff.network.AbstractClientNetHandler;
 import fluff.network.NetworkException;
-import muscaa.chess.client.Client;
-import muscaa.chess.client.gui.screens.DisconnectedScreen;
-import muscaa.chess.client.network.ChessClient;
+import muscaa.chess.client.network.AbstractChessClient;
+import muscaa.chess.client.network.ConnectChessClient;
 import muscaa.chess.client.network.common.packets.CPacketChangeContext;
-import muscaa.chess.client.utils.TaskManager;
 import muscaa.chess.network.common.packets.PacketDisconnect;
 
-public class ClientCommonNetHandler extends AbstractClientNetHandler<ChessClient> implements IClientCommonNetHandler {
-	
-	private String disconnectMessage;
+public class ClientCommonNetHandler extends AbstractClientNetHandler<AbstractChessClient> implements IClientCommonNetHandler {
 	
 	@Override
 	public void onConnect() throws NetworkException {
 		super.onConnect();
 		
-		disconnectMessage = null;
-	}
-	
-	@Override
-	public void onDisconnect() {
-		TaskManager.render(() -> {
-			Client.INSTANCE.setScreen(new DisconnectedScreen(disconnectMessage));
-		});
+		if (client instanceof ConnectChessClient connectClient) {
+			connectClient.disconnectMessage = null;
+		}
 	}
 	
 	@Override
 	public void onPacketDisconnect(PacketDisconnect packet) {
-		disconnectMessage = packet.getMessage();
+		if (client instanceof ConnectChessClient connectClient) {
+			connectClient.disconnectMessage = packet.getMessage();
+		}
 		
 		client.disconnect();
 	}

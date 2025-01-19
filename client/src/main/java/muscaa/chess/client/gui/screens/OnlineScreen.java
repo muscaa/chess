@@ -1,6 +1,10 @@
 package muscaa.chess.client.gui.screens;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -17,11 +21,14 @@ import muscaa.chess.client.gui.widgets.WPanel;
 import muscaa.chess.client.gui.widgets.WScrollPane;
 import muscaa.chess.client.gui.widgets.WTable;
 import muscaa.chess.client.gui.widgets.WTextButton;
-import muscaa.chess.client.network.ChessClient;
+import muscaa.chess.client.network.ConnectChessClient;
+import muscaa.chess.client.network.PingChessClient;
+import muscaa.chess.client.network.ping.packets.CPacketPing;
 
 public class OnlineScreen extends ChildGuiScreen {
 	
 	private ButtonGroup<Button> group;
+	private Map<ServersConfig.Server, WLabel> servers;
 	private WTextButton joinButton;
 	private WTextButton editButton;
 	private WTextButton deleteButton;
@@ -64,12 +71,15 @@ public class OnlineScreen extends ChildGuiScreen {
 		content.top();
 		
 		group = new ButtonGroup<>();
+		servers = new HashMap<>();
 		for (ServersConfig.Server server : chess.serversConfig) {
             Button button = serverEntry(server);
             group.add(button);
             content.add(button);
             content.row();
 		}
+		
+		refresh();
 		
 		WPanel servers = new WPanel();
 		servers.defaults().growX().pad(PAD_MEDIUM);
@@ -86,10 +96,29 @@ public class OnlineScreen extends ChildGuiScreen {
 		button.add(new WLabel(server.name));
 		button.row();
 		
-		button.add(new WLabel(server.address + ":" + server.port, FONT_SMALL, Color.GRAY));
+		WLabel label = new WLabel("", FONT_SMALL, Color.GRAY);//new WLabel(server.address + ":" + server.port, FONT_SMALL, Color.GRAY);
+		label.setWrap(true);
+		servers.put(server, label);
+		
+		button.add(label);
 		button.row();
 		
 		return button;
+	}
+	
+	private void refresh() {
+		for (Map.Entry<ServersConfig.Server, WLabel> entry : servers.entrySet()) {
+			entry.getValue().setText("Pinging...");
+			
+			PingChessClient pingClient = new PingChessClient();
+			CompletableFuture<CPacketPing> pingFuture = pingClient.ping(entry.getKey());
+			try {
+				CPacketPing packet = pingFuture.get();
+				entry.getValue().setText(packet.getMotd() + " " + packet.getPlayers() + "/" + packet.getMaxPlayers());
+			} catch (InterruptedException | ExecutionException e) {
+				entry.getValue().setText(e.getMessage());
+			}
+		}
 	}
 	
 	private WTable footer() {
@@ -101,7 +130,7 @@ public class OnlineScreen extends ChildGuiScreen {
         	try {
         		ServersConfig.Server server = chess.serversConfig.get(group.getCheckedIndex());
         		
-        		ChessClient client = new ChessClient();
+        		ConnectChessClient client = new ConnectChessClient();
             	client.connect(server);
         		
 				chess.setBoard(new RemoteBoard(client));
@@ -151,7 +180,7 @@ public class OnlineScreen extends ChildGuiScreen {
         
         WTextButton refreshButton = new WTextButton("Refresh");
         refreshButton.addActionListener(w -> {
-        	
+        	refresh();
         });
         row2.add(refreshButton);
         

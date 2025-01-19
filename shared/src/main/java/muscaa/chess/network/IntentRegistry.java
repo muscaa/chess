@@ -10,7 +10,7 @@ public class IntentRegistry {
 	public static final Registry<IntentValue> REG = Registries.create(Chess.NAMESPACE.path("intents"));
 	
 	public static final RegistryKey<IntentValue> NULL = REG.register(Chess.NULL, IntentValue::new);
-	//public static final Intent PING = REG.register(new Intent(Chess.NAMESPACE.path("ping")));
+	public static final RegistryKey<IntentValue> PING = REG.register(Chess.NAMESPACE.path("ping"), IntentValue::new);
 	public static final RegistryKey<IntentValue> CONNECT = REG.register(Chess.NAMESPACE.path("connect"), IntentValue::new);
 	
 	public static void init() {
