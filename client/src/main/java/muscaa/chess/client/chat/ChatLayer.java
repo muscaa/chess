@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import muscaa.chess.client.Client;
+import muscaa.chess.client.assets.FontRegistry;
 import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.widgets.WLabel;
 import muscaa.chess.client.gui.widgets.WPanel;
@@ -75,7 +75,7 @@ public class ChatLayer implements ILayerWrapper {
 			chat.getCells().removeIndex(0);
 		}
 		
-		WLabel label = new WLabel(line, GuiScreen.FONT_SMALL, Color.WHITE);
+		WLabel label = new WLabel(line, FontRegistry.VARELA_18.get());
 		label.setWrap(true);
 		chat.add(label).growX().pad(GuiScreen.PAD_SMALL);
 		chat.row();

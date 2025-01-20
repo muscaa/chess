@@ -9,18 +9,21 @@ public class SPacketPing implements IPacketOutbound {
 	
 	private int players;
 	private int maxPlayers;
-	private String motd;
+	private String line1;
+	private String line2;
 	
-	public SPacketPing(int players, int maxPlayers, String motd) {
+	public SPacketPing(int players, int maxPlayers, String line1, String line2) {
 		this.players = players;
 		this.maxPlayers = maxPlayers;
-		this.motd = motd;
+		this.line1 = line1;
+		this.line2 = line2;
 	}
 	
 	@Override
 	public void writeData(IBinaryOutput out) throws IOException {
 		out.Int(players);
 		out.Int(maxPlayers);
-		out.LenString(motd);
+		out.LenString(line1);
+		out.LenString(line2);
 	}
 }

@@ -1,9 +1,9 @@
 package muscaa.chess.client.gui.screens;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Align;
 
 import muscaa.chess.Chess;
+import muscaa.chess.chat.ChatColor;
 import muscaa.chess.client.assets.FontRegistry;
 import muscaa.chess.client.assets.TextureRegistry;
 import muscaa.chess.client.board.BotBoard;
@@ -20,7 +20,7 @@ public class MainMenuScreen extends GuiScreen {
 		WTable content = new WTable();
 		content.defaults().growX().pad(PAD_SMALL).minHeight(BUTTON_HEIGHT);
 		
-		WLabel titleLabel = new WLabel("Chess", FONT_TITLE, Color.WHITE);
+		WLabel titleLabel = new WLabel("Chess", FontRegistry.MONTEZ_128.get());
 		titleLabel.setAlignment(Align.top);
 		content.add(titleLabel);
 		content.row();
@@ -96,6 +96,6 @@ public class MainMenuScreen extends GuiScreen {
 	protected void renderBackground(int mouseX, int mouseY, float delta) {
 		drawWallpaper(TextureRegistry.WALLPAPER.get());
 		
-		FontRegistry.VARELA_18.get().draw("Version " + Chess.VERSION, 5, FontRegistry.VARELA_18.get().getHeight(), Color.WHITE);
+		FontRegistry.VARELA_18.get().draw("Version " + Chess.VERSION, 5, FontRegistry.VARELA_18.get().getHeight(), ChatColor.WHITE);
 	}
 }

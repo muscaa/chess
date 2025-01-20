@@ -1,12 +1,16 @@
 package muscaa.chess.client.assets;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 
+import muscaa.chess.chat.ChatColor;
+import muscaa.chess.chat.ChatComponent;
+import muscaa.chess.chat.ChatComponentColor;
+import muscaa.chess.chat.ChatUtils;
 import muscaa.chess.client.utils.Screen;
 import muscaa.chess.registry.IRegistryValue;
 import muscaa.chess.registry.RegistryKey;
@@ -31,12 +35,40 @@ public class FontValue implements IRegistryValue<FontValue> {
 		}
 	}
 	
-	public void draw(String text, float x, float y, Color color) {
+	public void draw(String text, float x, float y, ChatColor color) {
 		if (font == null) return;
 		
+		drawComponent(ChatUtils.parse(text, color), x, y);
+	}
+	
+	public void drawFormatted(String text, float x, float y, ChatColor color) {
+		if (font == null) return;
+		
+		drawComponent(ChatUtils.parse(text, color, ChatUtils.FORMAT_CHAR), x, y);
+	}
+	
+	public void drawComponent(ChatComponent component, float x, float y) {
+		if (font == null) return;
+		
+		BitmapFontCache cache = begin();
+		cache.addText(component.text(), x, y);
+		for (ChatComponentColor componentColor : component.colors()) {
+			cache.setColors(componentColor.color().getFloatBits(), componentColor.from(), componentColor.to());
+		}
+		end();
+	}
+	
+	private BitmapFontCache begin() {
 		Screen.beginSprites();
-		font.setColor(color);
-		font.draw(Screen.SPRITES, text, x, y);
+		
+		BitmapFontCache cache = font.getCache();
+		cache.clear();
+		return cache;
+	}
+	
+	private void end() {
+		font.getCache().draw(Screen.SPRITES);
+		
 		Screen.endSprites();
 	}
 	

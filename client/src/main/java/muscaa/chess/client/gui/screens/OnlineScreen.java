@@ -6,12 +6,13 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.kotcrab.vis.ui.VisUI;
 
 import fluff.network.NetworkException;
+import muscaa.chess.chat.ChatColor;
+import muscaa.chess.client.assets.FontRegistry;
 import muscaa.chess.client.board.RemoteBoard;
 import muscaa.chess.client.config.ServersConfig;
 import muscaa.chess.client.gui.ChildGuiScreen;
@@ -28,7 +29,7 @@ import muscaa.chess.client.network.ping.packets.CPacketPing;
 public class OnlineScreen extends ChildGuiScreen {
 	
 	private ButtonGroup<Button> group;
-	private Map<ServersConfig.Server, WLabel> servers;
+	private Map<ServersConfig.Server, Button> servers;
 	private WTextButton joinButton;
 	private WTextButton editButton;
 	private WTextButton deleteButton;
@@ -74,6 +75,8 @@ public class OnlineScreen extends ChildGuiScreen {
 		servers = new HashMap<>();
 		for (ServersConfig.Server server : chess.serversConfig) {
             Button button = serverEntry(server);
+            servers.put(server, button);
+            
             group.add(button);
             content.add(button);
             content.row();
@@ -91,33 +94,58 @@ public class OnlineScreen extends ChildGuiScreen {
 	
 	private Button serverEntry(ServersConfig.Server server) {
 		Button button = new Button(VisUI.getSkin(), "toggle");
-		button.defaults().growX();
+		button.defaults().growX().minHeight(30);
 		
-		button.add(new WLabel(server.name));
+		WTable title = new WTable();
+		title.add(new WLabel(server.name)).growX();
+		title.add(new WLabel(FontRegistry.VARELA_18.get(), ChatColor.GRAY));
+		
+		button.add(title);
 		button.row();
 		
-		WLabel label = new WLabel("", FONT_SMALL, Color.GRAY);//new WLabel(server.address + ":" + server.port, FONT_SMALL, Color.GRAY);
-		label.setWrap(true);
-		servers.put(server, label);
+		WLabel line1 = new WLabel(FontRegistry.VARELA_18.get());
+		line1.setWrap(true);
+		button.add(line1);
+		button.row();
 		
-		button.add(label);
+		WLabel line2 = new WLabel(FontRegistry.VARELA_18.get());
+		line2.setWrap(true);
+		button.add(line2);
 		button.row();
 		
 		return button;
 	}
 	
 	private void refresh() {
-		for (Map.Entry<ServersConfig.Server, WLabel> entry : servers.entrySet()) {
-			entry.getValue().setText("Pinging...");
+		for (Map.Entry<ServersConfig.Server, Button> entry : servers.entrySet()) {
+			ServersConfig.Server server = entry.getKey();
+			Button button = entry.getValue();
 			
-			PingChessClient pingClient = new PingChessClient();
-			CompletableFuture<CPacketPing> pingFuture = pingClient.ping(entry.getKey());
-			try {
-				CPacketPing packet = pingFuture.get();
-				entry.getValue().setText(packet.getMotd() + " " + packet.getPlayers() + "/" + packet.getMaxPlayers());
-			} catch (InterruptedException | ExecutionException e) {
-				entry.getValue().setText(e.getMessage());
-			}
+			WTable title = (WTable) button.getChild(0);
+			WLabel players = (WLabel) title.getChild(1);
+			WLabel line1 = (WLabel) button.getChild(1);
+			WLabel line2 = (WLabel) button.getChild(2);
+			
+			Thread thread = new Thread(() -> {
+				players.setText("");
+				line1.setText("Pinging...");
+				line2.setText("");
+				
+				PingChessClient pingClient = new PingChessClient();
+				CompletableFuture<CPacketPing> pingFuture = pingClient.ping(server);
+				
+				try {
+					CPacketPing packet = pingFuture.get();
+					players.setText(packet.getPlayers() + "/" + packet.getMaxPlayers());
+					line1.setText(packet.getLine1());
+					line2.setText(packet.getLine2());
+				} catch (InterruptedException | ExecutionException e) {
+					line1.setTextFormatted("&cCan't connect to server");
+				}
+			});
+			thread.setName("Ping Server");
+			thread.setDaemon(true);
+			thread.start();
 		}
 	}
 	

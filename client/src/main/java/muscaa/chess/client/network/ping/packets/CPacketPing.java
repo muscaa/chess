@@ -9,7 +9,8 @@ public class CPacketPing implements IPacketInbound {
 	
 	private int players;
 	private int maxPlayers;
-	private String motd;
+	private String line1;
+	private String line2;
 	
 	public CPacketPing() {}
 	
@@ -17,7 +18,8 @@ public class CPacketPing implements IPacketInbound {
 	public void readData(IBinaryInput in) throws IOException {
 		players = in.Int();
 		maxPlayers = in.Int();
-		motd = in.LenString();
+		line1 = in.LenString();
+		line2 = in.LenString();
 	}
 	
 	public int getPlayers() {
@@ -28,7 +30,11 @@ public class CPacketPing implements IPacketInbound {
 		return maxPlayers;
 	}
 	
-	public String getMotd() {
-		return motd;
+	public String getLine1() {
+		return line1;
+	}
+	
+	public String getLine2() {
+		return line2;
 	}
 }
