@@ -11,7 +11,6 @@ import fluff.network.packet.IPacketOutbound;
 import fluff.network.packet.channels.DefaultPacketChannel;
 import muscaa.chess.client.network.intent.ClientIntentNetHandler;
 import muscaa.chess.network.IntentValue;
-import muscaa.chess.network.common.packets.PacketDisconnect;
 
 public abstract class AbstractChessClient extends AbstractClient {
 	
@@ -47,7 +46,7 @@ public abstract class AbstractChessClient extends AbstractClient {
 	public void disconnect() {
 		if (!isConnected()) return;
 		
-		super.send(new PacketDisconnect("disconnected"));
+		//super.send(new PacketDisconnect("disconnected"));
 		super.disconnect();
 	}
 	

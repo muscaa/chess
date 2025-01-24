@@ -1,6 +1,6 @@
 package muscaa.chess.network.ping;
 
-import muscaa.chess.network.common.IServerCommonNetHandler;
+import muscaa.chess.network.base.IServerBaseNetHandler;
 
-public interface IServerPingNetHandler extends IServerCommonNetHandler, IPingNetHandler {
+public interface IServerPingNetHandler extends IServerBaseNetHandler, IPingNetHandler {
 }

@@ -9,12 +9,14 @@ import muscaa.chess.client.config.ServersConfig;
 import muscaa.chess.client.gui.screens.DisconnectedScreen;
 import muscaa.chess.client.gui.screens.StatusScreen;
 import muscaa.chess.client.utils.TaskManager;
+import muscaa.chess.network.DisconnectReasonValue;
 import muscaa.chess.network.IntentRegistry;
 
 public class ConnectChessClient extends AbstractChessClient {
 	
 	public NetworkStatus status;
 	public StatusScreen statusScreen;
+	public DisconnectReasonValue disconnectReason;
 	public String disconnectMessage;
 	
 	public void connect(ServersConfig.Server server) throws UnknownHostException, IOException, NetworkException {
@@ -33,6 +35,8 @@ public class ConnectChessClient extends AbstractChessClient {
 	@Override
 	public void onDisconnect() {
 		super.onDisconnect();
+		
+		if (disconnectReason == null) return;
 		
 		TaskManager.render(() -> {
 			Client.INSTANCE.setScreen(new DisconnectedScreen(disconnectMessage));

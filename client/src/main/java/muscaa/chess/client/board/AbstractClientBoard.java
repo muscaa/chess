@@ -4,19 +4,20 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import muscaa.chess.board.AbstractBoard;
 import muscaa.chess.board.Cell;
 import muscaa.chess.board.Highlight;
 import muscaa.chess.board.TeamRegistry;
 import muscaa.chess.board.TeamValue;
+import muscaa.chess.chat.ChatUtils;
 import muscaa.chess.client.Client;
 import muscaa.chess.client.assets.SoundRegistry;
 import muscaa.chess.client.board.matrix.ClientMatrix;
 import muscaa.chess.client.board.piece.ClientPiece;
-import muscaa.chess.client.gui.screens.DisconnectedScreen;
 import muscaa.chess.client.utils.Screen;
 import muscaa.chess.client.utils.TaskManager;
 
-public abstract class AbstractBoard {
+public abstract class AbstractClientBoard extends AbstractBoard {
 	
 	protected Client chess;
 	protected BoardLayer layer;
@@ -24,18 +25,23 @@ public abstract class AbstractBoard {
 	protected ClientMatrix matrix;
 	protected TeamValue team;
 	protected List<Highlight> highlights = new LinkedList<>();
-    
-    public abstract void click(Cell cell);
-    
-	public void startGame() {
+	
+	public void init(Client chess, BoardLayer layer) {
+		this.chess = chess;
+		this.layer = layer;
+	}
+	
+	public abstract void click(Cell cell);
+	
+	public void onStartGame() {
 		highlights.clear();
 		
 		TaskManager.render(() -> {
 			chess.setScreen(null);
 		});
 	}
-	
-	public void updateBoard(int width, int height, List<ClientPiece> pieces) {
+    
+	public void onUpdateBoard(int width, int height, List<ClientPiece> pieces) {
 		if (matrix == null) {
 			matrix = new ClientMatrix(width, height);
 		} else if (matrix.getWidth() != width || matrix.getHeight() != height) {
@@ -54,23 +60,28 @@ public abstract class AbstractBoard {
 		SoundRegistry.MOVE.get().play();
 	}
 	
-	public void endGame(TeamValue winner) {
-		TaskManager.render(() -> {
+	public void onUpdateTurn(TeamValue turn) {
+	}
+	
+	public void onEndGame(TeamValue winner) {
+		/*TaskManager.render(() -> {
 			chess.setScreen(new DisconnectedScreen(
 					winner == TeamRegistry.NULL.get() ? "Stalemate"
 					: winner == team ? "You win"
 							: "Opponent wins"));
 			
 			chess.setBoard(null);
-		});
+		});*/
+		String text = winner == TeamRegistry.NULL.get() ? "&7Stalemate"
+				: winner == team ? "&aYou win"
+						: "&cOpponent wins";
+		
+		chess.chatLayer.addLine(ChatUtils.format(text)); // TODO on server
 	}
 	
-	public void init(Client chess, BoardLayer layer) {
-		this.chess = chess;
-		this.layer = layer;
+	public void dispose() {
+		highlights.clear();
 	}
-	
-	public void dispose() {}
 	
 	public ClientMatrix getMatrix() {
 		return matrix;

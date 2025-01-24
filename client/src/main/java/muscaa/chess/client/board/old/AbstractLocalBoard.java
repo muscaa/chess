@@ -1,14 +1,8 @@
-package muscaa.chess.client.board;
+package muscaa.chess.client.board.old;
 
-import muscaa.chess.board.Cell;
-import muscaa.chess.board.Lobby;
-import muscaa.chess.board.player.AbstractPlayer;
-import muscaa.chess.client.Client;
-import muscaa.chess.client.board.player.LocalPlayer;
-
-public abstract class AbstractLocalBoard extends AbstractBoard {
+public abstract class AbstractLocalBoard extends CAbstractBoard {
 	
-	protected final Lobby lobby;
+	/*protected final Lobby lobby;
 	protected final AbstractPlayer player;
 	
 	public AbstractLocalBoard() {
@@ -37,5 +31,5 @@ public abstract class AbstractLocalBoard extends AbstractBoard {
 	@Override
 	public void dispose() {
 		lobby.close();
-	}
+	}*/
 }

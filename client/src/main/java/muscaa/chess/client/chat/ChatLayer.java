@@ -25,7 +25,7 @@ public class ChatLayer implements ILayerWrapper {
 	public static final int WIDTH = 350;
 	public static final int HISTORY_SIZE = 100;
 	
-	private Client chess;
+	private final Client chess;
 	
 	private Stage stage;
 	private ILayer stageLayer;
@@ -105,13 +105,13 @@ public class ChatLayer implements ILayerWrapper {
 				String text = chatInput.getText();
 				chatInput.setText("");
 				
-				addLine(text); // TODO send message to server
-				
 				if (messageHistory.size() >= HISTORY_SIZE) {
 					messageHistory.remove(0);
 				}
 				messageHistory.add(text);
 				messageIndex = messageHistory.size();
+				
+				chess.getPlayer().sendChatMessage(text);
 				
 				TaskManager.render(() -> {
 					if (atBottom) {

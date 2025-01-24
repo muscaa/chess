@@ -10,6 +10,7 @@ import muscaa.chess.client.network.play.packets.CPacketGameEnd;
 import muscaa.chess.client.network.play.packets.CPacketGameStart;
 import muscaa.chess.client.network.play.packets.CPacketHighlightCells;
 import muscaa.chess.client.network.play.packets.CPacketTeam;
+import muscaa.chess.client.network.play.packets.CPacketTurn;
 
 public class ClientPlayNetHandler extends ClientCommonNetHandler implements IClientPlayNetHandler {
 	
@@ -24,26 +25,31 @@ public class ClientPlayNetHandler extends ClientCommonNetHandler implements ICli
 	
 	@Override
 	public void onPacketStartGame(CPacketGameStart packet) {
-		Client.INSTANCE.getBoard().startGame();
+		Client.INSTANCE.getPlayer().getBoard().onStartGame();
 	}
 	
 	@Override
 	public void onPacketBoard(CPacketBoard packet) {
-		Client.INSTANCE.getBoard().updateBoard(packet.getWidth(), packet.getHeight(), packet.getPieces());
+		Client.INSTANCE.getPlayer().getBoard().onUpdateBoard(packet.getWidth(), packet.getHeight(), packet.getPieces());
 	}
 	
 	@Override
 	public void onPacketTeam(CPacketTeam packet) {
-		Client.INSTANCE.getBoard().setTeam(packet.getTeam());
+		Client.INSTANCE.getPlayer().getBoard().setTeam(packet.getTeam());
+	}
+	
+	@Override
+	public void onPacketTurn(CPacketTurn packet) {
+		Client.INSTANCE.getPlayer().getBoard().onUpdateTurn(packet.getTurn());
 	}
 	
 	@Override
 	public void onPacketHighlightCells(CPacketHighlightCells packet) {
-		Client.INSTANCE.getBoard().setHighlights(packet.getHighlights());
+		Client.INSTANCE.getPlayer().getBoard().setHighlights(packet.getHighlights());
 	}
 	
 	@Override
 	public void onPacketEndGame(CPacketGameEnd packet) {
-		Client.INSTANCE.getBoard().endGame(packet.getWinner());
+		Client.INSTANCE.getPlayer().getBoard().onEndGame(packet.getWinner());
 	}
 }

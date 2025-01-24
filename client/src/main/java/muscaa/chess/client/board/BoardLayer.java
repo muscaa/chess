@@ -34,9 +34,9 @@ public class BoardLayer implements ILayer {
     
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
-		if (chess.getBoard() == null) return;
+		if (chess.getPlayer() == null || chess.getPlayer().getBoard() == null) return;
 		
-		AbstractBoard board = chess.getBoard();
+		AbstractClientBoard board = chess.getPlayer().getBoard();
 		if (board.getMatrix() == null || board.getTeam() == null) return;
 		
 		ClientMatrix matrix = board.getMatrix();
@@ -120,9 +120,9 @@ public class BoardLayer implements ILayer {
 	
 	@Override
 	public void resize(int width, int height) {
-		if (chess.getBoard() == null) return;
+		if (chess.getPlayer() == null || chess.getPlayer().getBoard() == null) return;
 		
-		AbstractBoard board = chess.getBoard();
+		AbstractClientBoard board = chess.getPlayer().getBoard();
 		if (board.getMatrix() == null) return;
 		
 		ClientMatrix matrix = board.getMatrix();
@@ -146,14 +146,14 @@ public class BoardLayer implements ILayer {
 	
 	@Override
 	public boolean hover(int mouseX, int mouseY) {
-		return chess.getBoard() != null;
+		return chess.getPlayer() == null || chess.getPlayer().getBoard() == null;
 	}
 	
 	@Override
 	public boolean mouseDown(int mouseX, int mouseY, int pointer, int button) {
-		if (chess.getBoard() == null) return false;
+		if (chess.getPlayer() == null || chess.getPlayer().getBoard() == null) return false;
 		
-		AbstractBoard board = chess.getBoard();
+		AbstractClientBoard board = chess.getPlayer().getBoard();
 		if (board.getMatrix() == null || board.getTeam() == null) return false;
 		
 		ClientMatrix matrix = board.getMatrix();
@@ -179,6 +179,6 @@ public class BoardLayer implements ILayer {
 	
 	@Override
 	public void dispose() {
-		chess.setBoard(null);
+		//chess.setBoard(null);
 	}
 }

@@ -3,13 +3,16 @@ package muscaa.chess.client.gui.screens;
 import com.kotcrab.vis.ui.util.IntDigitsOnlyFilter;
 
 import fluff.network.NetworkException;
-import muscaa.chess.client.board.LanBoard;
+import muscaa.chess.client.IntegratedServer;
 import muscaa.chess.client.gui.ChildGuiScreen;
 import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.widgets.WPanel;
 import muscaa.chess.client.gui.widgets.WTable;
 import muscaa.chess.client.gui.widgets.WTextButton;
 import muscaa.chess.client.gui.widgets.WTextField;
+import muscaa.chess.form.field.FormField;
+import muscaa.chess.form.field.FormFieldData;
+import muscaa.chess.network.login.ServerLoginNetHandler;
 
 public class LanGameFormScreen extends ChildGuiScreen {
 	
@@ -62,8 +65,19 @@ public class LanGameFormScreen extends ChildGuiScreen {
 		startServerButton.addActionListener(w -> {
 			int port = Integer.parseInt(portField.getText());
 			
-    		try {
-				chess.setBoard(new LanBoard(port));
+			try {
+				IntegratedServer server = new IntegratedServer();
+				server.start();
+				server.openToLan(port);
+				
+				chess.setScreen(new FormScreen(ServerLoginNetHandler.DEFAULT_LOGIN_FORM, (form, formData) -> {
+					FormField nameField = form.get("name");
+					FormFieldData nameFieldData = formData.get("name");
+					
+					String name = nameField.get(nameFieldData);
+					
+					server.joinAs(name);
+				}));
 			} catch (NetworkException e) {
 				e.printStackTrace();
 				

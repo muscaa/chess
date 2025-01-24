@@ -1,7 +1,9 @@
 package muscaa.chess.client.utils;
 
 import java.util.Queue;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutionException;
 
 import fluff.functions.gen.VoidFunc;
 
@@ -18,5 +20,16 @@ public class TaskManager {
 	
 	public static void render(VoidFunc func) {
 		RENDER_QUEUE.offer(func);
+	}
+	
+	public static void waitRender(VoidFunc func) {
+		try {
+			CompletableFuture<Void> future = new CompletableFuture<>();
+			render(() -> {
+				func.invoke();
+				future.complete(null);
+			});
+			future.get();
+		} catch (InterruptedException | ExecutionException e) {}
 	}
 }

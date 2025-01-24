@@ -2,17 +2,18 @@ package muscaa.chess.network.connection;
 
 import fluff.network.packet.channels.EncryptedPacketChannel;
 import muscaa.chess.Chess;
+import muscaa.chess.network.DisconnectReasonRegistry;
 import muscaa.chess.network.ServerContextRegistry;
-import muscaa.chess.network.common.ServerCommonNetHandler;
+import muscaa.chess.network.base.ServerBaseNetHandler;
 import muscaa.chess.network.connection.packets.SPacketEncrypt;
 import muscaa.chess.network.connection.packets.SPacketHandshake;
 
-public class ServerConnectionNetHandler extends ServerCommonNetHandler implements IServerConnectionNetHandler {
+public class ServerConnectionNetHandler extends ServerBaseNetHandler implements IServerConnectionNetHandler {
 	
 	@Override
 	public void onPacketEncrypt(SPacketEncrypt packet) {
 		if (packet.getProtocolVersion() != Chess.PROTOCOL_VERSION) {
-			connection.disconnect("Invalid protocol version!");
+			connection.disconnect(DisconnectReasonRegistry.KICK.get(), "Invalid protocol version!");
             return;
 		}
 		

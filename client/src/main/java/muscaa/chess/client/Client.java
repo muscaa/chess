@@ -9,7 +9,6 @@ import muscaa.chess.client.assets.FontRegistry;
 import muscaa.chess.client.assets.SoundCategoryRegistry;
 import muscaa.chess.client.assets.SoundRegistry;
 import muscaa.chess.client.assets.TextureRegistry;
-import muscaa.chess.client.board.AbstractBoard;
 import muscaa.chess.client.board.BoardLayer;
 import muscaa.chess.client.board.piece.ClientPieceRegistry;
 import muscaa.chess.client.chat.ChatLayer;
@@ -22,6 +21,7 @@ import muscaa.chess.client.gui.screens.MainMenuScreen;
 import muscaa.chess.client.layer.LayerManager;
 import muscaa.chess.client.mod.IClientModInitializer;
 import muscaa.chess.client.network.ClientContextRegistry;
+import muscaa.chess.client.player.AbstractClientPlayer;
 import muscaa.chess.client.utils.Screen;
 import muscaa.chess.client.utils.Shapes;
 import muscaa.chess.client.utils.TaskManager;
@@ -43,14 +43,12 @@ public class Client {
 	public final SettingsConfig settingsConfig;
 	
 	public final LayerManager layerManager;
-	
 	private final BoardLayer boardLayer;
-	private AbstractBoard board;
-	
-	private final ChatLayer chatLayer;
-	
+	public final ChatLayer chatLayer;
 	private final GuiLayer guiLayer;
+	
 	private GuiScreen screen;
+	private AbstractClientPlayer player;
 	
 	private Client() {
 		try {
@@ -125,12 +123,57 @@ public class Client {
 		layerManager.resize(width, height);
 	}
 	
-	public AbstractBoard getBoard() {
+	public GuiScreen getScreen() {
+		return screen;
+	}
+	
+	public void setScreen(GuiScreen newScreen) {
+		GuiScreen oldScreen = screen;
+		if (oldScreen != null) {
+			oldScreen.dispose();
+		}
+		
+		screen = newScreen;
+		if (screen == null) {
+			if (player != null) return;
+			
+			screen = new MainMenuScreen();
+		}
+		
+		screen.init(this, guiLayer, Screen.VIEWPORT);
+	}
+	
+	public AbstractClientPlayer getPlayer() {
+		return player;
+	}
+	
+	public void setPlayer(AbstractClientPlayer newPlayer) {
+		chatLayer.clear();
+		
+		AbstractClientPlayer oldplayer = player;
+		if (oldplayer != null) {
+			oldplayer.dispose();
+		}
+		
+		player = newPlayer;
+		if (player != null) {
+			SoundRegistry.AMBIENT.get().stop();
+			Client.INSTANCE.setScreen(null);
+			
+			player.init(this, chatLayer, boardLayer);
+		} else {
+			if (!SoundRegistry.AMBIENT.get().isPlaying()) {
+                SoundRegistry.AMBIENT.get().loopSingle();
+			}
+		}
+	}
+	
+	/*public AbstractClientBoard getBoard() {
 		return board;
 	}
 	
-	public void setBoard(AbstractBoard newBoard) {
-		AbstractBoard oldBoard = board;
+	public void setBoard(AbstractClientBoard newBoard) {
+		AbstractClientBoard oldBoard = board;
 		if (oldBoard != null) {
 			oldBoard.dispose();
 		}
@@ -145,30 +188,11 @@ public class Client {
 				SoundRegistry.AMBIENT.get().loopSingle();
 			}
 		}
-	}
-	
-	public GuiScreen getScreen() {
-		return screen;
-	}
-	
-	public void setScreen(GuiScreen newScreen) {
-		GuiScreen oldScreen = screen;
-		if (oldScreen != null) {
-			oldScreen.dispose();
-		}
-		
-		screen = newScreen;
-		if (screen == null) {
-			if (board != null) return;
-			
-			screen = new MainMenuScreen();
-		}
-		
-		screen.init(this, guiLayer, Screen.VIEWPORT);
-	}
+	}*/
 	
 	public void returnToMainMenu() {
-		setBoard(null);
+		//setBoard(null);
+		setPlayer(null);
 		setScreen(new MainMenuScreen());
 	}
 	

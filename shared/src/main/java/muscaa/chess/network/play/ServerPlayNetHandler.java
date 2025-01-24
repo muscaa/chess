@@ -1,50 +1,54 @@
 package muscaa.chess.network.play;
 
 import fluff.network.client.IClient;
-import muscaa.chess.board.Lobby;
-import muscaa.chess.board.player.AbstractPlayer;
-import muscaa.chess.board.player.RemotePlayer;
+import muscaa.chess.AbstractServer;
+import muscaa.chess.board.AbstractServerBoard;
+import muscaa.chess.network.DisconnectReasonRegistry;
 import muscaa.chess.network.common.ServerCommonNetHandler;
 import muscaa.chess.network.play.packets.SPacketClickCell;
+import muscaa.chess.player.AbstractServerPlayer;
 
 public class ServerPlayNetHandler extends ServerCommonNetHandler implements IServerPlayNetHandler {
 	
-	protected final Lobby lobby;
-	protected AbstractPlayer player;
+	protected final AbstractServerBoard board;
 	
-	public ServerPlayNetHandler(Lobby lobby) {
-		this.lobby = lobby;
+	public ServerPlayNetHandler(AbstractServer gameServer, AbstractServerBoard board) {
+		super(gameServer);
+		
+		this.board = board;
 	}
 	
 	@Override
 	public void onInit(IClient client) {
 		super.onInit(client);
 		
-		if (player != null) {
-			connection.disconnect("Already connected!");
+		if (connection.player == null) {
+			connection.disconnect(DisconnectReasonRegistry.KICK.get(), "Not logged in!");
 			return;
 		}
 		
-		player = new RemotePlayer(connection);
-		boolean joined = lobby.join(player, false);
+		boolean joined = board.join(connection.player, false);
 		if (!joined) {
-			connection.disconnect("Lobby is full!");
+			connection.player.disconnect(DisconnectReasonRegistry.KICK.get(), "Lobby is full!");
 			return;
 		}
 	}
 	
 	@Override
 	public void onDisconnect() {
-		if (player == null) return;
+		if (connection.player == null) return;
 		
-		lobby.leave(player);
-		player = null;
+		AbstractServerPlayer player = connection.player;
+		connection.player = null;
+		
+		board.leave(player);
+		gameServer.removePlayer(player);
 	}
 	
 	@Override
 	public void onPacketClickCell(SPacketClickCell packet) {
-		if (player == null) return;
+		if (connection.player == null) return;
 		
-		player.click(packet.getCell());
+		connection.player.onClick(packet.getCell());
 	}
 }

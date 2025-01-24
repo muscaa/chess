@@ -1,6 +1,6 @@
 package muscaa.chess.network.intent;
 
-import muscaa.chess.network.common.ICommonNetHandler;
+import muscaa.chess.network.base.IBaseNetHandler;
 
-public interface IIntentNetHandler extends ICommonNetHandler {
+public interface IIntentNetHandler extends IBaseNetHandler {
 }

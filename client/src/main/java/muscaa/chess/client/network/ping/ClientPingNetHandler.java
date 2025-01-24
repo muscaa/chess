@@ -1,10 +1,10 @@
 package muscaa.chess.client.network.ping;
 
 import muscaa.chess.client.network.PingChessClient;
-import muscaa.chess.client.network.common.ClientCommonNetHandler;
+import muscaa.chess.client.network.base.ClientBaseNetHandler;
 import muscaa.chess.client.network.ping.packets.CPacketPing;
 
-public class ClientPingNetHandler extends ClientCommonNetHandler implements IClientPingNetHandler {
+public class ClientPingNetHandler extends ClientBaseNetHandler implements IClientPingNetHandler {
 	
 	@Override
 	public void onPacketPing(CPacketPing packet) {

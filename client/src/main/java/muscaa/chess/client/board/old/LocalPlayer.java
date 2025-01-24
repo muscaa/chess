@@ -1,23 +1,10 @@
-package muscaa.chess.client.board.player;
+package muscaa.chess.client.board.old;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import muscaa.chess.board.Cell;
-import muscaa.chess.board.Highlight;
-import muscaa.chess.board.TeamValue;
-import muscaa.chess.board.matrix.ServerMatrix;
-import muscaa.chess.board.piece.AbstractServerPiece;
-import muscaa.chess.board.player.AbstractPlayer;
-import muscaa.chess.client.board.AbstractBoard;
-import muscaa.chess.client.board.piece.ClientPiece;
-import muscaa.chess.client.board.piece.ClientPieceRegistry;
-
-public class LocalPlayer extends AbstractPlayer {
+public class LocalPlayer /*extends AbstractPlayer*/ {
 	
-	protected final AbstractBoard board;
+	/*protected final CAbstractBoard board;
 	
-	public LocalPlayer(AbstractBoard board) {
+	public LocalPlayer(CAbstractBoard board) {
 		this.board = board;
 	}
 	
@@ -64,5 +51,5 @@ public class LocalPlayer extends AbstractPlayer {
 		super.updateHighlights(highlights);
 		
 		board.setHighlights(highlights);
-	}
+	}*/
 }

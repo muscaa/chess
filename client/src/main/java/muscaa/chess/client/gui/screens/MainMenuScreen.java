@@ -2,21 +2,25 @@ package muscaa.chess.client.gui.screens;
 
 import com.badlogic.gdx.utils.Align;
 
+import muscaa.chess.AbstractServer;
 import muscaa.chess.Chess;
 import muscaa.chess.chat.ChatColor;
+import muscaa.chess.client.IntegratedServer;
 import muscaa.chess.client.assets.FontRegistry;
 import muscaa.chess.client.assets.TextureRegistry;
-import muscaa.chess.client.board.BotBoard;
 import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.widgets.WLabel;
 import muscaa.chess.client.gui.widgets.WTable;
 import muscaa.chess.client.gui.widgets.WTextButton;
 import muscaa.chess.client.utils.WindowUtils;
+import muscaa.chess.player.players.BotServerPlayer;
 
 public class MainMenuScreen extends GuiScreen {
 	
 	@Override
 	protected void init() {
+		System.out.println(AbstractServer.getInstance());
+		
 		WTable content = new WTable();
 		content.defaults().growX().pad(PAD_SMALL).minHeight(BUTTON_HEIGHT);
 		
@@ -60,7 +64,19 @@ public class MainMenuScreen extends GuiScreen {
 	
 	private void row1(WTable row) {
 		WTextButton offlineButton = new WTextButton("Offline");
-		offlineButton.addActionListener(w -> chess.setBoard(new BotBoard()));
+		offlineButton.addActionListener(w -> {
+			//chess.setBoard(new BotBoard());
+			
+			IntegratedServer server = new IntegratedServer();
+			server.start();
+			
+			server.joinAs("Player");
+			
+			BotServerPlayer botPlayer = new BotServerPlayer();
+			server.addPlayer(botPlayer);
+			
+			server.serverBoard.join(botPlayer, false);
+		});
 		row.add(offlineButton);
 	}
 	

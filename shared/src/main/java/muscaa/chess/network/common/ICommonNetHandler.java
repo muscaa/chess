@@ -1,9 +1,6 @@
 package muscaa.chess.network.common;
 
-import fluff.network.INetHandler;
-import muscaa.chess.network.common.packets.PacketDisconnect;
+import muscaa.chess.network.base.IBaseNetHandler;
 
-public interface ICommonNetHandler extends INetHandler {
-	
-	void onPacketDisconnect(PacketDisconnect packet);
+public interface ICommonNetHandler extends IBaseNetHandler {
 }

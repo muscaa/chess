@@ -14,7 +14,7 @@ public class CommandRegistry {
 		DISPATCHER.register(
 				LiteralArgumentBuilder.<ICommandSource>literal("ping")
 				.executes(context -> {
-					System.out.println("pong");
+					context.getSource().addChatLine("Pong!");
 					return 0;
 				})
 				);

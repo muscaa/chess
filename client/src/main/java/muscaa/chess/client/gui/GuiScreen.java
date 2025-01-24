@@ -50,7 +50,7 @@ public abstract class GuiScreen implements ILayerWrapper {
 	}
 	
 	protected void renderBackground(int mouseX, int mouseY, float delta) {
-		if (chess.getBoard() != null) {
+		if (chess.getPlayer() != null) {
 			Shapes.rect(0, 0, viewport.getWorldWidth(), viewport.getWorldHeight(), Theme.GUISCREEN_BACKGROUND);
 		} else {
 			drawWallpaper(TextureRegistry.WALLPAPER_BLUR.get());

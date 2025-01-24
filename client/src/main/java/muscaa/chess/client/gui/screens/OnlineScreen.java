@@ -13,7 +13,6 @@ import com.kotcrab.vis.ui.VisUI;
 import fluff.network.NetworkException;
 import muscaa.chess.chat.ChatColor;
 import muscaa.chess.client.assets.FontRegistry;
-import muscaa.chess.client.board.RemoteBoard;
 import muscaa.chess.client.config.ServersConfig;
 import muscaa.chess.client.gui.ChildGuiScreen;
 import muscaa.chess.client.gui.GuiScreen;
@@ -156,12 +155,10 @@ public class OnlineScreen extends ChildGuiScreen {
         joinButton = new WTextButton("Join");
         joinButton.addActionListener(w -> {
         	try {
-        		ServersConfig.Server server = chess.serversConfig.get(group.getCheckedIndex());
-        		
-        		ConnectChessClient client = new ConnectChessClient();
-            	client.connect(server);
-        		
-				chess.setBoard(new RemoteBoard(client));
+	    		ServersConfig.Server server = chess.serversConfig.get(group.getCheckedIndex());
+	    		
+	    		ConnectChessClient client = new ConnectChessClient();
+	        	client.connect(server);
 			} catch (IOException | NetworkException e) {
 				e.printStackTrace();
 				

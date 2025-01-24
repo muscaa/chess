@@ -5,14 +5,11 @@ import java.util.Scanner;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import muscaa.chess.Chess;
-import muscaa.chess.board.Lobby;
 import muscaa.chess.command.CommandRegistry;
-import muscaa.chess.command.ICommandSource;
+import muscaa.chess.command.ConsoleCommandSource;
 import muscaa.chess.mod.ChessModLoader;
 import muscaa.chess.mod.ModInfo;
-import muscaa.chess.network.ChessServer;
-import muscaa.chess.network.ServerContextRegistry;
-import muscaa.chess.network.play.ServerPlayNetHandler;
+import muscaa.chess.server.DedicatedServer;
 import muscaa.chess.server.mod.IServerModInitializer;
 
 public class Main {
@@ -24,19 +21,16 @@ public class Main {
 			IServerModInitializer::onPostInitializeServer
 			);
 	
-	public static ChessServer server;
-	public static Lobby lobby;
+	public static DedicatedServer server;
 	
     public static void main(String[] args) throws Exception {
     	MOD_LOADER.loadPre();
     	
     	Chess.init();
     	
-		server = new ChessServer(40755);
-		lobby = new Lobby();
-		
-		ServerContextRegistry.PLAY.get().setHandlerFunc(() -> new ServerPlayNetHandler(lobby));
-		server.start(true);
+    	server = new DedicatedServer();
+    	
+		server.server.start(true);
 		
 		MOD_LOADER.loadPost();
     	
@@ -47,13 +41,13 @@ public class Main {
 			if (line.equals("stop")) break;
 			
 			try {
-				CommandRegistry.DISPATCHER.execute(line, new ICommandSource() {});
+				CommandRegistry.DISPATCHER.execute(line, ConsoleCommandSource.INSTANCE);
 			} catch (CommandSyntaxException e) {
 				e.printStackTrace();
 			}
 		}
 		s.close();
 		
-		server.stop();
+		server.server.stop();
     }
 }

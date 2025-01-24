@@ -10,6 +10,7 @@ import muscaa.chess.board.piece.ServerPieceRegistry;
 import muscaa.chess.board.piece.move.MoveRegistry;
 import muscaa.chess.command.CommandRegistry;
 import muscaa.chess.form.field.FormFieldRegistry;
+import muscaa.chess.network.DisconnectReasonRegistry;
 import muscaa.chess.network.IntentRegistry;
 import muscaa.chess.network.ServerContextRegistry;
 import muscaa.chess.network.SharedContextRegistry;
@@ -33,6 +34,7 @@ public class Chess {
 		ServerPieceRegistry.init();
 		MoveRegistry.init();
 		CommandRegistry.init();
+		DisconnectReasonRegistry.init();
 		SharedContextRegistry.init();
 		ServerContextRegistry.init();
 	}

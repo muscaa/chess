@@ -28,7 +28,7 @@ public class ClientInputProcessor extends LayerInputProcessor {
 				return true;
 				
 			case Keys.ESCAPE:
-				if (chess.getBoard() == null) break;
+				if (chess.getPlayer() == null) break;
 				
 				GuiScreen screen = chess.getScreen();
 				screen = screen == null ? new PauseScreen() : null;

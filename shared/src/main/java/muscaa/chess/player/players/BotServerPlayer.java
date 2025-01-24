@@ -1,4 +1,4 @@
-package muscaa.chess.board.player;
+package muscaa.chess.player.players;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,9 +16,12 @@ import muscaa.chess.board.matrix.ServerMatrix;
 import muscaa.chess.board.piece.AbstractServerPiece;
 import muscaa.chess.board.piece.ServerPieceRegistry;
 import muscaa.chess.board.piece.move.AbstractMoveValue;
+import muscaa.chess.board.piece.move.MoveUtils;
 import muscaa.chess.board.piece.pieces.NullPiece;
+import muscaa.chess.network.DisconnectReasonValue;
+import muscaa.chess.player.AbstractServerPlayer;
 
-public class BotPlayer extends AbstractPlayer {
+public class BotServerPlayer extends AbstractServerPlayer {
 	
 	protected static final double[][] PAWN_EVAL_WHITE = {
 			{  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0 },
@@ -97,9 +100,12 @@ public class BotPlayer extends AbstractPlayer {
 	
 	protected final ExecutorService executor;
 	
-	public BotPlayer() {
+	public BotServerPlayer() {
 		executor = Executors.newSingleThreadExecutor();
 	}
+	
+	@Override
+	public void addChatLine(String line) {}
 	
 	@Override
 	public void startGame() {
@@ -119,25 +125,32 @@ public class BotPlayer extends AbstractPlayer {
 		executor.shutdownNow();
 	}
 	
+	@Override
+	public void disconnect(DisconnectReasonValue reason, String message) {
+		super.disconnect(reason, message);
+		
+		executor.shutdownNow();
+	}
+	
 	protected void doMove() {
-		if (lobby.turn != team) return;
+		if (board.getTurn() != team) return;
 		
 		MoveEntry bestMove = null;
 		
-		List<MoveEntry> bestMoves = minimaxRoot(lobby.matrix, 3, true);
+		List<MoveEntry> bestMoves = minimaxRoot(board.matrix, 3, true);
 		if (!bestMoves.isEmpty()) {
 			Random random = new Random();
 			bestMove = bestMoves.get(random.nextInt(bestMoves.size()));
 		} else {
-			bestMove = getRandomMove(lobby.matrix, lobby.allMoves);
+			bestMove = getRandomMove(board.matrix, board.allMoves);
 		}
 		
 		if (bestMove == null) {
-			lobby.endGame(team.invert());
+			board.endGame(team.invert());
 			return;
 		}
 		
-		lobby.doMove(bestMove.move, bestMove.from, bestMove.to);
+		board.doMove(bestMove.move, bestMove.from, bestMove.to);
 	}
 	
 	protected MoveEntry getRandomMove(ServerMatrix matrix, Map<Cell, Map<Cell, AbstractMoveValue>> allMoves) {
@@ -194,7 +207,7 @@ public class BotPlayer extends AbstractPlayer {
 				move.doMove(matrix, from, to);
 				matrix.end();
 				
-				boolean inCheck = !lobby.getInCheck(piece.getTeam()).isEmpty();
+				boolean inCheck = !MoveUtils.getInCheck(board.matrix, piece.getTeam()).isEmpty();
 				if (inCheck) {
 					matrix.undo(1);
 					continue;
@@ -255,7 +268,7 @@ public class BotPlayer extends AbstractPlayer {
 					move.doMove(matrix, from, to);
 					matrix.end();
 					
-					boolean inCheck = !lobby.getInCheck(piece.getTeam()).isEmpty();
+					boolean inCheck = !MoveUtils.getInCheck(board.matrix, piece.getTeam()).isEmpty();
 					if (inCheck) {
 						matrix.undo(1);
 						continue;
@@ -291,7 +304,7 @@ public class BotPlayer extends AbstractPlayer {
 					move.doMove(matrix, from, to);
 					matrix.end();
 					
-					boolean inCheck = !lobby.getInCheck(piece.getTeam()).isEmpty();
+					boolean inCheck = !MoveUtils.getInCheck(board.matrix, piece.getTeam()).isEmpty();
 					if (inCheck) {
 						matrix.undo(1);
 						continue;

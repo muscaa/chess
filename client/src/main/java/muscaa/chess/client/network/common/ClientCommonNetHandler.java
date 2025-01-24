@@ -1,34 +1,28 @@
 package muscaa.chess.client.network.common;
 
-import fluff.network.AbstractClientNetHandler;
-import fluff.network.NetworkException;
-import muscaa.chess.client.network.AbstractChessClient;
-import muscaa.chess.client.network.ConnectChessClient;
-import muscaa.chess.client.network.common.packets.CPacketChangeContext;
-import muscaa.chess.network.common.packets.PacketDisconnect;
+import muscaa.chess.client.Client;
+import muscaa.chess.client.board.boards.RemoteClientBoard;
+import muscaa.chess.client.network.base.ClientBaseNetHandler;
+import muscaa.chess.client.network.common.packets.CPacketChatLine;
+import muscaa.chess.client.network.common.packets.CPacketJoinBoard;
+import muscaa.chess.client.network.common.packets.CPacketLeaveBoard;
 
-public class ClientCommonNetHandler extends AbstractClientNetHandler<AbstractChessClient> implements IClientCommonNetHandler {
+public abstract class ClientCommonNetHandler extends ClientBaseNetHandler implements IClientCommonNetHandler {
 	
 	@Override
-	public void onConnect() throws NetworkException {
-		super.onConnect();
-		
-		if (client instanceof ConnectChessClient connectClient) {
-			connectClient.disconnectMessage = null;
-		}
+	public void onPacketChatLine(CPacketChatLine packet) {
+		Client.INSTANCE.getPlayer().onAddChatLine(packet.getLine());
 	}
 	
 	@Override
-	public void onPacketDisconnect(PacketDisconnect packet) {
-		if (client instanceof ConnectChessClient connectClient) {
-			connectClient.disconnectMessage = packet.getMessage();
-		}
+	public void onPacketJoinBoard(CPacketJoinBoard packet) {
+		RemoteClientBoard board = new RemoteClientBoard(client);
 		
-		client.disconnect();
+		Client.INSTANCE.getPlayer().setBoard(board);
 	}
 	
 	@Override
-	public void onPacketChangeContext(CPacketChangeContext packet) {
-		client.setContext(packet.getContext());
+	public void onPacketLeaveBoard(CPacketLeaveBoard packet) {
+		Client.INSTANCE.getPlayer().setBoard(null);
 	}
 }

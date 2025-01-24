@@ -1,4 +1,4 @@
-package muscaa.chess.client.network.common.packets;
+package muscaa.chess.client.network.base.packets;
 
 import java.io.IOException;
 

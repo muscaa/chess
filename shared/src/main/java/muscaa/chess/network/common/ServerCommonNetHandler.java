@@ -1,16 +1,19 @@
 package muscaa.chess.network.common;
 
-import fluff.network.AbstractServerNetHandler;
-import muscaa.chess.network.ChessClientConnection;
-import muscaa.chess.network.ChessServer;
-import muscaa.chess.network.common.packets.PacketDisconnect;
+import muscaa.chess.AbstractServer;
+import muscaa.chess.network.base.ServerBaseNetHandler;
+import muscaa.chess.network.common.packets.SPacketChatMessage;
 
-public class ServerCommonNetHandler extends AbstractServerNetHandler<ChessServer, ChessClientConnection> implements IServerCommonNetHandler {
+public abstract class ServerCommonNetHandler extends ServerBaseNetHandler implements IServerCommonNetHandler {
+	
+	protected final AbstractServer gameServer;
+	
+	public ServerCommonNetHandler(AbstractServer server) {
+		this.gameServer = server;
+	}
 	
 	@Override
-	public void onPacketDisconnect(PacketDisconnect packet) {
-		connection.disconnect();
-		
-		// handle lines?
+	public void onPacketChatMessage(SPacketChatMessage packet) {
+		connection.player.onSendChatMessage(packet.getMessage());
 	}
 }

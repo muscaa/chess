@@ -1,21 +1,8 @@
-package muscaa.chess.board;
-
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import muscaa.chess.board.matrix.ServerMatrix;
-import muscaa.chess.board.piece.AbstractServerPiece;
-import muscaa.chess.board.piece.ServerPieceRegistry;
-import muscaa.chess.board.piece.move.AbstractMoveValue;
-import muscaa.chess.board.piece.move.moves.CaptureMove;
-import muscaa.chess.board.piece.pieces.NullPiece;
-import muscaa.chess.board.player.AbstractPlayer;
+package muscaa.chess.board.old;
 
 public class Lobby {
 	
-	public final LinkedList<AbstractPlayer> players = new LinkedList<>();
+	/*public final LinkedList<AbstractPlayer> players = new LinkedList<>();
 	public final HashMap<TeamValue, AbstractPlayer> teams = new HashMap<>();
 	
 	public ServerMatrix matrix;
@@ -320,5 +307,5 @@ public class Lobby {
 			players.clear();
 			teams.clear();
 		}
-	}
+	}*/
 }

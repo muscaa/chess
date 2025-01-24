@@ -21,14 +21,14 @@ public class PauseScreen extends GuiScreen {
 		content.add(optionsButton);
 		content.row();
 		
-		if (chess.getBoard() != null) {
+		/*if (chess.getBoard() != null) {
 			WTextButton surrenderButton = new WTextButton("Surrender");
 			surrenderButton.addActionListener(w -> {
 				
 			});
 			content.add(surrenderButton);
 			content.row();
-		}
+		}*/
 		
 		content.add();
 		content.row();

@@ -2,10 +2,10 @@ package muscaa.chess.network.ping;
 
 import fluff.network.client.IClient;
 import muscaa.chess.chat.ChatUtils;
-import muscaa.chess.network.common.ServerCommonNetHandler;
+import muscaa.chess.network.base.ServerBaseNetHandler;
 import muscaa.chess.network.ping.packets.SPacketPing;
 
-public class ServerPingNetHandler extends ServerCommonNetHandler implements IServerPingNetHandler {
+public class ServerPingNetHandler extends ServerBaseNetHandler implements IServerPingNetHandler {
 	
 	@Override
 	public void onInit(IClient client) {

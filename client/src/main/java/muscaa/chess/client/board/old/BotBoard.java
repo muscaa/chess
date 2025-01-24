@@ -1,11 +1,8 @@
-package muscaa.chess.client.board;
-
-import muscaa.chess.board.player.AbstractPlayer;
-import muscaa.chess.board.player.BotPlayer;
+package muscaa.chess.client.board.old;
 
 public class BotBoard extends AbstractLocalBoard {
 	
-	protected final AbstractPlayer bot;
+	/*protected final AbstractPlayer bot;
 	
 	public BotBoard() {
 		bot = new BotPlayer();
@@ -16,5 +13,5 @@ public class BotBoard extends AbstractLocalBoard {
 		super.addPlayers();
 		
 		lobby.join(bot, false);
-	}
+	}*/
 }

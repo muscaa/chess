@@ -1,11 +1,11 @@
 package muscaa.chess.client.network.intent;
 
 import fluff.network.NetworkException;
-import muscaa.chess.client.network.common.ClientCommonNetHandler;
+import muscaa.chess.client.network.base.ClientBaseNetHandler;
 import muscaa.chess.client.network.intent.packets.CPacketIntent;
 import muscaa.chess.network.IntentValue;
 
-public class ClientIntentNetHandler extends ClientCommonNetHandler implements IClientIntentNetHandler {
+public class ClientIntentNetHandler extends ClientBaseNetHandler implements IClientIntentNetHandler {
 	
 	private final IntentValue intent;
 	
