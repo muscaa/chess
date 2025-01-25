@@ -1,13 +1,17 @@
 package muscaa.chess;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import muscaa.chess.board.AbstractServerBoard;
 import muscaa.chess.chat.ChatUtils;
 import muscaa.chess.command.CommandRegistry;
+import muscaa.chess.command.ConsoleCommandSource;
+import muscaa.chess.command.ICommandSource;
 import muscaa.chess.network.DisconnectReasonRegistry;
 import muscaa.chess.player.AbstractServerPlayer;
 import muscaa.chess.utils.SequenceMap;
@@ -16,25 +20,33 @@ public abstract class AbstractServer {
 	
 	protected static AbstractServer INSTANCE;
 	
-	private final SequenceMap<AbstractServerBoard> boards = new SequenceMap<>();
-	private final LinkedList<AbstractServerPlayer> players = new LinkedList<>();
+	protected final SequenceMap<AbstractServerBoard> boards = new SequenceMap<>();
+	protected final Map<String, AbstractServerPlayer> players = new HashMap<>();
+	protected final LinkedList<ICommandSource> sources = new LinkedList<>();
+	protected final ConsoleCommandSource consoleSource;
 	
-	public void onSendChatMessage(AbstractServerPlayer player, String message) {
+	public AbstractServer() {
+		this.consoleSource = new ConsoleCommandSource(this);
+		
+		sources.add(consoleSource);
+	}
+	
+	public void onSendChatMessage(ICommandSource source, String message) {
 		if (message.startsWith("/")) {
 			try {
-				CommandRegistry.DISPATCHER.execute(message.substring(1), player);
+				CommandRegistry.DISPATCHER.execute(message.substring(1), source);
 			} catch (CommandSyntaxException e) {
-				player.addChatLine(e.getMessage());
+				source.addChatLine(ChatUtils.format("&c") + e.getMessage());
 			}
 			return;
 		}
 		
-		broadcast(ChatUtils.format("&7[&6" + player.getName() + "&7] &f") + message);
+		broadcast(ChatUtils.format("&7[&6" + source.getName() + "&7] &f") + message);
 	}
 	
 	public void broadcast(String message) {
-		for (AbstractServerPlayer p : players) {
-			p.addChatLine(message);
+		for (ICommandSource source : sources) {
+			source.addChatLine(message);
 		}
 	}
 	
@@ -48,7 +60,8 @@ public abstract class AbstractServer {
 	}
 	
 	public void addPlayer(AbstractServerPlayer player) {
-		players.add(player);
+		players.put(player.getName(), player);
+		sources.add(player);
 		player.init(this);
 	}
 	
@@ -57,7 +70,8 @@ public abstract class AbstractServer {
 			player.getBoard().leave(player);
 		}
 		
-        players.remove(player);
+		sources.remove(player);
+        players.remove(player.getName());
 	}
 	
 	public void start() {
@@ -80,9 +94,21 @@ public abstract class AbstractServer {
 			boards.get(it.next()).close();
 		}
 		
-		for (AbstractServerPlayer p : players) {
+		for (AbstractServerPlayer p : players.values()) {
 			p.disconnect(DisconnectReasonRegistry.SERVER_STOP.get(), "Server stopped!");
 		}
+	}
+	
+	public AbstractServerBoard getBoard(int id) {
+		return boards.get(id);
+	}
+	
+	public AbstractServerPlayer getPlayer(String name) {
+		return players.get(name);
+	}
+	
+	public ConsoleCommandSource getConsoleSource() {
+		return consoleSource;
 	}
 	
 	public static AbstractServer getInstance() {

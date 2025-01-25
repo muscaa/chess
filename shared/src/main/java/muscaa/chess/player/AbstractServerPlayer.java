@@ -71,4 +71,9 @@ public abstract class AbstractServerPlayer extends AbstractPlayer implements ICo
 	public void setHighlights(List<Highlight> highlights) {
 		this.highlights = highlights;
 	}
+	
+	@Override
+	public AbstractServer getServer() {
+		return server;
+	}
 }

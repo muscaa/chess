@@ -102,6 +102,8 @@ public class BotServerPlayer extends AbstractServerPlayer {
 	
 	public BotServerPlayer() {
 		executor = Executors.newSingleThreadExecutor();
+		
+		setName("Bot");
 	}
 	
 	@Override

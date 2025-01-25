@@ -1,18 +1,31 @@
 package muscaa.chess.command;
 
+import muscaa.chess.AbstractServer;
+import muscaa.chess.chat.ChatComponent;
+import muscaa.chess.chat.ChatUtils;
+
 public class ConsoleCommandSource implements ICommandSource {
 	
-	public static final ConsoleCommandSource INSTANCE = new ConsoleCommandSource();
+	protected final AbstractServer server;
 	
-	private ConsoleCommandSource() {}
+	public ConsoleCommandSource(AbstractServer server) {
+		this.server = server;
+	}
 	
 	@Override
 	public void addChatLine(String line) {
-		System.out.println(line);
+		ChatComponent component = ChatUtils.parse(line);
+		
+		System.out.println(component.text());
 	}
 	
 	@Override
 	public String getName() {
 		return "CONSOLE";
+	}
+	
+	@Override
+	public AbstractServer getServer() {
+		return server;
 	}
 }

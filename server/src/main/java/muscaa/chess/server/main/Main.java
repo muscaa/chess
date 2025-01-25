@@ -2,11 +2,7 @@ package muscaa.chess.server.main;
 
 import java.util.Scanner;
 
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
 import muscaa.chess.Chess;
-import muscaa.chess.command.CommandRegistry;
-import muscaa.chess.command.ConsoleCommandSource;
 import muscaa.chess.mod.ChessModLoader;
 import muscaa.chess.mod.ModInfo;
 import muscaa.chess.server.DedicatedServer;
@@ -28,9 +24,8 @@ public class Main {
     	
     	Chess.init();
     	
-    	server = new DedicatedServer();
-    	
-		server.server.start(true);
+    	server = new DedicatedServer(40755);
+    	server.start();
 		
 		MOD_LOADER.loadPost();
     	
@@ -40,14 +35,10 @@ public class Main {
 			String line = s.nextLine();
 			if (line.equals("stop")) break;
 			
-			try {
-				CommandRegistry.DISPATCHER.execute(line, ConsoleCommandSource.INSTANCE);
-			} catch (CommandSyntaxException e) {
-				e.printStackTrace();
-			}
+			server.onSendChatMessage(server.getConsoleSource(), line);
 		}
 		s.close();
 		
-		server.server.stop();
+		server.stop();
     }
 }
