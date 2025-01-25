@@ -54,6 +54,14 @@ public class Form implements Iterable<FormField> {
 		return true;
 	}
 	
+	public Form copy() {
+		Form copy = new Form(id, name, submitText);
+		for (FormField field : this) {
+            copy.add(field.copy());
+		}
+		return copy;
+	}
+	
 	@Override
 	public Iterator<FormField> iterator() {
 		return fields.values().iterator();

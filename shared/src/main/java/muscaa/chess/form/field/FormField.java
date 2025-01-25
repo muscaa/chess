@@ -38,4 +38,8 @@ public class FormField {
 		
 		return false;
 	}
+	
+	public FormField copy() {
+		return new FormField(id, fieldType, name);
+	}
 }
