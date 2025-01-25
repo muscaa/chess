@@ -1,9 +1,7 @@
 package muscaa.chess;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
@@ -21,7 +19,7 @@ public abstract class AbstractServer {
 	protected static AbstractServer INSTANCE;
 	
 	protected final SequenceMap<AbstractServerBoard> boards = new SequenceMap<>();
-	protected final Map<String, AbstractServerPlayer> players = new HashMap<>();
+	protected final LinkedList<AbstractServerPlayer> players = new LinkedList<>();
 	protected final LinkedList<ICommandSource> sources = new LinkedList<>();
 	protected final ConsoleCommandSource consoleSource;
 	
@@ -60,7 +58,7 @@ public abstract class AbstractServer {
 	}
 	
 	public void addPlayer(AbstractServerPlayer player) {
-		players.put(player.getName(), player);
+		players.add(player);
 		sources.add(player);
 		player.init(this);
 	}
@@ -71,7 +69,7 @@ public abstract class AbstractServer {
 		}
 		
 		sources.remove(player);
-        players.remove(player.getName());
+        players.remove(player);
 	}
 	
 	public void start() {
@@ -94,7 +92,7 @@ public abstract class AbstractServer {
 			boards.get(it.next()).close();
 		}
 		
-		for (AbstractServerPlayer p : players.values()) {
+		for (AbstractServerPlayer p : players) {
 			p.disconnect(DisconnectReasonRegistry.SERVER_STOP.get(), "Server stopped!");
 		}
 	}
@@ -104,7 +102,10 @@ public abstract class AbstractServer {
 	}
 	
 	public AbstractServerPlayer getPlayer(String name) {
-		return players.get(name);
+		return players.stream()
+				.filter(p -> p.getName().equals(name))
+				.findFirst()
+				.orElse(null);
 	}
 	
 	public ConsoleCommandSource getConsoleSource() {
