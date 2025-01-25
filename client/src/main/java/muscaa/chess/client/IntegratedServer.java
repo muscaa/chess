@@ -10,6 +10,7 @@ import muscaa.chess.client.player.players.LocalServerPlayer;
 import muscaa.chess.network.ChessServer;
 import muscaa.chess.network.ServerContextRegistry;
 import muscaa.chess.network.login.ServerLoginNetHandler;
+import muscaa.chess.network.ping.ServerPingNetHandler;
 import muscaa.chess.network.play.ServerPlayNetHandler;
 
 public class IntegratedServer extends AbstractServer {
@@ -53,6 +54,8 @@ public class IntegratedServer extends AbstractServer {
 	
 	public void openToLan(int port) throws NetworkException {
 		networkServer = new ChessServer(port);
+		
+		ServerContextRegistry.PING.get().setHandlerFunc(() -> new ServerPingNetHandler(this));
 		ServerContextRegistry.LOGIN.get().setHandlerFunc(() -> new ServerLoginNetHandler(this));
 		ServerContextRegistry.PLAY.get().setHandlerFunc(() -> new ServerPlayNetHandler(this, serverBoard));
 		

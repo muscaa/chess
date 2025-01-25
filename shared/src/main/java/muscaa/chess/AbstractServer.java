@@ -97,8 +97,26 @@ public abstract class AbstractServer {
 		}
 	}
 	
+	public int getBoardCount() {
+		return boards.size();
+	}
+	
 	public AbstractServerBoard getBoard(int id) {
 		return boards.get(id);
+	}
+	
+	public int getPlayerCount() {
+		return players.size();
+	}
+	
+	public int getMaxPlayerCount() {
+		return 2;
+	}
+	
+	public String[] getMotd() {
+		return new String[] {
+				ChatUtils.format("&7A Chess Server")
+				};
 	}
 	
 	public AbstractServerPlayer getPlayer(String name) {

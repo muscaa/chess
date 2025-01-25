@@ -6,6 +6,7 @@ import muscaa.chess.board.AbstractServerBoard;
 import muscaa.chess.board.boards.LobbyServerBoard;
 import muscaa.chess.network.ChessServer;
 import muscaa.chess.network.ServerContextRegistry;
+import muscaa.chess.network.ping.ServerPingNetHandler;
 import muscaa.chess.network.play.ServerPlayNetHandler;
 import muscaa.chess.server.network.DedicatedServerLoginNetHandler;
 
@@ -30,6 +31,7 @@ public class DedicatedServer extends AbstractServer {
 		
 		networkServer = new ChessServer(port);
 		
+		ServerContextRegistry.PING.get().setHandlerFunc(() -> new ServerPingNetHandler(this));
 		ServerContextRegistry.LOGIN.get().setHandlerFunc(() -> new DedicatedServerLoginNetHandler(this));
 		ServerContextRegistry.PLAY.get().setHandlerFunc(() -> new ServerPlayNetHandler(this, serverBoard));
 		

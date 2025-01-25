@@ -47,6 +47,7 @@ public class ServerLoginNetHandler extends ServerBaseNetHandler implements IServ
 		boolean pressed = submitButton.isPressed(submitButtonData);
 		
 		if (!pressed) return null;
+		if (name.length() < 3) return null;
 		
 		return name;
 	}

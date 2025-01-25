@@ -21,7 +21,6 @@ import muscaa.chess.network.intent.packets.SPacketIntent;
 import muscaa.chess.network.login.IServerLoginNetHandler;
 import muscaa.chess.network.login.packets.SPacketProfile;
 import muscaa.chess.network.ping.IServerPingNetHandler;
-import muscaa.chess.network.ping.ServerPingNetHandler;
 import muscaa.chess.network.ping.packets.SPacketPing;
 import muscaa.chess.network.play.IServerPlayNetHandler;
 import muscaa.chess.network.play.packets.SPacketBoard;
@@ -74,7 +73,7 @@ public class ServerContextRegistry {
 					.registerOutbound(200, SPacketPing.class)
 			;
 	public static final RegistryKey<ServerContextValue<IServerPingNetHandler>> PING = REG.register(Chess.NAMESPACE.path("ping"),
-			key -> new ServerContextValue<>(key, PING_CONTEXT, ServerPingNetHandler::new));
+			key -> new ServerContextValue<>(key, PING_CONTEXT, null));
 	
 	//
 	// CONNECTION
