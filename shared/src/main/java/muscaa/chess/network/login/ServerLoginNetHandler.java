@@ -1,5 +1,7 @@
 package muscaa.chess.network.login;
 
+import java.util.UUID;
+
 import fluff.network.NetworkException;
 import fluff.network.client.IClient;
 import muscaa.chess.AbstractServer;
@@ -86,7 +88,7 @@ public class ServerLoginNetHandler extends ServerBaseNetHandler implements IServ
 			return;
 		}
 		
-		connection.login(name);
+		connection.login(UUID.nameUUIDFromBytes(name.getBytes()));
 		
 		connection.player = new RemoteServerPlayer(connection);
 		connection.player.setName(name);

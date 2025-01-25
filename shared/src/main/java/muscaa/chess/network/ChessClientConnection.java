@@ -32,10 +32,10 @@ public class ChessClientConnection extends AbstractClientConnection {
 		setContextUnsafe(context.getContext(), handler);
 	}
 	
-	public void login(String name) {
-		if (uuid != null) return;
+	public void login(UUID uuid) {
+		if (this.uuid != null) return;
 		
-		uuid = UUID.nameUUIDFromBytes(name.getBytes());
+		this.uuid = uuid;
 	}
 	
 	public void disconnect(DisconnectReasonValue reason, String message) {
