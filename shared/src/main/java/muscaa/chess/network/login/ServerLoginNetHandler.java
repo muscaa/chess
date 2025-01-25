@@ -25,16 +25,16 @@ public class ServerLoginNetHandler extends ServerBaseNetHandler implements IServ
 	}
 	
 	protected final AbstractServer gameServer;
-	protected Form loginForm;
+	protected final Form loginForm;
 	
 	public ServerLoginNetHandler(AbstractServer gameServer) {
 		this.gameServer = gameServer;
 		
-		buildLoginForm();
+		loginForm = buildLoginForm();
 	}
 	
-	protected void buildLoginForm() {
-		loginForm = DEFAULT_LOGIN_FORM;
+	protected Form buildLoginForm() {
+		return DEFAULT_LOGIN_FORM;
 	}
 	
 	protected void handleLoginData(FormData loginData) {
