@@ -1,4 +1,4 @@
-package muscaa.chess.network.login.packets;
+package muscaa.chess.network.base.packets;
 
 import java.io.IOException;
 
@@ -7,11 +7,11 @@ import fluff.network.packet.IPacketOutbound;
 import muscaa.chess.form.Form;
 import muscaa.chess.network.PacketOutputUtils;
 
-public class SPacketLoginForm implements IPacketOutbound {
+public class SPacketForm implements IPacketOutbound {
 	
 	private Form form;
 	
-	public SPacketLoginForm(Form form) {
+	public SPacketForm(Form form) {
 		this.form = form;
 	}
 	

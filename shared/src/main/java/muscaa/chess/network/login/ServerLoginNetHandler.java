@@ -11,8 +11,8 @@ import muscaa.chess.form.field.FormFieldRegistry;
 import muscaa.chess.network.DisconnectReasonRegistry;
 import muscaa.chess.network.ServerContextRegistry;
 import muscaa.chess.network.base.ServerBaseNetHandler;
-import muscaa.chess.network.login.packets.SPacketLogin;
-import muscaa.chess.network.login.packets.SPacketLoginForm;
+import muscaa.chess.network.base.packets.SPacketForm;
+import muscaa.chess.network.base.packets.SPacketFormData;
 import muscaa.chess.network.login.packets.SPacketProfile;
 import muscaa.chess.player.players.RemoteServerPlayer;
 
@@ -53,12 +53,17 @@ public class ServerLoginNetHandler extends ServerBaseNetHandler implements IServ
 	public void onInit(IClient client) {
 		super.onInit(client);
 		
-		connection.send(new SPacketLoginForm(loginForm));
+		connection.send(new SPacketForm(loginForm));
 	}
 	
 	@Override
-	public void onPacketLogin(SPacketLogin packet) {
+	public void onPacketFormData(SPacketFormData packet) {
 		FormData loginData = packet.getFormData();
+		if (!loginData.id.equals(loginForm.id)) {
+			super.onPacketFormData(packet);
+			return;
+		}
+		
 		if (!loginForm.isValid(loginData)) {
 			connection.disconnect(DisconnectReasonRegistry.KICK.get(), "Invalid login form data!");
 			return;

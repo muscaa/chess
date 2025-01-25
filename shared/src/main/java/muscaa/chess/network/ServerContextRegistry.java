@@ -4,6 +4,8 @@ import fluff.network.packet.PacketContext;
 import muscaa.chess.Chess;
 import muscaa.chess.network.base.IServerBaseNetHandler;
 import muscaa.chess.network.base.packets.SPacketChangeContext;
+import muscaa.chess.network.base.packets.SPacketForm;
+import muscaa.chess.network.base.packets.SPacketFormData;
 import muscaa.chess.network.common.IServerCommonNetHandler;
 import muscaa.chess.network.common.packets.SPacketChatLine;
 import muscaa.chess.network.common.packets.SPacketChatMessage;
@@ -17,8 +19,6 @@ import muscaa.chess.network.intent.IServerIntentNetHandler;
 import muscaa.chess.network.intent.ServerIntentNetHandler;
 import muscaa.chess.network.intent.packets.SPacketIntent;
 import muscaa.chess.network.login.IServerLoginNetHandler;
-import muscaa.chess.network.login.packets.SPacketLogin;
-import muscaa.chess.network.login.packets.SPacketLoginForm;
 import muscaa.chess.network.login.packets.SPacketProfile;
 import muscaa.chess.network.ping.IServerPingNetHandler;
 import muscaa.chess.network.ping.ServerPingNetHandler;
@@ -48,6 +48,8 @@ public class ServerContextRegistry {
 	private static final PacketContext<IServerBaseNetHandler> BASE_CONTEXT =
 			new PacketContext<IServerBaseNetHandler>(SharedContextRegistry.BASE.get().getContext())
 			        .registerOutbound(1, SPacketChangeContext.class)
+			        .registerOutbound(2, SPacketForm.class)
+			        .registerInbound(3, SPacketFormData::new, IServerBaseNetHandler::onPacketFormData)
 			;
 	public static final RegistryKey<ServerContextValue<IServerBaseNetHandler>> BASE = REG.register(Chess.NAMESPACE.path("base"),
 			key -> new ServerContextValue<>(key, BASE_CONTEXT, null));
@@ -92,8 +94,6 @@ public class ServerContextRegistry {
 	private static final PacketContext<IServerLoginNetHandler> LOGIN_CONTEXT =
 			new PacketContext<IServerLoginNetHandler>(SharedContextRegistry.LOGIN.get().getContext())
 			        .extend(BASE_CONTEXT)
-					.registerOutbound(300, SPacketLoginForm.class)
-					.registerInbound(301, SPacketLogin::new, IServerLoginNetHandler::onPacketLogin)
 					.registerOutbound(302, SPacketProfile.class)
 			;
 	public static final RegistryKey<ServerContextValue<IServerLoginNetHandler>> LOGIN = REG.register(Chess.NAMESPACE.path("login"),

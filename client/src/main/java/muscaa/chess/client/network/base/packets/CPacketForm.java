@@ -1,4 +1,4 @@
-package muscaa.chess.client.network.login.packets;
+package muscaa.chess.client.network.base.packets;
 
 import java.io.IOException;
 
@@ -7,11 +7,11 @@ import fluff.network.packet.IPacketInbound;
 import muscaa.chess.form.Form;
 import muscaa.chess.network.PacketInputUtils;
 
-public class CPacketLoginForm implements IPacketInbound {
+public class CPacketForm implements IPacketInbound {
 	
 	private Form form;
 	
-	public CPacketLoginForm() {}
+	public CPacketForm() {}
 	
 	@Override
 	public void readData(IBinaryInput in) throws IOException {

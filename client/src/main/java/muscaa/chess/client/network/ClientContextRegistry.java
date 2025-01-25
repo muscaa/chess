@@ -4,6 +4,8 @@ import fluff.network.packet.PacketContext;
 import muscaa.chess.Chess;
 import muscaa.chess.client.network.base.IClientBaseNetHandler;
 import muscaa.chess.client.network.base.packets.CPacketChangeContext;
+import muscaa.chess.client.network.base.packets.CPacketForm;
+import muscaa.chess.client.network.base.packets.CPacketFormData;
 import muscaa.chess.client.network.common.IClientCommonNetHandler;
 import muscaa.chess.client.network.common.packets.CPacketChatLine;
 import muscaa.chess.client.network.common.packets.CPacketChatMessage;
@@ -17,8 +19,6 @@ import muscaa.chess.client.network.intent.IClientIntentNetHandler;
 import muscaa.chess.client.network.intent.packets.CPacketIntent;
 import muscaa.chess.client.network.login.ClientLoginNetHandler;
 import muscaa.chess.client.network.login.IClientLoginNetHandler;
-import muscaa.chess.client.network.login.packets.CPacketLogin;
-import muscaa.chess.client.network.login.packets.CPacketLoginForm;
 import muscaa.chess.client.network.login.packets.CPacketProfile;
 import muscaa.chess.client.network.ping.ClientPingNetHandler;
 import muscaa.chess.client.network.ping.IClientPingNetHandler;
@@ -50,6 +50,8 @@ public class ClientContextRegistry {
 	private static final PacketContext<IClientBaseNetHandler> BASE_CONTEXT =
 			new PacketContext<IClientBaseNetHandler>(SharedContextRegistry.BASE.get().getContext())
 					.registerInbound(1, CPacketChangeContext::new, IClientBaseNetHandler::onPacketChangeContext)
+					.registerInbound(2, CPacketForm::new, IClientBaseNetHandler::onPacketForm)
+					.registerOutbound(3, CPacketFormData.class)
 			;
 	public static final RegistryKey<ClientContextValue<IClientBaseNetHandler>> BASE = REG.register(Chess.NAMESPACE.path("base"),
 			key -> new ClientContextValue<>(key, BASE_CONTEXT, null));
@@ -94,8 +96,6 @@ public class ClientContextRegistry {
 	private static final PacketContext<IClientLoginNetHandler> LOGIN_CONTEXT =
 			new PacketContext<IClientLoginNetHandler>(SharedContextRegistry.LOGIN.get().getContext())
 			        .extend(BASE_CONTEXT)
-					.registerInbound(300, CPacketLoginForm::new, IClientLoginNetHandler::onPacketLoginForm)
-					.registerOutbound(301, CPacketLogin.class)
 					.registerInbound(302, CPacketProfile::new, IClientLoginNetHandler::onPacketProfile)
 			;
 	public static final RegistryKey<ClientContextValue<IClientLoginNetHandler>> LOGIN = REG.register(Chess.NAMESPACE.path("login"),
