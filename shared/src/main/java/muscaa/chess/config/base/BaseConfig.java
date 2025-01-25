@@ -131,6 +131,10 @@ public abstract class BaseConfig<C> implements IConfig {
 		return (IValueString) value(v);
 	}
 	
+	public IValueString String(String key, String defaultValue) {
+		return String(key, defaultValue, defaultValue);
+	}
+	
 	protected void putString(Func3<BaseValueString<C>, String, String, String> constructor) {
 		constructors.put(String.class, constructor);
 	}
@@ -141,6 +145,10 @@ public abstract class BaseConfig<C> implements IConfig {
 		
 		BaseValueObject<C, V> v = constructor.invoke(key, defaultValue, defaultValue);
 		return value(v);
+	}
+	
+	public <V> IValueObject<V> Object(String key, V defaultValue) {
+		return Object(key, defaultValue, defaultValue);
 	}
 	
 	protected void putObject(Func3<BaseValueObject<C, ?>, String, ?, ?> constructor) {

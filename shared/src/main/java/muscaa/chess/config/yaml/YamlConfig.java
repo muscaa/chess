@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.yaml.snakeyaml.Yaml;
@@ -50,7 +50,7 @@ public class YamlConfig extends FileBaseConfig<Map<String, Object>> {
 	
 	@Override
 	protected void save(FileOutputStream out) throws IOException {
-		Map<String, Object> context = new HashMap<>();
+		Map<String, Object> context = new LinkedHashMap<>();
 		
 		for (BaseValue<?, Map<String, Object>> value : values) {
 			value.save(context);

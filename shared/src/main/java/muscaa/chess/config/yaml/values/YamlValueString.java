@@ -21,8 +21,8 @@ public class YamlValueString extends BaseValueString<Map<String, Object>> {
 	
 	@Override
 	public void save(Map<String, Object> context) {
-		if (isSet()) {
+		//if (isSet()) {
 			context.put(key, value);
-		}
+		//}
 	}
 }

@@ -6,30 +6,31 @@ import muscaa.chess.board.AbstractServerBoard;
 import muscaa.chess.board.boards.LobbyServerBoard;
 import muscaa.chess.network.ChessServer;
 import muscaa.chess.network.ServerContextRegistry;
-import muscaa.chess.network.login.ServerLoginNetHandler;
 import muscaa.chess.network.play.ServerPlayNetHandler;
+import muscaa.chess.server.network.DedicatedServerLoginNetHandler;
 
 public class DedicatedServer extends AbstractServer {
 	
-	protected final ChessServer networkServer;
 	protected final AbstractServerBoard serverBoard;
 	
-	public DedicatedServer(int port, AbstractServerBoard serverBoard) {
-		this.networkServer = new ChessServer(port);
+	protected ChessServer networkServer;
+	
+	public DedicatedServer(AbstractServerBoard serverBoard) {
 		this.serverBoard = serverBoard;
 		
 		addBoard(serverBoard);
 	}
 	
-	public DedicatedServer(int port) {
-		this(port, new LobbyServerBoard());
+	public DedicatedServer() {
+		this(new LobbyServerBoard());
 	}
 	
-	@Override
-	public void start() {
-		super.start();
+	public void start(int port) {
+		start();
 		
-		ServerContextRegistry.LOGIN.get().setHandlerFunc(() -> new ServerLoginNetHandler(this));
+		networkServer = new ChessServer(port);
+		
+		ServerContextRegistry.LOGIN.get().setHandlerFunc(() -> new DedicatedServerLoginNetHandler(this));
 		ServerContextRegistry.PLAY.get().setHandlerFunc(() -> new ServerPlayNetHandler(this, serverBoard));
 		
 		try {

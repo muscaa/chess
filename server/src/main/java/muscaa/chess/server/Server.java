@@ -7,7 +7,13 @@ import muscaa.chess.mod.ChessModLoader;
 import muscaa.chess.mod.ModException;
 import muscaa.chess.mod.ModInfo;
 import muscaa.chess.server.command.ServerCommandsInit;
+import muscaa.chess.server.config.SettingsConfig;
+import muscaa.chess.server.database.AbstractDatabase;
+import muscaa.chess.server.database.DatabaseRegistry;
+import muscaa.chess.server.database.impl.MainTables;
+import muscaa.chess.server.hash.HashAlgorithmRegistry;
 import muscaa.chess.server.mod.IServerModInitializer;
+import muscaa.chess.utils.NamespacePath;
 
 public class Server {
 	
@@ -19,8 +25,13 @@ public class Server {
 			);
 	public static final Server INSTANCE = new Server();
 	
+	public final SettingsConfig settingsConfig;
+	
+	private final DedicatedServer dedicatedServer;
+	private AbstractDatabase database;
+	private MainTables mainTables;
+	
 	private boolean running;
-	private DedicatedServer server;
 	
 	private Server() {
 		try {
@@ -30,6 +41,10 @@ public class Server {
 		}
 		
 		Chess.EVENTS.subscribe(new ServerCommandsInit());
+		
+		settingsConfig = new SettingsConfig();
+		
+		dedicatedServer = new DedicatedServer();
 	}
 	
 	public void start() {
@@ -37,10 +52,18 @@ public class Server {
 		
     	Chess.init();
     	
-    	// load configs
+    	HashAlgorithmRegistry.init();
+    	DatabaseRegistry.init();
     	
-    	server = new DedicatedServer(40755);
-    	server.start();
+    	settingsConfig.load();
+    	
+    	database = DatabaseRegistry.REG.get(NamespacePath.of(settingsConfig.databaseType.get())).get().create();
+    	mainTables = new MainTables();
+    	
+    	database.open();
+		mainTables.init(database);
+    	
+    	dedicatedServer.start(settingsConfig.port.get());
 		
 		try {
 			MOD_LOADER.loadPost();
@@ -48,17 +71,19 @@ public class Server {
 			throw new RuntimeException(e);
 		}
     	
-		server.getConsoleSource().addChatLine("Server started. Type 'stop' to stop.");
+		System.out.println("Server started. Type 'stop' to stop.");
 		
 		Scanner s = new Scanner(System.in);
 		while (running && s.hasNextLine()) {
 			String line = s.nextLine();
 			
-			server.onSendChatMessage(server.getConsoleSource(), "/" + line);
+			dedicatedServer.onSendChatMessage(dedicatedServer.getConsoleSource(), "/" + line);
 		}
 		s.close();
 		
-		server.stop();
+		settingsConfig.save();
+		dedicatedServer.stop();
+		database.close();
 	}
 	
 	public void stop() {
@@ -67,5 +92,17 @@ public class Server {
 	
 	public boolean isRunning() {
 		return running;
+	}
+	
+	public AbstractDatabase getDatabase() {
+		return database;
+	}
+	
+	public MainTables getMainTables() {
+		return mainTables;
+	}
+	
+	public DedicatedServer getDedicatedServer() {
+		return dedicatedServer;
 	}
 }
