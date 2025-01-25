@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import muscaa.chess.AbstractServer;
 import muscaa.chess.Chess;
 import muscaa.chess.client.assets.FontRegistry;
 import muscaa.chess.client.assets.SoundCategoryRegistry;
@@ -168,31 +169,11 @@ public class Client {
 		}
 	}
 	
-	/*public AbstractClientBoard getBoard() {
-		return board;
-	}
-	
-	public void setBoard(AbstractClientBoard newBoard) {
-		AbstractClientBoard oldBoard = board;
-		if (oldBoard != null) {
-			oldBoard.dispose();
-		}
-		
-		board = newBoard;
-		if (board != null) {
-			SoundRegistry.AMBIENT.get().stop();
-			
-			board.init(this, boardLayer);
-		} else {
-			if (!SoundRegistry.AMBIENT.get().isPlaying()) {
-				SoundRegistry.AMBIENT.get().loopSingle();
-			}
-		}
-	}*/
-	
 	public void returnToMainMenu() {
-		//setBoard(null);
 		setPlayer(null);
+		if (AbstractServer.getInstance() != null) {
+            AbstractServer.getInstance().stop();
+		}
 		setScreen(new MainMenuScreen());
 	}
 	

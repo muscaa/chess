@@ -1,69 +1,100 @@
 package muscaa.chess.form;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import muscaa.chess.form.field.FormField;
-import muscaa.chess.form.field.FormFieldData;
+import fluff.bin.IBinaryInput;
+import fluff.bin.IBinaryOutput;
+import fluff.bin.data.IBinaryData;
 
-public class Form implements Iterable<FormField> {
+public class Form implements IBinaryData, Iterable<AbstractFormWidget> {
 	
-	private final Map<String, FormField> fields = new LinkedHashMap<>();
+	private final Map<String, AbstractFormWidget> widgets = new LinkedHashMap<>();
 	public String id;
 	public String name;
-	public String submitText;
 	
-	public Form(String id, String name, String submitText) {
+	public Form(String id, String name) {
         this.id = id;
         this.name = name;
-        this.submitText = submitText;
 	}
 	
+	public Form() {}
+	
 	public int size() {
-		return fields.size();
+		return widgets.size();
 	}
 	
 	public boolean contains(String id) {
-        return fields.containsKey(id);
+        return widgets.containsKey(id);
 	}
 	
-	public FormField get(String id) {
-		return fields.get(id);
+	public <V extends AbstractFormWidget> V get(String id) {
+		return (V) widgets.get(id);
 	}
 	
-	public void add(FormField field) {
-		fields.put(field.id, field);
+	public void add(AbstractFormWidget widget) {
+		widgets.put(widget.id, widget);
 	}
 	
 	public void remove(String id) {
-		fields.remove(id);
+		widgets.remove(id);
 	}
 	
-	public boolean isValid(FormData formData) {
-		if (!id.equals(formData.id)) return false;
-		if (size() != formData.size()) return false;
+	public boolean isValid(FormData data) {
+		if (!id.equals(data.id)) return false;
+		if (size() != data.size()) return false;
 		
-		for (FormField field : this) {
-			FormFieldData fieldData = formData.get(field.id);
-			if (fieldData == null) return false;
+		for (AbstractFormWidget widget : this) {
+			AbstractFormWidgetData widgetData = data.get(widget.id);
+			if (widgetData == null) return false;
 			
-			if (!field.isValid(fieldData)) return false;
+			if (!widget.isValid(widgetData)) return false;
 		}
 		
 		return true;
 	}
 	
 	public Form copy() {
-		Form copy = new Form(id, name, submitText);
-		for (FormField field : this) {
-            copy.add(field.copy());
+		Form copy = new Form(id, name);
+		for (AbstractFormWidget widget : this) {
+            copy.add(widget.copy());
 		}
 		return copy;
 	}
 	
 	@Override
-	public Iterator<FormField> iterator() {
-		return fields.values().iterator();
+	public void readData(IBinaryInput in) throws IOException {
+		id = in.LenString();
+		name = in.LenString();
+		
+		int size = in.Int();
+		for (int i = 0; i < size; i++) {
+			int type = in.Int();
+			
+			AbstractFormWidget widget = FormWidgets.WIDGET_BY_TYPE.get(type).invoke();
+			in.Data(widget);
+			add(widget);
+		}
+	}
+	
+	@Override
+	public void writeData(IBinaryOutput out) throws IOException {
+		out.LenString(id);
+		out.LenString(name);
+		
+		out.Int(size());
+		for (AbstractFormWidget widget : this) {
+			int type = FormWidgets.WIDGET_TYPE.get(widget.getClass());
+			out.Int(type);
+			
+			out.Data(widget);
+		}
+	}
+	
+	@Override
+	public Iterator<AbstractFormWidget> iterator() {
+		return widgets.values().iterator();
 	}
 }

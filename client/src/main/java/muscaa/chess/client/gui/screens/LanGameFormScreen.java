@@ -10,8 +10,6 @@ import muscaa.chess.client.gui.widgets.WPanel;
 import muscaa.chess.client.gui.widgets.WTable;
 import muscaa.chess.client.gui.widgets.WTextButton;
 import muscaa.chess.client.gui.widgets.WTextField;
-import muscaa.chess.form.field.FormField;
-import muscaa.chess.form.field.FormFieldData;
 import muscaa.chess.network.login.ServerLoginNetHandler;
 
 public class LanGameFormScreen extends ChildGuiScreen {
@@ -71,10 +69,8 @@ public class LanGameFormScreen extends ChildGuiScreen {
 				server.openToLan(port);
 				
 				chess.setScreen(new FormScreen(ServerLoginNetHandler.DEFAULT_LOGIN_FORM, (form, formData) -> {
-					FormField nameField = form.get("name");
-					FormFieldData nameFieldData = formData.get("name");
-					
-					String name = nameField.get(nameFieldData);
+					String name = ServerLoginNetHandler.handleDefaultLoginData(form, formData);
+					if (name == null) return;
 					
 					server.joinAs(name);
 				}));

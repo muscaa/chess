@@ -1,42 +1,74 @@
 package muscaa.chess.form;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import muscaa.chess.form.field.FormFieldData;
+import fluff.bin.IBinaryInput;
+import fluff.bin.IBinaryOutput;
+import fluff.bin.data.IBinaryData;
 
-public class FormData implements Iterable<FormFieldData> {
+public class FormData implements IBinaryData, Iterable<AbstractFormWidgetData> {
 	
-	private final Map<String, FormFieldData> fields = new HashMap<>();
+	private final Map<String, AbstractFormWidgetData> widgets = new HashMap<>();
 	public String id;
 	
 	public FormData(String id) {
 		this.id = id;
 	}
 	
+	public FormData() {}
+	
 	public int size() {
-		return fields.size();
+		return widgets.size();
 	}
 	
 	public boolean contains(String id) {
-        return fields.containsKey(id);
+        return widgets.containsKey(id);
 	}
 	
-	public FormFieldData get(String id) {
-		return fields.get(id);
+	public <V extends AbstractFormWidgetData> V get(String id) {
+		return (V) widgets.get(id);
 	}
 	
-	public void add(FormFieldData fieldData) {
-		fields.put(fieldData.id, fieldData);
+	public void add(AbstractFormWidgetData widgetData) {
+		widgets.put(widgetData.id, widgetData);
 	}
 	
 	public void remove(String id) {
-		fields.remove(id);
+		widgets.remove(id);
 	}
 	
 	@Override
-	public Iterator<FormFieldData> iterator() {
-		return fields.values().iterator();
+	public void readData(IBinaryInput in) throws IOException {
+		id = in.LenString();
+		
+		int size = in.Int();
+		for (int i = 0; i < size; i++) {
+			int type = in.Int();
+			
+			AbstractFormWidgetData widgetData = FormWidgets.WIDGET_DATA_BY_TYPE.get(type).invoke();
+			in.Data(widgetData);
+			add(widgetData);
+		}
+	}
+	
+	@Override
+	public void writeData(IBinaryOutput out) throws IOException {
+		out.LenString(id);
+		
+		out.Int(size());
+		for (AbstractFormWidgetData widgetData : this) {
+			int type = FormWidgets.WIDGET_DATA_TYPE.get(widgetData.getClass());
+			out.Int(type);
+			
+			out.Data(widgetData);
+		}
+	}
+	
+	@Override
+	public Iterator<AbstractFormWidgetData> iterator() {
+		return widgets.values().iterator();
 	}
 }
