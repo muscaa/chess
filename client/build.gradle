@@ -6,7 +6,7 @@ dependencies {
 	include "com.kotcrab.vis:vis-ui:$visUiVersion"
 	include project(":shared")
 	
-	internal project(path: ":client-lwjgl", configuration: "internal")
+	internal project(":client-lwjgl")
 }
 
 ext.bootstrapEntry = "muscaa.chess.client.main.Main"

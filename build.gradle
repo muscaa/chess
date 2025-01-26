@@ -32,6 +32,11 @@ subprojects {
 		}
 		
 		configurations {
+			classpath {
+				canBeResolved = true
+			    canBeConsumed = true
+			}
+		
 			internal {
 				canBeResolved = true
 			    canBeConsumed = true
@@ -52,11 +57,15 @@ subprojects {
 			    canBeConsumed = true
 		    }
 		    
-		    /*compileClasspath.extendsFrom(bootstrap)
+		    compileClasspath.extendsFrom(classpath)
+		    runtimeClasspath.extendsFrom(classpath)
+		    testCompileClasspath.extendsFrom(classpath)
+		    testRuntimeClasspath.extendsFrom(classpath)
+		    
+		    compileClasspath.extendsFrom(bootstrap)
 		    runtimeClasspath.extendsFrom(bootstrap)
 		    testCompileClasspath.extendsFrom(bootstrap)
-		    testRuntimeClasspath.extendsFrom(bootstrap)*/
-		    api.extendsFrom(bootstrap)
+		    testRuntimeClasspath.extendsFrom(bootstrap)
 		    
 		    compileClasspath.extendsFrom(shade)
 		    runtimeClasspath.extendsFrom(shade)
@@ -125,10 +134,6 @@ subprojects {
 					from components.java
 				}
 			}
-		}
-		
-		artifacts {
-			internal jar
 		}
     }
 }

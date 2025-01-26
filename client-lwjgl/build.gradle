@@ -1,12 +1,9 @@
 ext.subName = "client-lwjgl"
 
 dependencies {
+	classpath project(":client")
+	
 	include "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
 	include "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
 	include "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-	include project(":client")
-	
-	internal "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
-	internal "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-	internal "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
 }
