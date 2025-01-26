@@ -1,3 +1,14 @@
+## Version 1.2.0 - Jan 26, 2025
+- Implemented login and registration system.
+- Better form API.
+- Added client & server players, boards.
+- Added chat functionality.
+- Split server into integrated and dedicated.
+- Added ping requests and improved packet handling.
+- Added server configuration options, hash algorithms, and databases.
+- Fixed various bugs.
+- Minor improvements & additions.
+
 ## Version 1.1.0 - Jan 13, 2025
 - Added an options screen for more customization.
 - Implemented config API for better configuration handling.
