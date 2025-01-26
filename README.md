@@ -1,36 +1,64 @@
-# chess
+# Chess
 
-A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
+[![](https://jitpack.io/v/muscaa/chess.svg)](https://jitpack.io/#muscaa/chess)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-This project was generated with a template including simple application launchers and an `ApplicationAdapter` extension that draws a simple GUI on the screen.
+A Java-based Chess game that supports both single-player and multiplayer modes.
 
-## Platforms
+## Features
 
-- `core`: Main module with the application logic shared by all platforms.
-- `lwjgl3`: Primary desktop platform using LWJGL3; was called 'desktop' in older docs.
-- `server`: A separate application without access to the `core` module.
-- `shared`: A common module shared by `core` and `server` platforms.
+- Single-player mode with a BOT opponent.
+- Multiplayer mode for local or online play.
+- Player chat system with commands.
+- Full modding support to customize the game and add new functionalities.
+- Cross-platform support for Windows, macOS, and Linux.
+
+## Requirements
+
+- Java 17+
+- `chess-updater.jar`
+
+## Download
+
+For an easier installation and update process, use the `chess-updater.jar`,
+which can be downloaded from the [Chess Launcher Repository](https://github.com/muscaa/chess-launcher)
+or directly from [this link](https://github.com/muscaa/chess-launcher/releases/download/updater/chess-updater.jar).
 
 ## Gradle
 
-This project uses [Gradle](https://gradle.org/) to manage dependencies.
-The Gradle wrapper was included, so you can run Gradle tasks using `gradlew.bat` or `./gradlew` commands.
-Useful Gradle tasks and flags:
+### Run
+```bash
+./gradlew client:run
+```
+or
+```bash
+./gradlew server:run
+```
 
-- `--continue`: when using this flag, errors will not stop the tasks from running.
-- `--daemon`: thanks to this flag, Gradle daemon will be used to run chosen tasks.
-- `--offline`: when using this flag, cached dependency archives will be used.
-- `--refresh-dependencies`: this flag forces validation of all dependencies. Useful for snapshot versions.
-- `build`: builds sources and archives of every project.
-- `cleanEclipse`: removes Eclipse project data.
-- `cleanIdea`: removes IntelliJ project data.
-- `clean`: removes `build` folders, which store compiled classes and built archives.
-- `eclipse`: generates Eclipse project data.
-- `idea`: generates IntelliJ project data.
-- `lwjgl3:jar`: builds application's runnable jar, which can be found at `lwjgl3/build/libs`.
-- `lwjgl3:run`: starts the application.
-- `server:run`: runs the server application.
-- `test`: runs unit tests (if any).
+### Build
+```bash
+./gradlew client:build
+```
+or
+```bash
+./gradlew server:build
+```
 
-Note that most tasks that are not specific to a single project can be run with `name:` prefix, where the `name` should be replaced with the ID of a specific project.
-For example, `core:clean` removes `build` folder only from the `core` project.
+## Modding
+
+It supports mods to enhance and customize gameplay.
+Mods can be added by placing their `.jar` files in the `mods/` folder within the game directory.
+
+### How to develop mods
+1. Clone the [Chess Template Mod](https://github.com/muscaa/chess-template-mod) repository for a quick start.
+2. Configure and develop your mod.
+3. Test your mod by running it in a dev environment with:
+    ```bash
+    ./gradlew run
+    ```
+4. Build your mod with:
+    ```bash
+    ./gradlew build
+    ```
+5. Add the mod `.jar` file to the `~/.chess/mods/` directory.
+6. Done!
