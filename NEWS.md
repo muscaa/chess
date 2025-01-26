@@ -1,6 +1,6 @@
 ## Version 1.2.0 - Jan 26, 2025
 - Implemented login and registration system.
-- Better form API.
+- Better forms API.
 - Added client & server players, boards.
 - Added chat functionality.
 - Split server into integrated and dedicated.
