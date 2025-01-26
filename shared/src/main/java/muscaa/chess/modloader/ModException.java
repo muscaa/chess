@@ -1,4 +1,4 @@
-package muscaa.chess.mod;
+package muscaa.chess.modloader;
 
 public class ModException extends Exception {
 	

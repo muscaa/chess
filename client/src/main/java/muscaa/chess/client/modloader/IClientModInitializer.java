@@ -1,4 +1,4 @@
-package muscaa.chess.client.mod;
+package muscaa.chess.client.modloader;
 
 public interface IClientModInitializer {
 	

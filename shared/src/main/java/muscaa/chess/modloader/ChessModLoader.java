@@ -1,6 +1,7 @@
-package muscaa.chess.mod;
+package muscaa.chess.modloader;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import fluff.functions.gen.obj.TVoidFunc1;
 import fluff.json.JSON;
 import fluff.json.JSONObject;
 import muscaa.chess.bootstrap.Bootstrap;
+import muscaa.chess.bootstrap.DefaultBootstrap;
 import muscaa.chess.utils.FileUtils;
 
 public class ChessModLoader<V> {
@@ -74,41 +76,103 @@ public class ChessModLoader<V> {
 	
 	protected void loadBase() throws ModException {
 	    for (File file : FileUtils.MODS.listFiles()) {
-	    	if (!file.getName().endsWith(".jar")) continue;
-	    	
-	    	try {
-				JarFile jar = new JarFile(file);
-				JarEntry modJson = jar.getJarEntry("mod.json");
+	    	loadJar(file);
+	    }
+	    
+	    if (DefaultBootstrap.MOD_JARS != null && !DefaultBootstrap.MOD_JARS.isBlank()) {
+			for (String path : DefaultBootstrap.MOD_JARS.split(";")) {
+				File file = new File(path);
+				if (!file.exists()) continue;
 				
+				if (!file.isDirectory()) {
+				    loadJar(file);
+				    continue;
+				}
+				
+			    for (File child : file.listFiles()) {
+			    	loadJar(child);
+			    }
+			}
+	    }
+		
+	    if (DefaultBootstrap.MOD_CLASSES != null && !DefaultBootstrap.MOD_CLASSES.isBlank()) {
+			for (String path : DefaultBootstrap.MOD_CLASSES.split(";")) {
+	            File file = new File(path);
+	            if (!file.exists()) continue;
+	            
+				loadClasses(file);
+			}
+	    }
+	}
+	
+	protected void loadJar(File file) throws ModException {
+		if (file.isDirectory() || !file.getName().endsWith(".jar")) return;
+    	
+    	try {
+			JarFile jar = new JarFile(file);
+			JarEntry modJson = jar.getJarEntry("mod.json");
+			
+			JSONObject json;
+			try (InputStream in = jar.getInputStream(modJson)) {
+				json = JSON.object(new String(in.readAllBytes()));
+			}
+			
+			jar.close();
+			
+			ModInfo info = ModInfo.of(json);
+			if (info.getID() == null) {
+				throw new ModException("Mod " + file.getName() + " is missing ID");
+			}
+			if (info.getClientMain() == null && info.getServerMain() == null) {
+				throw new ModException("Mod " + file.getName() + " is missing main class");
+			}
+			
+			if (modInfos.containsKey(info.getID())) {
+				throw new ModException("Duplicate mod ID " + info.getID());
+			}
+			
+			if (!Bootstrap.INSTANCE.loader.addJar(file)) {
+				throw new IOException("Failed to load jar " + file.getName());
+			}
+			
+			modInfos.put(info.getID(), info);
+		} catch (Exception e) {
+			throw new ModException("Failed to load mod " + file.getName(), e);
+		}
+	}
+	
+	protected void loadClasses(File dir) throws ModException {
+		if (!dir.isDirectory()) return;
+    	
+    	try {
+			File modJson = new File(dir, "mod.json");
+			
+			if (modJson.exists()) {
 				JSONObject json;
-				try (InputStream in = jar.getInputStream(modJson)) {
+				try (InputStream in = new FileInputStream(modJson)) {
 					json = JSON.object(new String(in.readAllBytes()));
 				}
 				
-				jar.close();
-				
 				ModInfo info = ModInfo.of(json);
 				if (info.getID() == null) {
-					throw new ModException("Mod " + file.getName() + " is missing ID");
+					throw new ModException("Mod " + dir.getName() + " is missing ID");
 				}
 				if (info.getClientMain() == null && info.getServerMain() == null) {
-					throw new ModException("Mod " + file.getName() + " is missing main class");
+					throw new ModException("Mod " + dir.getName() + " is missing main class");
 				}
 				
 				if (modInfos.containsKey(info.getID())) {
 					throw new ModException("Duplicate mod ID " + info.getID());
 				}
 				
-				if (!Bootstrap.INSTANCE.loader.addJar(file)) {
-					throw new IOException("Failed to load jar " + file.getName());
-				}
-				
 				modInfos.put(info.getID(), info);
-			} catch (Exception e) {
-				throw new ModException("Failed to load mod " + file.getName(), e);
 			}
-	    }
-	    
-	    // TODO handle bootstrap mods
+			
+			if (!Bootstrap.INSTANCE.loader.addFolder(dir)) {
+				throw new IOException("Failed to load folder " + dir.getName());
+			}
+		} catch (Exception e) {
+			throw new ModException("Failed to load mod " + dir.getName(), e);
+		}
 	}
 }

@@ -3,16 +3,16 @@ package muscaa.chess.server;
 import java.util.Scanner;
 
 import muscaa.chess.Chess;
-import muscaa.chess.mod.ChessModLoader;
-import muscaa.chess.mod.ModException;
-import muscaa.chess.mod.ModInfo;
+import muscaa.chess.modloader.ChessModLoader;
+import muscaa.chess.modloader.ModException;
+import muscaa.chess.modloader.ModInfo;
 import muscaa.chess.server.command.ServerCommandsInit;
 import muscaa.chess.server.config.SettingsConfig;
 import muscaa.chess.server.database.AbstractDatabase;
 import muscaa.chess.server.database.DatabaseRegistry;
 import muscaa.chess.server.database.impl.MainTables;
 import muscaa.chess.server.hash.HashAlgorithmRegistry;
-import muscaa.chess.server.mod.IServerModInitializer;
+import muscaa.chess.server.modloader.IServerModInitializer;
 import muscaa.chess.utils.NamespacePath;
 
 public class Server {

@@ -20,15 +20,15 @@ import muscaa.chess.client.gui.GuiLayer;
 import muscaa.chess.client.gui.GuiScreen;
 import muscaa.chess.client.gui.screens.MainMenuScreen;
 import muscaa.chess.client.layer.LayerManager;
-import muscaa.chess.client.mod.IClientModInitializer;
+import muscaa.chess.client.modloader.IClientModInitializer;
 import muscaa.chess.client.network.ClientContextRegistry;
 import muscaa.chess.client.player.AbstractClientPlayer;
 import muscaa.chess.client.utils.Screen;
 import muscaa.chess.client.utils.Shapes;
 import muscaa.chess.client.utils.TaskManager;
-import muscaa.chess.mod.ChessModLoader;
-import muscaa.chess.mod.ModException;
-import muscaa.chess.mod.ModInfo;
+import muscaa.chess.modloader.ChessModLoader;
+import muscaa.chess.modloader.ModException;
+import muscaa.chess.modloader.ModInfo;
 
 public class Client {
 	
