@@ -1,3 +1,9 @@
+## Version 1.2.1 - Jan 26, 2025
+- Added a mods GUI screen.
+- Added mod descriptions.
+- Introduced developer environment modding support.
+- Minor improvements.
+
 ## Version 1.2.0 - Jan 26, 2025
 - Implemented login and registration system.
 - Better forms API.
