@@ -1,12 +1,12 @@
 ext.subName = "client"
 
 dependencies {
-	include "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-	include "com.badlogicgames.gdx:gdx:$gdxVersion"
-	include "com.kotcrab.vis:vis-ui:$visUiVersion"
-	include project(":shared")
+	embedded project(":client-lwjgl")
 	
-	internal project(":client-lwjgl")
+	export project(":shared")
+	export "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+	export "com.badlogicgames.gdx:gdx:$gdxVersion"
+	export "com.kotcrab.vis:vis-ui:$visUiVersion"
 }
 
 ext.bootstrapEntry = "muscaa.chess.client.main.Main"

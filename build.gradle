@@ -32,47 +32,51 @@ subprojects {
 		}
 		
 		configurations {
-			classpath {
-				canBeResolved = true
-			    canBeConsumed = true
-			}
-		
-			internal {
+			// required at compile & runtime, not included, not published
+			provided {
 				canBeResolved = true
 			    canBeConsumed = true
 			}
 			
+			// not required at compile & runtime, included, not published
+			embedded {
+				canBeResolved = true
+			    canBeConsumed = true
+			}
+			
+			// required at compile & runtime, included, published
+		    export {
+			    canBeResolved = true
+			    canBeConsumed = true
+		    }
+		    
+		    // required at compile & runtime, included, not published
+		    internal {
+			    canBeResolved = true
+			    canBeConsumed = true
+		    }
+			
+			// bootstrap dependencies
 			bootstrap {
 				canBeResolved = true
 			    canBeConsumed = true
 			}
 		    
+		    // shaded dependencies
 		    shade {
 				canBeResolved = true
 			    canBeConsumed = true
 			}
 		    
-		    include {
-			    canBeResolved = true
-			    canBeConsumed = true
-		    }
+		    compileClasspath.extendsFrom(provided)
+		    runtimeClasspath.extendsFrom(provided)
+		    testCompileClasspath.extendsFrom(provided)
+		    testRuntimeClasspath.extendsFrom(provided)
 		    
-		    compileClasspath.extendsFrom(classpath)
-		    runtimeClasspath.extendsFrom(classpath)
-		    testCompileClasspath.extendsFrom(classpath)
-		    testRuntimeClasspath.extendsFrom(classpath)
-		    
-		    compileClasspath.extendsFrom(bootstrap)
-		    runtimeClasspath.extendsFrom(bootstrap)
-		    testCompileClasspath.extendsFrom(bootstrap)
-		    testRuntimeClasspath.extendsFrom(bootstrap)
-		    
-		    compileClasspath.extendsFrom(shade)
-		    runtimeClasspath.extendsFrom(shade)
-		    testCompileClasspath.extendsFrom(shade)
-		    testRuntimeClasspath.extendsFrom(shade)
-		    
-		    api.extendsFrom(include)
+		    api.extendsFrom(export)
+		    provided.extendsFrom(internal)
+		    provided.extendsFrom(bootstrap)
+		    provided.extendsFrom(shade)
 		}
     }
     
@@ -107,8 +111,9 @@ subprojects {
 			from(configurations.bootstrap)
 		    into("libs") {
 		    	from(tasks.named("jar"))
-		    	from(configurations.internal)
-	        	from(configurations.include)
+		    	from(configurations.embedded)
+	        	from(configurations.export)
+	        	from(configurations.internal)
 		    }
 		}
 		

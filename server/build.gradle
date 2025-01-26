@@ -1,11 +1,10 @@
 ext.subName = "server"
 
 dependencies {
-	include project(":shared")
-	
-	include "de.mkammerer:argon2-jvm:2.11"
-	include "mysql:mysql-connector-java:8.0.33"
-	include "org.xerial:sqlite-jdbc:3.48.0.0"
+	export project(":shared")
+	export "de.mkammerer:argon2-jvm:2.11"
+	export "mysql:mysql-connector-java:8.0.33"
+	export "org.xerial:sqlite-jdbc:3.48.0.0"
 }
 
 ext.bootstrapEntry = "muscaa.chess.server.main.Main"

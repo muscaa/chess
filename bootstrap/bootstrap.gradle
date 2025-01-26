@@ -15,14 +15,15 @@ dependencies {
 tasks.register("copyLibs") {
 	def libs = file("run/${libsDir}")
 	
-    inputs.files(configurations.internal, configurations.shade, configurations.include)
+    inputs.files(configurations.shade, configurations.embedded, configurations.export, configurations.internal)
     outputs.dir(libs)
 	
     doLast {
         copy {
-        	from(configurations.internal)
         	from(configurations.shade)
-        	from(configurations.include)
+        	from(configurations.embedded)
+        	from(configurations.export)
+        	from(configurations.internal)
         	into(libs)
         }
     }
