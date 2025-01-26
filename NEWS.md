@@ -6,6 +6,7 @@
 - Split server into integrated and dedicated.
 - Added ping requests and improved packet handling.
 - Added server configuration options, hash algorithms, and databases.
+- Added modding support.
 - Fixed various bugs.
 - Minor improvements & additions.
 
